@@ -16,6 +16,12 @@
   background-color: white;
   /* 스크롤바 비표시 */
   -ms-overflow-style: none;
+  
+  /* Safe Area 환경 변수 */
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
 }
 
 ::-webkit-scrollbar {
@@ -104,4 +110,43 @@ input[type="number"] {
 
 .slick-dots li {
   margin: 0 0.28px; /* 점 사이 간격 줄이기 */
+}
+
+/* Safe Area 유틸리티 클래스 */
+.safe-area-top {
+  padding-top: var(--sat);
+}
+
+.safe-area-bottom {
+  padding-bottom: var(--sab);
+}
+
+.safe-area-left {
+  padding-left: var(--sal);
+}
+
+.safe-area-right {
+  padding-right: var(--sar);
+}
+
+.safe-area-x {
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+}
+
+.safe-area-y {
+  padding-top: var(--sat);
+  padding-bottom: var(--sab);
+}
+
+.safe-area-all {
+  padding-top: var(--sat);
+  padding-right: var(--sar);
+  padding-bottom: var(--sab);
+  padding-left: var(--sal);
+}
+
+/* Bottom Navigation Bar가 있는 페이지를 위한 여백 */
+.pb-nav-safe {
+  padding-bottom: calc(4rem + var(--sab));
 }

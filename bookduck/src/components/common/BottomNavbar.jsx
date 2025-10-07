@@ -12,7 +12,14 @@ import library_active from "../../assets/common/bottom-nav-library-active.svg";
 
 const BottomNavbar = () => {
   return (
-    <div className="fixed bottom-0 w-full max-w-[64rem] h-[4rem] border-t-[0.3px] border-[#0000004D] bg-[#FFFFFF] z-[110]">
+    // 하단 Safe Area
+    <div 
+      className="fixed bottom-0 w-full max-w-[64rem] border-t-[0.3px] border-[#0000004D] bg-[#FFFFFF] z-[110]"
+      style={{ 
+        height: 'calc(4rem + var(--sab))',
+        paddingBottom: 'var(--sab)'
+      }}
+    >
       <div className="flex  w-full justify-evenly items-center mt-[0.62rem] cursor-pointer">
         <NavLink to="/home">
           {({ isActive }) => (
