@@ -1,5 +1,4 @@
 import { KakaoURI, GoogleURI } from "../../api/oauth";
-import mainDuck from "../../assets/common/main-duck.svg";
 import kakao from "../../assets/loginPage/kakao.svg";
 import google from "../../assets/loginPage/google.svg";
 
@@ -8,7 +7,7 @@ const LoginPage = () => {
     <div className="h-screen overflow-hidden flex flex-col">
       <div className="flex flex-col flex-grow justify-end bg-gray-10 px-5 py-6 ">
         <div className="self-center pb-[4rem]">
-          <img src={mainDuck} className="w-[12.75rem] h-[12.375rem] " />
+          <img src="/assets/characterPage/logo/bookduck-logo.svg" className="w-[12.75rem] h-[12.375rem] " />
         </div>
         <div className="flex flex-col ">
           <p className="text-t1 font-semibold mb-2">환영해요!</p>
