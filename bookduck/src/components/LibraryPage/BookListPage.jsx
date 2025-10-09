@@ -20,6 +20,7 @@ import {
 } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { getReadingStatusKey, statusArr } from "../../utils/bookStatus";
 
 const BookListPage = ({ view }) => {
   const [sort, setSort] = useState("최신순");
@@ -28,7 +29,6 @@ const BookListPage = ({ view }) => {
   const [visible, setVisible] = useState(false);
   const [statusBottomSheet, setStatusBottomSheet] = useState(false); //최신순, 별점순, 제목순 보여주는 바텀시트 보이는지 여부
   const [statusVisible, setStatusVisible] = useState(false);
-  const statusArr = ["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"];
   const [isCancel, setCancel] = useState(true);
   const [sortedBookList, setSortedBookList] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState();
@@ -48,21 +48,6 @@ const BookListPage = ({ view }) => {
         return "title";
       default:
         return "latest";
-    }
-  };
-
-  const getReadingStatusKey = (status) => {
-    switch (status) {
-      case "읽고 싶어요":
-        return "NOT_STARTED";
-      case "읽고 있어요":
-        return "READING";
-      case "다 읽었어요":
-        return "FINISHED";
-      case "중단했어요":
-        return "STOPPED";
-      default:
-        return "NOT_STARTED";
     }
   };
 

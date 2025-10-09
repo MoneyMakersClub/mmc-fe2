@@ -21,6 +21,7 @@ import {
   postAddFolderBook,
 } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
+import { getReadingStatusKor, getReadingStatusKey } from "../../utils/bookStatus";
 
 const EnterBookCasePage = () => {
   const { id } = useParams(); // URL에서 id를 추출
@@ -36,36 +37,6 @@ const EnterBookCasePage = () => {
   const [selectedFolderBookId, setSelectedFolderBookId] = useState([]);
 
   const navigate = useNavigate();
-
-  const getReadingStatusKey = (status) => {
-    switch (status) {
-      case "읽고 싶어요":
-        return "NOT_STARTED";
-      case "읽고 있어요":
-        return "READING";
-      case "다 읽었어요":
-        return "FINISHED";
-      case "중단했어요":
-        return "STOPPED";
-      default:
-        return "NOT_STARTED";
-    }
-  };
-
-  const getReadingStatus = (status) => {
-    switch (status) {
-      case "NOT_STARTED":
-        return "읽고 싶어요";
-      case "READING":
-        return "읽고 있어요";
-      case "FINISHED":
-        return "다 읽었어요";
-      case "STOPPED":
-        return "중단했어요";
-      default:
-        return "읽고 싶어요";
-    }
-  };
 
   const {
     data: folderBookListData = { bookList: [] },
@@ -321,7 +292,7 @@ const EnterBookCasePage = () => {
                               bookImg={book.imgPath ? book.imgPath : imgEx}
                               rating={book.rating}
                               isSelected={selectedIndex.includes(index)}
-                              initState={getReadingStatus(book.readStatus)}
+                              initState={getReadingStatusKor(book.readStatus)}
                             />
                           </div>
                         </div>
@@ -349,7 +320,7 @@ const EnterBookCasePage = () => {
                               bookImg={book.imgPath}
                               rating={book.rating}
                               isSelected={selectedIndex.includes(index)}
-                              initState={getReadingStatus(book.readStatus)}
+                              initState={getReadingStatusKor(book.readStatus)}
                             />
                           </div>
                         </div>

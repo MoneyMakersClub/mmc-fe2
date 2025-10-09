@@ -7,38 +7,9 @@ import Divider1 from "../../components/common/Divider1";
 import ListBottomSheet from "../common/ListBottomSheet";
 import SuspenseLoading from "../common/SuspenseLoading";
 import { get, patch, post, del } from "../../api/example";
+import { getReadingStatusKor, getReadingStatusKey, statusArr } from "../../utils/bookStatus";
 
-const statusArr = ["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"];
 const DATA_LIMIT = 10;
-
-const getReadingStatusKey = (status) => {
-  switch (status) {
-    case "읽고 싶어요":
-      return "NOT_STARTED";
-    case "읽고 있어요":
-      return "READING";
-    case "다 읽었어요":
-      return "FINISHED";
-    case "중단했어요":
-      return "STOPPED";
-    default:
-      return null;
-  }
-};
-const getReadingStatusKor = (status) => {
-  switch (status) {
-    case "NOT_STARTED":
-      return "읽고 싶어요";
-    case "READING":
-      return "읽고 있어요";
-    case "FINISHED":
-      return "다 읽었어요";
-    case "STOPPED":
-      return "중단했어요";
-    default:
-      return null;
-  }
-};
 
 const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
   const navigate = useNavigate();
