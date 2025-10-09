@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import ExtractCard from "../../components/MainPage/ExtractCard";
 import ReviewCard from "../../components/MainPage/ReviewCard";
 import BookDisplay from "../../components/MainPage/BookDisplay";
@@ -9,7 +9,7 @@ const SelectCardPage = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full">
-      <Header3 title="위젯 선택" />
+      <NavigationHeader title="위젯 선택" />
 
       <div className="flex flex-col gap-[0.38rem] pt-[1.44rem] px-5 pb-[2.19rem]">
         <p className="text-st text-black">추가할 위젯 유형을 선택해주세요</p>

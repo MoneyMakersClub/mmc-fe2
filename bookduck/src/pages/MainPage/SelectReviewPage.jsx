@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { get, post } from "../../api/example";
 import { useNavigate } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import SearchComponent from "../../components/common/SearchComponent";
 import ReviewCard from "../../components/MainPage/ReviewCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
@@ -124,7 +124,7 @@ const SelectReviewPage = () => {
 
   return (
     <div className="w-full">
-      <Header3 title="한줄평 카드 위젯" />
+      <NavigationHeader title="한줄평 카드 위젯" />
       <div className="mt-[0.62rem] mb-4">
         <SearchComponent
           placeholder="제목이나 작가로 작성한 카드를 검색하세요"

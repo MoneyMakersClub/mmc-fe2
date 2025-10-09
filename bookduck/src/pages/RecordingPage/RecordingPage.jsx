@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { get } from "../../api/example";
 import { useQuery } from "@tanstack/react-query";
 import Divider2 from "../../components/common/Divider2";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import ColoredAuthorComponent from "../../components/RecordingPage/ColoredAuthorComponent";
 import ExtractWritingComponent from "../../components/RecordingPage/ExtractWritingComponent";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
@@ -201,7 +201,7 @@ const RecordingPage = () => {
 
   return (
     <>
-      <Header3
+      <NavigationHeader
         title="기록하기"
         check={true}
         handleCancel={handleCancel}

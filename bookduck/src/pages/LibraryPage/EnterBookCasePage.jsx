@@ -1,6 +1,5 @@
-import Header1 from "../../components/common/Header1";
-import Header3 from "../../components/common/Header3";
-import Header from "../../components/RecordingPage/Header";
+import NavigationHeader from "../../components/common/NavigationHeader";
+import BasicHeader from "../../components/common/BasicHeader";
 import ListIcon from "../../components/LibraryPage/ListIcon";
 import CoverIcon from "../../components/LibraryPage/CoverIcon";
 import { useEffect, useState } from "react";
@@ -158,16 +157,16 @@ const EnterBookCasePage = () => {
   return (
     <>
       {editState ? (
-        <Header3
+        <NavigationHeader
           title="책장 편집"
           edit={true}
           editState={editState}
           handleEdit={handleEdit}
         />
       ) : addBookState ? (
-        <Header3 title="책 추가하기" />
+        <NavigationHeader title="책 추가하기" />
       ) : (
-        <Header3
+        <NavigationHeader
           title=""
           edit={true}
           editState={editState}
@@ -190,7 +189,7 @@ const EnterBookCasePage = () => {
         ) : (
           !addBookState && (
             <>
-              <Header title={folderBookListData.folderName} />
+              <BasicHeader title={folderBookListData.folderName} />
               <div className="absolute right-4 top-4 ">
                 <div className="flex gap-2 cursor-pointer">
                   <ListIcon

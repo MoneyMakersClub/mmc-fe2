@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
 import BottomNavbar from "../../components/common/BottomNavbar";
-import Header from "../../components/RecordingPage/Header";
+import BasicHeader from "../../components/common/BasicHeader";
 import TotalView from "../../components/RecordingPage/TotalView";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import ExtractView from "../../components/RecordingPage/ExtractView";
@@ -37,7 +37,7 @@ const ArchivePage = () => {
   return (
     <>
       <div className="flex flex-col ">
-        <Header title="기록 아카이브" />
+        <BasicHeader title="기록 아카이브" />
         <TabBarComponent
           tabs={["전체보기", "발췌", "감상평"]}
           activeTab={tab}

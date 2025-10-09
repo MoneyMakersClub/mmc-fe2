@@ -1,8 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Divider1 from "../../components/common/Divider1";
 import Divider2 from "../../components/common/Divider2";
-import Header1 from "../../components/common/Header1";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import StatusBar from "../../components/common/StatusBar";
 import ColoredAuthorComponent from "../../components/RecordingPage/ColoredAuthorComponent";
 import ExtractWritingComponent from "../../components/RecordingPage/ExtractWritingComponent";
@@ -195,7 +194,7 @@ const EditPage = () => {
   return (
     <>
       <StatusBar />
-      <Header3
+      <NavigationHeader
         title="기록하기"
         check={true}
         handleCancel={handleCancel}

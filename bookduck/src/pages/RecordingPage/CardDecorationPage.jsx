@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import ReviewComponents from "../../components/RecordingPage/ReviewComponents";
 import RoundedTabComponent from "../../components/common/RoundedTabComponent";
 import { useState } from "react";
@@ -40,7 +40,7 @@ const CardDecorationPage = () => {
 
   return (
     <>
-      <Header3 title="감상평 카드 꾸미기" />
+      <NavigationHeader title="감상평 카드 꾸미기" />
       <div className="flex justify-center mt-[2.69rem] mb-[5.12rem]">
         <ReviewComponents reviewData={reviewData} />
       </div>

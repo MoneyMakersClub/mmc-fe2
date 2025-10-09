@@ -7,7 +7,7 @@ import ArchiveView from "../../components/BookInfoPage/ArchiveView";
 import FloatingRecordButton from "../../components/common/FloatingRecordButton";
 import MyComment from "../../components/BookInfoPage/MyComment";
 import Header2 from "../../components/RecordingPage/Header2";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import { getCustomBookInfo } from "../../api/bookinfo";
 import SuspenseLoading from "../../components/common/SuspenseLoading"; // 로딩 컴포넌트
 
@@ -65,7 +65,7 @@ const BookInfoAddedPage = () => {
         </div>
       ) : (
         <div>
-          <Header3 title="" />
+          <NavigationHeader title="" />
           <div className="flex flex-col items-center px-4 mt-4 gap-[8.875rem]">
             <BookInfo isMe={isMe} bookData={bookData} />
             <div className="flex flex-col items-center gap-6">

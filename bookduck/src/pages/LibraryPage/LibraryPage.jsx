@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import BookListPage from "../../components/LibraryPage/BookListPage";
 import BookCasePage from "../../components/LibraryPage/BookCasePage";
-import Header from "../../components/RecordingPage/Header";
+import BasicHeader from "../../components/common/BasicHeader";
 import BottomSheetModal from "../../components/common/BottomSheetModal";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import ListIcon from "../../components/LibraryPage/ListIcon";
@@ -58,7 +58,7 @@ const LibraryPage = () => {
   return (
     <>
       <div className="relative flex flex-col ">
-        <Header title="서재" />
+        <BasicHeader title="서재" />
         <TabBarComponent
           tabs={["책 목록", "책장"]}
           activeTab={clickedPage}

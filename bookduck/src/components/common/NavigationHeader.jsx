@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import header_arrow from "../../assets/common/header-arrow.svg";
 
+/* 뒤로가기 + 왼쪽 정렬 제목 + 편집/취소/완료 버튼 */
+
 //check = true면 취소 / 완료 버튼 표시
 //edit은 "편집" 텍스트 띄울지 여부
 //editState는 편집 텍스트를 클릭했는지 여부 (편집 버튼 클릭했으면 true)
-const Header3 = ({
+const NavigationHeader = ({
   title = "제목",
   check = false,
   edit = false,
@@ -54,4 +56,5 @@ const Header3 = ({
     </div>
   );
 };
-export default Header3;
+export default NavigationHeader;
+

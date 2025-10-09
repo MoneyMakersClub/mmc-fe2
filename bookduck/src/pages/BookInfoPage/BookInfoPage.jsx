@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import InfoView from "../../components/BookInfoPage/InfoView";
@@ -46,7 +46,7 @@ const BookInfoPage = () => {
 
   return (
     <div className="w-full w-max-[64rem]">
-      <Header3 title="" />
+      <NavigationHeader title="" />
       <div className="flex flex-col mt-2 gap-5">
         <div className="flex flex-col gap-2 px-4">
           <div className="flex flex-col gap-5">

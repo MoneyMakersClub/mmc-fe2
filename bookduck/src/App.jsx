@@ -12,6 +12,7 @@ import NotificationPage from "./pages/NotificationPage/NotificationPage";
 import CharacterPage from "./pages/CharacterPage/CharacterPage";
 import MyBadgePage from "./pages/CharacterPage/MyBadgePage";
 import CharacterCustomPage from "./pages/CharacterPage/CharacterCustomPage";
+import BookclubPage from "./pages/BookclubPage/BookclubPage";
 import SelectBookPage from "./pages/RecordingPage/SelectBookPage";
 import ArchivePage from "./pages/RecordingPage/ArchivePage";
 import ArchiveDetail from "./pages/RecordingPage/ArchiveDetailPage";
@@ -168,6 +169,9 @@ function App() {
         <Route path="/character" element={<CharacterPage />} />
         <Route path="/character/custom" element={<CharacterCustomPage />} />
         <Route path="/myBadge" element={<MyBadgePage />} />
+
+        {/* 북클럽 관련 */}
+        <Route path="/bookclub" element={<BookclubPage />} />
 
         {/* 도서관 관련 */}
         <Route path="/library" element={<LibraryPage />} />

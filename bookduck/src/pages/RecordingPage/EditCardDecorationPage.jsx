@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import StatusBar from "../../components/common/StatusBar";
 import ReviewComponents from "../../components/RecordingPage/ReviewComponents";
 import Divider1 from "../../components/common/Divider1";
@@ -45,7 +45,7 @@ const EditCardDecorationPage = () => {
   return (
     <>
       <StatusBar />
-      <Header3 title="감상평 카드 꾸미기" />
+      <NavigationHeader title="감상평 카드 꾸미기" />
       <div className="flex justify-center mt-[2.69rem] mb-[5.12rem]">
         <ReviewComponents reviewData={reviewData} />
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import GeneralNotiComponent from "../../components/NotificationPage/GeneralNotiComponent";
 import AnnounceNotiComponent from "../../components/NotificationPage/AnnounceNotiComponent";
@@ -44,7 +44,7 @@ const NotificationPage = () => {
 
   return (
     <div className="relative">
-      <Header3 title="알림" edit={false} />
+      <NavigationHeader title="알림" edit={false} />
       <div>
         <TabBarComponent
           tabs={["일반", "공지"]}

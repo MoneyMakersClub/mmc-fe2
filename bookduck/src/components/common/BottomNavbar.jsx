@@ -7,6 +7,8 @@ import record from "../../assets/common/bottom-nav-record.svg";
 import record_active from "../../assets/common/bottom-nav-record-active.svg";
 import character from "../../assets/common/bottom-nav-character.svg";
 import character_active from "../../assets/common/bottom-nav-character-active.svg";
+import bookclub from "../../assets/common/bottom-nav-bookclub.svg";
+import bookclub_active from "../../assets/common/bottom-nav-bookclub-active.svg";
 import library from "../../assets/common/bottom-nav-library.svg";
 import library_active from "../../assets/common/bottom-nav-library-active.svg";
 
@@ -36,13 +38,13 @@ const BottomNavbar = () => {
             <>{isActive ? <img src={record_active} /> : <img src={record} />}</>
           )}
         </NavLink>
-        <NavLink to="/character">
+        <NavLink to="/bookclub">
           {({ isActive }) => (
             <>
               {isActive ? (
-                <img src={character_active} />
+                <img src={bookclub_active} />
               ) : (
-                <img src={character} />
+                <img src={bookclub} />
               )}
             </>
           )}
