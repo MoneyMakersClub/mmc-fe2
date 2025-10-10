@@ -18,7 +18,7 @@ import {
   getTotalBook,
   patchBookStatus,
 } from "../../api/library";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getReadingStatusKey, statusArr } from "../../utils/bookStatus";
 
@@ -35,6 +35,7 @@ const BookListPage = ({ view }) => {
   const [currentState, setCurrentState] = useState({});
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -90,7 +91,7 @@ const BookListPage = ({ view }) => {
 
   const handleTabClick = async (tab) => {
     setTabList((prev) =>
-      prev.includes(tab) ? prev.filter((t) => t !== tab) : [...prev, tab]
+      prev.includes(tab) ? [] : [tab]
     );
     console.log(tabList);
   };
@@ -104,8 +105,10 @@ const BookListPage = ({ view }) => {
     };
     if (tabList.length !== 0) {
       selectSortedList();
+    } else {
+      setSortedBookList([]);
     }
-  }, [tabList]);
+  }, [tabList, sort]);
 
   const handleStatusClick = (userBookId) => {
     setSelectedBookId(userBookId);
@@ -114,29 +117,66 @@ const BookListPage = ({ view }) => {
   };
 
   const handleStatusChange = async (status) => {
-    const initialState = bookListData.bookList.reduce((acc, book) => {
-      acc[book.userBookId] = book.readStatus;
-      return acc;
-    }, {});
-    setCurrentState(initialState);
-
+    // 낙관적 업데이트: 즉시 UI 업데이트
     setCurrentState((prev) => ({
-      ...prev, // 이전 상태를 복사
-      selectedBookId: getReadingStatusKey(status), // index 값을 업데이트
+      ...prev,
+      [selectedBookId]: getReadingStatusKey(status),
     }));
-    const res = await patchBookStatus(
-      selectedBookId,
-      getReadingStatusKey(status)
-    );
-    window.location.reload();
 
-    console.log(res);
+    setStatusVisible(false);
+    setTimeout(() => {
+      setStatusBottomSheet(false);
+    }, 200);
+
+    try {
+      const res = await patchBookStatus(
+        selectedBookId,
+        getReadingStatusKey(status)
+      );
+      console.log(res);
+      
+      // React Query 캐시 무효화로 부드럽게 데이터 다시 불러오기
+      queryClient.invalidateQueries({ queryKey: ["bookListData"] });
+      
+      // 필터가 적용된 경우 sortedBookList도 업데이트
+      if (tabList.length !== 0) {
+        const statusList = tabList.map((it) => getReadingStatusKey(it));
+        const sortedRes = await getSortedTotalBook(statusList, getSortKey(sort));
+        setSortedBookList(sortedRes.bookList);
+      }
+    } catch (error) {
+      console.error("책 상태 변경 실패", error);
+      // 실패 시 원래 상태로 롤백
+      const initialState = bookListData.bookList.reduce((acc, book) => {
+        acc[book.userBookId] = book.readStatus;
+        return acc;
+      }, {});
+      setCurrentState(initialState);
+    }
   };
 
   const handlePutCancel = async () => {
-    const res = await deleteBook(selectedBookId);
-    console.log(res);
-    window.location.reload();
+    setStatusVisible(false);
+    setTimeout(() => {
+      setStatusBottomSheet(false);
+    }, 200);
+
+    try {
+      const res = await deleteBook(selectedBookId);
+      console.log(res);
+      
+      // React Query 캐시 무효화로 부드럽게 데이터 다시 불러오기
+      queryClient.invalidateQueries({ queryKey: ["bookListData"] });
+      
+      // 필터가 적용된 경우 sortedBookList도 업데이트
+      if (tabList.length !== 0) {
+        const statusList = tabList.map((it) => getReadingStatusKey(it));
+        const sortedRes = await getSortedTotalBook(statusList, getSortKey(sort));
+        setSortedBookList(sortedRes.bookList);
+      }
+    } catch (error) {
+      console.error("책 삭제 실패", error);
+    }
   };
 
   const handleBookClick = (isCustom, bookInfoId) => {
