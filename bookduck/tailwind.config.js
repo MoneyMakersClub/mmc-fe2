@@ -54,6 +54,7 @@ export default {
           100: "#FFECA4",
         },
         red: "#EA4520",
+        "red-light": "#F6E5E1",
         special: "#FF9F1C",
       },
       backgroundImage: {
