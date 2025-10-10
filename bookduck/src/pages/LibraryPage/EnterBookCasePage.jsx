@@ -22,6 +22,7 @@ import {
 } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
 import { getReadingStatusKor, getReadingStatusKey } from "../../utils/bookStatus";
+import { useOptimisticUpdate } from "../../hooks/useOptimisticUpdate";
 
 const EnterBookCasePage = () => {
   const { id } = useParams(); // URL에서 id를 추출
@@ -37,13 +38,14 @@ const EnterBookCasePage = () => {
   const [selectedFolderBookId, setSelectedFolderBookId] = useState([]);
 
   const navigate = useNavigate();
+  const { mutate } = useOptimisticUpdate();
 
   const {
     data: folderBookListData = { bookList: [] },
     isError,
     error,
   } = useQuery({
-    queryKey: ["folderBookListData"],
+    queryKey: ["folderBookListData", id],
     queryFn: () => getBookFromFolder(id),
   });
 
@@ -75,12 +77,10 @@ const EnterBookCasePage = () => {
 
   const handleEdit = async () => {
     if (editState) {
-      const data = {
-        folderName: inputValue,
-      };
-      const res = await patchFolderName(id, data);
-      console.log(res);
-      window.location.reload();
+      await mutate({
+        apiCall: () => patchFolderName(id, { folderName: inputValue }),
+        queryKeys: [["folderBookListData", id]],
+      });
     }
     setEditState(!editState);
     setSelectedIndex([]);
@@ -111,18 +111,20 @@ const EnterBookCasePage = () => {
   }, [tabList]);
 
   const handleButtonClick = async () => {
-    if (addBookState) {
-      const userbookId = selectedBookList;
+    const apiCall = addBookState
+      ? () => postAddFolderBook(id, selectedBookList)
+      : () => deleteAddFolderBook(id, selectedFolderBookId);
 
-      const res = await postAddFolderBook(id, userbookId);
-      console.log(res);
-    } else {
-      const userbookId = selectedFolderBookId;
-      console.log(userbookId);
-      const res = await deleteAddFolderBook(id, userbookId);
-      console.log(res);
-    }
-    window.location.reload();
+    await mutate({
+      apiCall,
+      queryKeys: [["folderBookListData", id]],
+      onSuccess: () => {
+        setAddBookState(false);
+        setSelectedBookList([]);
+        setSelectedFolderBookId([]);
+        setSelectedIndex([]);
+      },
+    });
   };
 
   return (

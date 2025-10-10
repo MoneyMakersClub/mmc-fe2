@@ -8,8 +8,10 @@ import book_case_ex2 from "../../assets/libraryPage/bookcase-ex2.svg";
 import book_case_ex3 from "../../assets/libraryPage/bookcase-ex3.svg";
 import { deleteFolder, getTotalFolder } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
+import { useOptimisticUpdate } from "../../hooks/useOptimisticUpdate";
 
 const BookCasePage = ({ showAddBookCaseBottomSheet, bookCaseId }) => {
+  const { mutate } = useOptimisticUpdate();
   const [showMenuBottomSheet, setShowMenuBottomSheet] = useState(false);
   const [visible, setVisible] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -39,10 +41,12 @@ const BookCasePage = ({ showAddBookCaseBottomSheet, bookCaseId }) => {
 
   //삭제 모달창에서 삭제 버튼 누르면 실행
   const handleDeleteModal = async () => {
-    const res = await deleteFolder(folderId);
-    console.log(res);
-    window.location.reload();
     setShowDeleteModal(false);
+    
+    await mutate({
+      apiCall: () => deleteFolder(folderId),
+      queryKeys: ["totalFolderData"],
+    });
   };
 
   //삭제 모달창에서 취소 버튼 누르면 실행
