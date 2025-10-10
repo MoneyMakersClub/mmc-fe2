@@ -16,7 +16,7 @@ const BottomNavbar = () => {
   return (
     // 하단 Safe Area
     <div 
-      className="fixed bottom-0 w-full max-w-[64rem] border-t-[0.3px] border-[#0000004D] bg-[#FFFFFF] z-[110]"
+      className="fixed bottom-0 w-full max-w-[64rem] border-t border-gray-300 bg-white shadow-sm z-[110]"
       style={{ 
         height: 'calc(4rem + var(--sab))',
         paddingBottom: 'var(--sab)'

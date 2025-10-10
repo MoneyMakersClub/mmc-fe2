@@ -72,25 +72,7 @@ const SearchMainPage = () => {
                 최근 기록한 책
               </div>
               {recentBooks.length > 0 ? (
-                <div className="grid grid-cols-3 gap-3">
-                  {recentBooks.map((book, index) => {
-                    return (
-                      <BookComponent
-                        key={index}
-                        img={book.imgPath}
-                        title={book.title}
-                        auhtor={book.author}
-                        handleClick={() =>
-                          navigate(
-                            book.isCustom
-                              ? `/info/book/custom/${book.bookInfoId}`
-                              : `/info/book/${book.bookInfoId}`
-                          )
-                        }
-                      />
-                    );
-                  })}
-                </div>
+                <CarouselComponent books={recentBooks} />
               ) : (
                 <div className="flex w-full h-[11.5rem] justify-center items-center">
                   <p className="text-gray-400 text-b2">
@@ -121,7 +103,7 @@ const SearchMainPage = () => {
               <div className="text-b1 font-semibold text-gray-800">
                 요즘 많이 읽는 책 Top 12
               </div>
-              <CarouselComponent popularBooks={popularBooks} />
+              <CarouselComponent books={popularBooks} />
             </div>
           </>
         ) : (
