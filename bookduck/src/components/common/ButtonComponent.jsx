@@ -24,7 +24,7 @@ const ButtonComponent = ({
   className,
   ...props
 }) => {
-  const baseStyles = "text-center";
+  const baseStyles = "text-center flex items-center justify-center";
 
   const primaryEnabledStyle = color
     ? "bg-gray-700 text-white"

@@ -67,18 +67,19 @@ const SearchMainPage = () => {
         />
         {!search ? (
           <>
-            <div className="w-full flex flex-col gap-3 mt-4 margin-auto px-8">
+            <div className="w-full flex flex-col gap-3 mt-4 margin-auto px-4">
               <div className="text-b1 font-semibold text-gray-800">
                 최근 기록한 책
               </div>
-              <div className="flex flex-row gap-3">
-                {recentBooks.length > 0 ? (
-                  recentBooks.map((book, index) => {
+              {recentBooks.length > 0 ? (
+                <div className="grid grid-cols-3 gap-3">
+                  {recentBooks.map((book, index) => {
                     return (
                       <BookComponent
                         key={index}
                         img={book.imgPath}
                         title={book.title}
+                        auhtor={book.author}
                         handleClick={() =>
                           navigate(
                             book.isCustom
@@ -88,17 +89,17 @@ const SearchMainPage = () => {
                         }
                       />
                     );
-                  })
-                ) : (
-                  <div className="flex w-full h-[11.5rem] justify-center items-center">
-                    <p className="text-gray-400 text-b2">
-                      아직 기록한 책이 없어요.
-                    </p>
-                  </div>
-                )}
-              </div>
+                  })}
+                </div>
+              ) : (
+                <div className="flex w-full h-[11.5rem] justify-center items-center">
+                  <p className="text-gray-400 text-b2">
+                    아직 기록한 책이 없어요.
+                  </p>
+                </div>
+              )}
             </div>
-            <div className="flex justify-between px-7 py-4 bg-gray-10 my-5">
+            <div className="flex justify-between items-center h-24 px-8 py-4 bg-gray-10 my-5">
               <div className="flex flex-col gap-1 justify-center">
                 <span className="text-c1 text-gray-400">
                   책을 찾을 수 없나요?
@@ -107,14 +108,16 @@ const SearchMainPage = () => {
                   원하는 책을 직접 등록해보세요
                 </span>
               </div>
-              <button
-                className="text-white text-btn2 bg-orange-300 px-4 py-2 rounded-[0.5rem]"
+              <ButtonComponent
+                text="책 등록하기"
+                type="secondary"
+                color="orange"
+                size="medium"
                 onClick={() => navigate("/search/register")}
-              >
-                책 등록하기
-              </button>
+                className="h-10"
+              />
             </div>
-            <div className="flex flex-col gap-3 px-8">
+            <div className="flex flex-col gap-3 px-4">
               <div className="text-b1 font-semibold text-gray-800">
                 요즘 많이 읽는 책 Top 12
               </div>
