@@ -47,7 +47,7 @@ body {
 #root {
   width: 100%;
   max-width: 64rem;
-  height: 100svh;
+  height: 100dvh; /* Dynamic Viewport Height - 주소창 높이 자동 고려 */
   margin: 0 auto;
 }
 
