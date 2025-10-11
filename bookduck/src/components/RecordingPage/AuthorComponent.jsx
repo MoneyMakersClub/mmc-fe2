@@ -5,6 +5,8 @@ const AuthorComponent = ({ archiveDetailData }) => {
   const navigate = useNavigate();
 
   const handleGotoBookInfo = () => {
+    // 현재 경로 저장
+    sessionStorage.setItem('previousPath', window.location.pathname);
     navigate(`/info/book/custom/${archiveDetailData.bookInfoId}`);
   };
   return (

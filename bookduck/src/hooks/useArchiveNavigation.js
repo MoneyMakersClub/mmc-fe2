@@ -10,9 +10,6 @@ export const useArchiveNavigation = () => {
       const typeState =
         res.excerpt && res.review ? "ALL" : res.excerpt ? "EXCERPT" : "REVIEW";
 
-      // detail로 이동 전 현재 경로 저장
-      sessionStorage.setItem('previousPath', window.location.pathname);
-
       if (typeState === "ALL") {
         navigate(`/total-archive-detail/${archiveId}`, {
           state: { detailData: res },

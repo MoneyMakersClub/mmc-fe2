@@ -245,23 +245,17 @@ const EditPage = () => {
     const hasExcerpt = data.excerpt;
     const hasReview = data.review;
     
-    // 현재 경로의 이전 경로를 저장 (detail에서 뒤로가기 시 사용)
-    const savedPrevious = sessionStorage.getItem('previousPath');
-    if (savedPrevious) {
-      sessionStorage.setItem('previousPath', savedPrevious);
-    }
-    
     if (hasExcerpt && hasReview) {
       navigate(`/total-archive-detail/${archiveId}`, {
-        state: { detailData: res }
+        state: { detailData: res, fromEdit: true }
       });
     } else if (hasReview) {
       navigate(`/review-archive-detail/${archiveId}`, {
-        state: { detailData: res }
+        state: { detailData: res, fromEdit: true }
       });
     } else if (hasExcerpt) {
       navigate(`/excerpt-archive-detail/${archiveId}`, {
-        state: { detailData: res }
+        state: { detailData: res, fromEdit: true }
       });
     } else {
       navigate(-1);
@@ -288,8 +282,8 @@ const EditPage = () => {
         handleBack={handleBack}
         handleComplete={handleComplete}
       />
-      <div className="flex flex-col gap-[1rem] mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
-        <div className="mt-5">
+      <div className="flex flex-col mx-4 pt-[calc(env(safe-area-inset-top))]">
+        <div className="flex justify-start">
           <ColoredAuthorComponent
             bookInfo={bookInfo}
             edit={true}

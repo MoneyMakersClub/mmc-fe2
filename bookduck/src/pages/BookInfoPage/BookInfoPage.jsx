@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
 import TabBarComponent from "../../components/common/TabBarComponent";
@@ -12,6 +12,7 @@ import SuspenseLoading from "../../components/common/SuspenseLoading";
 
 const BookInfoPage = () => {
   const { bookinfoId } = useParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("책 정보");
   const [RatingListData, setRatingListData] = useState(null);
   const [bookData, setBookData] = useState(null);
@@ -34,6 +35,10 @@ const BookInfoPage = () => {
     fetchData();
   }, [bookinfoId]);
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -44,7 +49,7 @@ const BookInfoPage = () => {
 
   return (
     <div className="w-full w-max-[64rem]">
-      <NavigationHeader title="" />
+      <NavigationHeader title="" handleBack={handleBack} />
       <div className="flex flex-col pt-[calc(env(safe-area-inset-top)+2.75rem+0.5rem)] gap-5">
         <div className="flex flex-col gap-2 px-4">
           <div className="flex flex-col gap-5">

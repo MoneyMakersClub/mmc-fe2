@@ -14,11 +14,16 @@ const NavigationHeader = ({
   handleEdit,
   handleComplete,
   handleCancel,
+  handleBack,
 }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (handleBack) {
+      handleBack();
+    } else {
+      navigate(-1);
+    }
   };
   return (
     <div className="fixed top-0 left-0 right-0 bg-white z-50 pt-[env(safe-area-inset-top)] flex justify-between items-center h-[2.75rem] px-4">

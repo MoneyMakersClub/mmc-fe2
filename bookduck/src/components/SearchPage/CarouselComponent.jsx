@@ -45,6 +45,12 @@ const CarouselComponent = ({ books }) => {
     }
   };
 
+  // 책 클릭 핸들러
+  const handleBookClick = (bookInfoId) => {
+    sessionStorage.setItem('previousPath', window.location.pathname);
+    navigate(`/info/book/${bookInfoId}`);
+  };
+
   // 3권 이하면 그리드
   if (books.length <= 3) {
     return (
@@ -55,7 +61,7 @@ const CarouselComponent = ({ books }) => {
             img={book.imgPath}
             title={book.title}
             // author={book.author}
-            handleClick={() => navigate(`/info/book/${book.bookInfoId}`)}
+            handleClick={() => handleBookClick(book.bookInfoId)}
           />
         ))}
       </div>
@@ -76,7 +82,7 @@ const CarouselComponent = ({ books }) => {
               img={book.imgPath}
               title={book.title}
               // author={book.author}
-              handleClick={() => navigate(`/info/book/${book.bookInfoId}`)}
+              handleClick={() => handleBookClick(book.bookInfoId)}
             />
           ))}
         </div>

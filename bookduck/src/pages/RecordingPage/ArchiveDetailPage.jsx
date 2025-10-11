@@ -37,7 +37,6 @@ const ArchiveDetail = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [excerptClick, setExcerptClick] = useState(false);
   const [reviewClick, setReviewClick] = useState(false);
-  const [previousPath, setPreviousPath] = useState(null); // 이전 경로 저장
   const navigate = useNavigate();
 
   const archiveDetailData = location.state?.detailData || {};
@@ -46,12 +45,6 @@ const ArchiveDetail = () => {
   useEffect(() => {
     setExcerptId(archiveDetailData.excerpt?.excerptId);
     setReviewId(archiveDetailData.review?.reviewId);
-    
-    // 진입 시점의 이전 경로 저장 (세션 스토리지 활용)
-    const savedPath = sessionStorage.getItem('previousPath');
-    if (savedPath) {
-      setPreviousPath(savedPath);
-    }
   }, []);
 
   const handleMenu = () => {
@@ -59,11 +52,13 @@ const ArchiveDetail = () => {
   };
 
   const handleBack = () => {
-    // 저장된 이전 경로가 있으면 그곳으로, 없으면 -1
-    if (previousPath) {
-      sessionStorage.removeItem('previousPath'); // 사용 후 제거
-      navigate(previousPath);
+    // edit에서 온 경우만 특별 처리
+    const fromEdit = location.state?.fromEdit;
+    if (fromEdit) {
+      // edit에서 왔으면 -2 (edit과 decoration을 건너뜀)
+      navigate(-2);
     } else {
+      // 일반적인 경우: 브라우저 히스토리 뒤로가기
       navigate(-1);
     }
   };
