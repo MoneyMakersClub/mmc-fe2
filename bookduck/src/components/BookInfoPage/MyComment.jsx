@@ -15,8 +15,10 @@ import {
   editOneLine,
   deleteOneLine,
 } from "../../api/bookinfo";
+import { useOptimisticUpdate } from "../../hooks/useOptimisticUpdate";
 
 const MyComment = ({ bookData }) => {
+  const { mutate } = useOptimisticUpdate();
   const bookInfo = bookData?.bookInfoBasicDto;
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [bottomSheet2Show, setBottomSheet2Show] = useState(false);
@@ -70,48 +72,53 @@ const MyComment = ({ bookData }) => {
 
   // 한줄평 등록
   const handleCompleteClick = async (userbookId, oneLineContent) => {
-    setText(inputValue);
     setVisible(false);
     setTimeout(() => {
       setBottomSheetShow(false);
     }, 200);
-    try {
-      await enrollOneLine(userbookId, oneLineContent);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+
+    await mutate({
+      apiCall: () => enrollOneLine(userbookId, oneLineContent),
+      queryKeys: ["bookInfoData"],
+      optimisticUpdate: () => setText(inputValue),
+      rollback: () => setText(bookData?.myOneLine || ""),
+    });
   };
 
   // 한줄평 수정
   const handleEditClick = async (onelineId, oneLineContent) => {
-    setText(inputValue);
     setEditVisible(false);
     setTimeout(() => {
       setEditSheetShow(false);
     }, 200);
-    try {
-      await editOneLine(onelineId, oneLineContent);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+
+    await mutate({
+      apiCall: () => editOneLine(onelineId, oneLineContent),
+      queryKeys: ["bookInfoData"],
+      optimisticUpdate: () => setText(inputValue),
+      rollback: () => setText(bookData?.myOneLine || ""),
+    });
   };
 
   // 한줄평 삭제
   const handleDeleteClick = async (onelineId) => {
-    setText("");
-    setInputValue("");
     setVisible2(false);
     setTimeout(() => {
       setBottomSheet2Show(false);
     }, 200);
-    try {
-      await deleteOneLine(onelineId);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+
+    await mutate({
+      apiCall: () => deleteOneLine(onelineId),
+      queryKeys: ["bookInfoData"],
+      optimisticUpdate: () => {
+        setText("");
+        setInputValue("");
+      },
+      rollback: () => {
+        setText(bookData?.myOneLine || "");
+        setInputValue(bookData?.myOneLine || "");
+      },
+    });
   };
 
   const handleStarClick = async (index, event) => {

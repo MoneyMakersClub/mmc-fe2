@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import RecordCalender from "../../components/StatisticsPage/RecordCalender";
 import Divider2 from "../../components/common/Divider2";
 import MyKeyword from "../../components/StatisticsPage/MyKeyword";
@@ -83,7 +83,7 @@ const StatisticsPage = () => {
   }
   return (
     <div className="flex flex-col pb-[11.25rem]">
-      <Header3 title="독서 리포트" />
+      <NavigationHeader title="독서 리포트" />
       <UserCard
         nickname={userData?.nickname}
         userId={userId}

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
 import BottomNavbar from "../../components/common/BottomNavbar";
-import Header from "../../components/RecordingPage/Header";
+import BasicHeader from "../../components/common/BasicHeader";
 import TotalView from "../../components/RecordingPage/TotalView";
 import TabBarComponent from "../../components/common/TabBarComponent";
-import ExtractView from "../../components/RecordingPage/ExtractView";
+import ExcerptView from "../../components/RecordingPage/ExcerptView";
 import ReviewView from "../../components/RecordingPage/ReviewView";
 import { useNavigate } from "react-router-dom";
 import FloatingRecordButton from "../../components/common/FloatingRecordButton";
@@ -23,7 +23,6 @@ const ArchivePage = () => {
     queryKey: ["fontSettings"],
     queryFn: async () => {
       const response = await get(`/settings`);
-      console.log(response);
       return response.recordFont;
     },
     refetchOnMount: true,
@@ -37,7 +36,7 @@ const ArchivePage = () => {
   return (
     <>
       <div className="flex flex-col ">
-        <Header title="기록 아카이브" />
+        <BasicHeader title="기록 아카이브" />
         <TabBarComponent
           tabs={["전체보기", "발췌", "감상평"]}
           activeTab={tab}
@@ -47,7 +46,7 @@ const ArchivePage = () => {
         />
         <div className="px-4">
           {tab === "전체보기" && <TotalView font={font} />}
-          {tab === "발췌" && <ExtractView font={font} />}
+          {tab === "발췌" && <ExcerptView font={font} />}
           {tab === "감상평" && <ReviewView font={font} />}
           <div className="h-[6rem] bg-transparent"></div>
         </div>

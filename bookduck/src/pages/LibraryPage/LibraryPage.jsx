@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import BookListPage from "../../components/LibraryPage/BookListPage";
 import BookCasePage from "../../components/LibraryPage/BookCasePage";
-import Header from "../../components/RecordingPage/Header";
+import BasicHeader from "../../components/common/BasicHeader";
 import BottomSheetModal from "../../components/common/BottomSheetModal";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import ListIcon from "../../components/LibraryPage/ListIcon";
 import CoverIcon from "../../components/LibraryPage/CoverIcon";
 import plus_orange from "../../assets/common/plus-orange.svg";
 import { postAddFolder } from "../../api/library";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LibraryPage = () => {
+  const queryClient = useQueryClient();
   const [isClicked, setIsClicked] = useState("list");
   const [showAddBookCaseBottomSheet, setShowAddBookCaseBottomSheet] =
     useState(false);
@@ -46,19 +48,33 @@ const LibraryPage = () => {
   };
 
   const handleAddFolder = async () => {
-    const data = {
-      folderName: inputValue,
-    };
-    const res = await postAddFolder(data);
-    window.location.reload();
-    setShowAddBookCaseBottomSheet(false);
-    console.log(res);
+    try {
+      const data = {
+        folderName: inputValue,
+      };
+      const res = await postAddFolder(data);
+      console.log(res);
+      
+      // 바텀시트 닫기
+      setVisible(false);
+      setTimeout(() => {
+        setShowAddBookCaseBottomSheet(false);
+      }, 300);
+      
+      // 입력값 초기화
+      setInputValue("");
+      
+      // React Query 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ["folderListData"] });
+    } catch (error) {
+      console.error("책장 추가 실패", error);
+    }
   };
 
   return (
     <>
       <div className="relative flex flex-col ">
-        <Header title="서재" />
+        <BasicHeader title="서재" />
         <TabBarComponent
           tabs={["책 목록", "책장"]}
           activeTab={clickedPage}

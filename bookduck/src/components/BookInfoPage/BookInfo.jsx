@@ -1,27 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import down from "../../assets/common/down-arrow.svg";
 import BottomSheetModal from "../common/BottomSheetModal";
 import ListBottomSheet from "../common/ListBottomSheet";
 import imgEx from "../../assets/common/bookImg-ex.svg";
+import { patch } from "../../api/example";
+import { getReadingStatusKor, getReadingStatusKey, statusArr } from "../../utils/bookStatus";
 
 const BookInfo = ({ isMe = "default", bookData }) => {
-  const statusArr = ["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"];
-  const [currentState, setCurrentState] = useState("읽고 싶어요");
+  const bookBasicData = isMe === "default" ? bookData?.bookInfoBasicDto : bookData;
+
+  const [currentState, setCurrentState] = useState(
+    getReadingStatusKor(bookBasicData?.readStatus) || "읽고 싶어요"
+  );
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isCancel, setCancel] = useState(true);
+
+  useEffect(() => {
+    if (bookBasicData?.readStatus) {
+      setCurrentState(getReadingStatusKor(bookBasicData.readStatus));
+    }
+  }, [bookBasicData?.readStatus]);
 
   const handleStatusClick = () => {
     setBottomSheetShow(true);
   };
 
-  const handleStatusChange = (status) => {
+  const handleStatusChange = async (status) => {
     setCurrentState(status);
+    
+    if (bookBasicData?.userbookId) {
+      try {
+        const statusKey = getReadingStatusKey(status);
+        await patch(`/books/${bookBasicData.userbookId}?status=${statusKey}`);
+        setVisible(false);
+        setTimeout(() => {
+          setBottomSheetShow(false);
+        }, 200);
+        // 페이지 새로고침으로 데이터 갱신
+        window.location.reload();
+      } catch (error) {
+        console.error("책 상태 변경 업데이트 오류:", error);
+      }
+    }
   };
 
   const handlePutCancel = () => {};
-  const bookBasicData =
-    isMe === "default" ? bookData?.bookInfoBasicDto : bookData;
   console.log(bookBasicData);
   // 기본으로 등록되어 있는 책: default 내가 직접 등록한 책: me 타유저가 직접 등록한 책: other
   return (

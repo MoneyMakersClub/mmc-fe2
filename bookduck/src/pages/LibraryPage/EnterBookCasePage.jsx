@@ -1,6 +1,5 @@
-import Header1 from "../../components/common/Header1";
-import Header3 from "../../components/common/Header3";
-import Header from "../../components/RecordingPage/Header";
+import NavigationHeader from "../../components/common/NavigationHeader";
+import BasicHeader from "../../components/common/BasicHeader";
 import ListIcon from "../../components/LibraryPage/ListIcon";
 import CoverIcon from "../../components/LibraryPage/CoverIcon";
 import { useEffect, useState } from "react";
@@ -22,6 +21,8 @@ import {
   postAddFolderBook,
 } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
+import { getReadingStatusKor, getReadingStatusKey } from "../../utils/bookStatus";
+import { useOptimisticUpdate } from "../../hooks/useOptimisticUpdate";
 
 const EnterBookCasePage = () => {
   const { id } = useParams(); // URL에서 id를 추출
@@ -37,43 +38,14 @@ const EnterBookCasePage = () => {
   const [selectedFolderBookId, setSelectedFolderBookId] = useState([]);
 
   const navigate = useNavigate();
-
-  const getReadingStatusKey = (status) => {
-    switch (status) {
-      case "읽고 싶어요":
-        return "NOT_STARTED";
-      case "읽고 있어요":
-        return "READING";
-      case "다 읽었어요":
-        return "FINISHED";
-      case "중단했어요":
-        return "STOPPED";
-      default:
-        return "NOT_STARTED";
-    }
-  };
-
-  const getReadingStatus = (status) => {
-    switch (status) {
-      case "NOT_STARTED":
-        return "읽고 싶어요";
-      case "READING":
-        return "읽고 있어요";
-      case "FINISHED":
-        return "다 읽었어요";
-      case "STOPPED":
-        return "중단했어요";
-      default:
-        return "읽고 싶어요";
-    }
-  };
+  const { mutate } = useOptimisticUpdate();
 
   const {
     data: folderBookListData = { bookList: [] },
     isError,
     error,
   } = useQuery({
-    queryKey: ["folderBookListData"],
+    queryKey: ["folderBookListData", id],
     queryFn: () => getBookFromFolder(id),
   });
 
@@ -105,12 +77,10 @@ const EnterBookCasePage = () => {
 
   const handleEdit = async () => {
     if (editState) {
-      const data = {
-        folderName: inputValue,
-      };
-      const res = await patchFolderName(id, data);
-      console.log(res);
-      window.location.reload();
+      await mutate({
+        apiCall: () => patchFolderName(id, { folderName: inputValue }),
+        queryKeys: [["folderBookListData", id]],
+      });
     }
     setEditState(!editState);
     setSelectedIndex([]);
@@ -141,33 +111,35 @@ const EnterBookCasePage = () => {
   }, [tabList]);
 
   const handleButtonClick = async () => {
-    if (addBookState) {
-      const userbookId = selectedBookList;
+    const apiCall = addBookState
+      ? () => postAddFolderBook(id, selectedBookList)
+      : () => deleteAddFolderBook(id, selectedFolderBookId);
 
-      const res = await postAddFolderBook(id, userbookId);
-      console.log(res);
-    } else {
-      const userbookId = selectedFolderBookId;
-      console.log(userbookId);
-      const res = await deleteAddFolderBook(id, userbookId);
-      console.log(res);
-    }
-    window.location.reload();
+    await mutate({
+      apiCall,
+      queryKeys: [["folderBookListData", id]],
+      onSuccess: () => {
+        setAddBookState(false);
+        setSelectedBookList([]);
+        setSelectedFolderBookId([]);
+        setSelectedIndex([]);
+      },
+    });
   };
 
   return (
     <>
       {editState ? (
-        <Header3
+        <NavigationHeader
           title="책장 편집"
           edit={true}
           editState={editState}
           handleEdit={handleEdit}
         />
       ) : addBookState ? (
-        <Header3 title="책 추가하기" />
+        <NavigationHeader title="책 추가하기" />
       ) : (
-        <Header3
+        <NavigationHeader
           title=""
           edit={true}
           editState={editState}
@@ -190,7 +162,7 @@ const EnterBookCasePage = () => {
         ) : (
           !addBookState && (
             <>
-              <Header title={folderBookListData.folderName} />
+              <BasicHeader title={folderBookListData.folderName} />
               <div className="absolute right-4 top-4 ">
                 <div className="flex gap-2 cursor-pointer">
                   <ListIcon
@@ -322,7 +294,7 @@ const EnterBookCasePage = () => {
                               bookImg={book.imgPath ? book.imgPath : imgEx}
                               rating={book.rating}
                               isSelected={selectedIndex.includes(index)}
-                              initState={getReadingStatus(book.readStatus)}
+                              initState={getReadingStatusKor(book.readStatus)}
                             />
                           </div>
                         </div>
@@ -350,7 +322,7 @@ const EnterBookCasePage = () => {
                               bookImg={book.imgPath}
                               rating={book.rating}
                               isSelected={selectedIndex.includes(index)}
-                              initState={getReadingStatus(book.readStatus)}
+                              initState={getReadingStatusKor(book.readStatus)}
                             />
                           </div>
                         </div>

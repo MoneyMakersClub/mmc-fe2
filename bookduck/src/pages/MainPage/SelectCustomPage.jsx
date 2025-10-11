@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { get, post } from "../../api/example";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import OneBookCard from "../../components/MainPage/OneBookCard";
 import BottomSheetModal from "../../components/common/BottomSheetModal";
 import SearchComponent from "../../components/common/SearchComponent";
@@ -107,7 +107,7 @@ const SelectCustomPage = () => {
   };
   return (
     <div className="w-full">
-      <Header3 title="커스텀 위젯" />
+      <NavigationHeader title="커스텀 위젯" />
       <div className="mt-[2.63rem] px-5">
         <OneBookCard
           bookNumber={bookNumber}

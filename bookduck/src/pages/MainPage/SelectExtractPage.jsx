@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { get, post } from "../../api/example";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import SearchComponent from "../../components/common/SearchComponent";
-import ExtractCard from "../../components/MainPage/ExtractCard";
+import HomeExcerptCard from "../../components/MainPage/HomeExcerptCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
 
 const SelectExtractPage = () => {
@@ -130,7 +130,7 @@ const SelectExtractPage = () => {
 
   return (
     <div className="w-full">
-      <Header3 title="발췌 카드 위젯" />
+      <NavigationHeader title="발췌 카드 위젯" />
       <div className="mt-[0.62rem] mb-4">
         <SearchComponent
           placeholder="기록한 발췌 카드를 검색하세요"
@@ -141,7 +141,7 @@ const SelectExtractPage = () => {
       <div className="flex flex-col gap-4 px-5">
         {excerpts.length > 0 &&
           excerpts.map((excerpt, index) => (
-            <ExtractCard
+            <HomeExcerptCard
               key={index}
               onClick={() => handleSelectCard(excerpt.excerptId)}
               selected={excerptId === excerpt.excerptId ? true : false}

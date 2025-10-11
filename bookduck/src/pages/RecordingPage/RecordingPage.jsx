@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { get } from "../../api/example";
 import { useQuery } from "@tanstack/react-query";
 import Divider2 from "../../components/common/Divider2";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import ColoredAuthorComponent from "../../components/RecordingPage/ColoredAuthorComponent";
-import ExtractWritingComponent from "../../components/RecordingPage/ExtractWritingComponent";
+import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWritingComponent";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
 import { useEffect, useState } from "react";
 import BottomSheetModal from "../../components/common/BottomSheetModal";
@@ -15,9 +15,12 @@ import { postExtractReview } from "../../api/archive";
 import useExtractData from "../../store/useExtractDataStore";
 import useReviewData from "../../store/useReviewDataStore";
 import useReviewColorStore from "../../store/useReviewColorStore";
+import { postExtractImage } from "../../api/archive";
+import RecordingModal from "../../components/RecordingPage/RecordingModal";
 
 const RecordingPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [viewBottomSheet, setViewBottomSheet] = useState(false);
@@ -27,11 +30,26 @@ const RecordingPage = () => {
   const [reviewPrivateShow, setReviewPrivateShow] = useState(false);
   const { reviewColor, setReviewColor } = useReviewColorStore();
   const { bookInfo, setBookInfo } = useBookInfoStore();
+  
+  // 모달에서 사용할 임시 상태들
+  const [tempExtractInputValue, setTempExtractInputValue] = useState("");
+  const [tempPageInputValue, setTempPageInputValue] = useState("");
+  const [tempTitleInputValue, setTempTitleInputValue] = useState("");
+  const [tempReviewInputValue, setTempReviewInputValue] = useState("");
 
   useEffect(() => {
     setAuthor(location.state?.author);
     setTitle(location.state?.title);
-  }, []);
+    
+    // decoration 페이지에서 돌아온 경우 모달 복원
+    if (location.state?.returnFromDecoration) {
+      setTempReviewInputValue(location.state.tempReviewInputValue || "");
+      setTempTitleInputValue(location.state.tempTitleInputValue || "");
+      setViewBottomSheet(true);
+      setBottomSheetType("감상평");
+      setTimeout(() => setVisible(true), 10);
+    }
+  }, [location.state]);
 
   const {
     data: font,
@@ -42,7 +60,6 @@ const RecordingPage = () => {
     queryKey: ["fontSettings"],
     queryFn: async () => {
       const response = await get(`/settings`);
-      console.log(response);
       return response.recordFont;
     },
     refetchOnMount: true,
@@ -55,7 +72,6 @@ const RecordingPage = () => {
     extractInputValue,
     setExtractInputValue,
   } = useExtractData();
-  console.log("pageInputValue:", pageInputValue, "extract:", extractInputValue);
   const {
     reviewPage,
     setReviewPage,
@@ -76,18 +92,47 @@ const RecordingPage = () => {
   };
 
   const handleExtractOnChange = (e) => {
-    setExtractInputValue(e.target.value);
+    setTempExtractInputValue(e.target.value);
   };
   const handleReviewOnChange = (e) => {
-    setReviewInputValue(e.target.value);
+    setTempReviewInputValue(e.target.value);
+  };
+  
+  const handleTempPageInputChange = (e) => {
+    setTempPageInputValue(e.target.value);
+  };
+  
+  const handleTempTitleInputChange = (e) => {
+    setTempTitleInputValue(e.target.value);
+  };
+
+  // 스크롤 동기화 핸들러
+  const handleExtractScroll = (e) => {
+    const highlightDiv = e.target.previousSibling;
+    if (highlightDiv) {
+      highlightDiv.scrollTop = e.target.scrollTop;
+    }
+  };
+
+  const handleReviewScroll = (e) => {
+    const highlightDiv = e.target.previousSibling;
+    if (highlightDiv) {
+      highlightDiv.scrollTop = e.target.scrollTop;
+    }
   };
 
   const handleExtractTextField = () => {
+    // 기존 값을 임시 상태로 복사
+    setTempExtractInputValue(extractInputValue);
+    setTempPageInputValue(pageInputValue);
     setViewBottomSheet(true);
     setBottomSheetType("발췌");
   };
 
   const handleReviewTextField = () => {
+    // 기존 값을 임시 상태로 복사
+    setTempTitleInputValue(titleInputValue);
+    setTempReviewInputValue(reviewInputValue);
     setViewBottomSheet(true);
     setBottomSheetType("감상평");
   };
@@ -98,7 +143,33 @@ const RecordingPage = () => {
       setViewBottomSheet(false); // 애니메이션이 끝난 후 모달 완전히 닫기
     }, 300);
   };
-  console.log(bookInfo);
+
+  const handleWriteClick = () => {
+    if (bottomSheetType === "발췌") {
+      // 발췌 모달의 임시 값을 메인 상태로 복사
+      setExtractInputValue(tempExtractInputValue);
+      setPageInputValue(tempPageInputValue);
+    } else if (bottomSheetType === "감상평") {
+      // 감상평 모달의 임시 값을 메인 상태로 복사
+      setTitleInputValue(tempTitleInputValue);
+      setReviewInputValue(tempReviewInputValue);
+    }
+    
+    setVisible(false); // 닫는 애니메이션 시작
+    setTimeout(() => {
+      setViewBottomSheet(false); // 애니메이션이 끝난 후 모달 완전히 닫기
+    }, 300);
+  };
+
+  const handleExtractImage = async (e) => {
+    const file = e.target.files[0]; // 선택한 파일
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await postExtractImage(formData);
+      setTempExtractInputValue(res.data);
+    }
+  };
 
   const handleComplete = async () => {
     const data = {};
@@ -177,9 +248,7 @@ const RecordingPage = () => {
     //   providerId: "Q7uTBgAAQBAJTEST3",
     // },
 
-    console.log(data);
     const res = await postExtractReview(data);
-    console.log(res);
     setBookInfo({});
     setPageInputValue();
     setExtractInputValue("");
@@ -189,32 +258,41 @@ const RecordingPage = () => {
   };
 
   const handleDecoration = () => {
+    // 현재 날짜를 YYYY.MM.DD 형식으로 생성
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+    
+    // 제목이 없으면 날짜 기반 제목 생성 (YYYY년 MM월 DD일의 기록)
+    const defaultTitle = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일의 기록`;
+    
+    // 모달에서 호출되므로 임시 값을 전달
     navigate("/recording/decoration", {
       state: {
-        textValue: reviewInputValue,
-        titleValue: titleInputValue,
-        bookTitleValue: title,
-        authorValue: author,
+        textValue: tempReviewInputValue,
+        titleValue: tempTitleInputValue || defaultTitle,
+        bookTitleValue: bookInfo.bookUnitDto?.title || bookInfo.title || title,
+        authorValue: bookInfo.bookUnitDto?.author || bookInfo.author || author,
+        createdDate: formattedDate, // 오늘 날짜 추가
       },
     });
   };
 
   return (
     <>
-      <Header3
+      <NavigationHeader
         title="기록하기"
         check={true}
         handleCancel={handleCancel}
         handleBack={handleBack}
         handleComplete={handleComplete}
       />
-      <div className="flex flex-col gap-[1rem] mx-4">
+      <div className="flex flex-col gap-[1rem] mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
         <div className="mt-5">
           <ColoredAuthorComponent bookInfo={bookInfo} />
         </div>
       </div>
       <div className="mx-4">
-        <ExtractWritingComponent
+        <ExcerptWritingComponent
           inputValue={extractInputValue}
           setInputValue={setExtractInputValue}
           pageInputValue={pageInputValue}
@@ -250,91 +328,25 @@ const RecordingPage = () => {
         >
           <div className="absolute w-10 h-1 top-[0.75rem] left-1/2 -translate-x-1/2 rounded-[0.25rem] bg-gray-300"></div>
 
-          <div className="flex flex-col gap-3 items-center">
-            {bottomSheetType === "발췌" && (
-              <>
-                <WritingTemplate height="18rem">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-end">
-                      <div className="flex items-center justify-center gap-1">
-                        <input
-                          type="number"
-                          placeholder="페이지"
-                          value={pageInputValue}
-                          onChange={(e) => setPageInputValue(e.target.value)}
-                          className="w-[2.5rem] bg-transparent text-b2 text-gray-800"
-                        />
-                        <div className={`text-b2 text-gray-400 ${font}`}>p</div>
-                      </div>
-                    </div>
-                    <textarea
-                      value={extractInputValue}
-                      onChange={handleExtractOnChange}
-                      placeholder="책의 구절을 입력하세요"
-                      maxLength={300}
-                      className={`w-[20.5625rem] h-[11.5rem] mt-2 bg-transparent text-b2 text-gray-800 appearance-none outline-none resize-none ${font}`}
-                    />
-                  </div>
-                  <div className="absolute bottom-5 right-4">
-                    <div
-                      className={`text-btn3 ${
-                        extractInputValue.length > 300
-                          ? "text-red"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {extractInputValue.length}/300
-                    </div>
-                  </div>
-                </WritingTemplate>
-                <ButtonComponent
-                  text="완료"
-                  type="primary"
-                  color="gray"
-                  onClick={handleBackdropClick}
-                  disabled={!extractInputValue || !pageInputValue}
-                />
-              </>
-            )}
-            {bottomSheetType === "감상평" && (
-              <>
-                <WritingTemplate height="18rem">
-                  <div className="flex flex-col gap-2">
-                    <input
-                      value={titleInputValue}
-                      onChange={(e) => setTitleInputValue(e.target.value)}
-                      placeholder="제목 (25자 이내로 작성하세요)"
-                      className={`text-b1 font-semibold bg-transparent ${font}`}
-                    />
-                    <textarea
-                      value={reviewInputValue}
-                      onChange={handleReviewOnChange}
-                      placeholder="책에 대한 자유로운 감상을 기록하세요"
-                      maxLength={1000}
-                      className={`w-[20.5625rem] h-[11rem] mt-2 bg-transparent text-b2 text-gray-800 appearance-none outline-none resize-none ${font}`}
-                    />
-                  </div>
-                  <div className="absolute bottom-5 right-4">
-                    <div
-                      className={`text-btn3 ${
-                        reviewInputValue.length > 1000
-                          ? "text-red"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {reviewInputValue.length}/1000
-                    </div>
-                  </div>
-                </WritingTemplate>
-                <ButtonComponent
-                  text="완료"
-                  type="primary"
-                  color="gray"
-                  onClick={handleBackdropClick}
-                  disabled={!reviewInputValue}
-                />
-              </>
-            )}
+          <div className="flex flex-col gap-4 items-center">
+            <RecordingModal
+              bottomSheetType={bottomSheetType}
+              tempPageInputValue={tempPageInputValue}
+              handleTempPageInputChange={handleTempPageInputChange}
+              tempExtractInputValue={tempExtractInputValue}
+              handleExtractOnChange={handleExtractOnChange}
+              handleExtractScroll={handleExtractScroll}
+              handleExtractImage={handleExtractImage}
+              tempTitleInputValue={tempTitleInputValue}
+              handleTempTitleInputChange={handleTempTitleInputChange}
+              tempReviewInputValue={tempReviewInputValue}
+              handleReviewOnChange={handleReviewOnChange}
+              handleReviewScroll={handleReviewScroll}
+              reviewColor={reviewColor}
+              handleDecoration={handleDecoration}
+              handleWriteClick={handleWriteClick}
+              font={font}
+            />
           </div>
         </BottomSheetModal>
       </div>

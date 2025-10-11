@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import { useParams, useNavigate } from "react-router-dom";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import InfoView from "../../components/BookInfoPage/InfoView";
@@ -12,6 +12,7 @@ import SuspenseLoading from "../../components/common/SuspenseLoading";
 
 const BookInfoPage = () => {
   const { bookinfoId } = useParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("책 정보");
   const [RatingListData, setRatingListData] = useState(null);
   const [bookData, setBookData] = useState(null);
@@ -23,10 +24,8 @@ const BookInfoPage = () => {
         setIsLoading(true); // 데이터 요청 전 로딩 시작
         const res = await getBookInfo({ bookinfoId });
         const res2 = await getOneLineRatingsInfo({ bookinfoId });
-        console.log("조회 성공: ", res);
         setBookData(res);
         setRatingListData(res2);
-        console.log("조회2 성공: ", res2);
       } catch (err) {
         console.error("오류 발생: ", err);
       } finally {
@@ -35,6 +34,10 @@ const BookInfoPage = () => {
     };
     fetchData();
   }, [bookinfoId]);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   if (isLoading) {
     return (
@@ -46,8 +49,8 @@ const BookInfoPage = () => {
 
   return (
     <div className="w-full w-max-[64rem]">
-      <Header3 title="" />
-      <div className="flex flex-col mt-2 gap-5">
+      <NavigationHeader title="" handleBack={handleBack} />
+      <div className="flex flex-col pt-[calc(env(safe-area-inset-top)+2.75rem+0.5rem)] gap-5">
         <div className="flex flex-col gap-2 px-4">
           <div className="flex flex-col gap-5">
             <BookInfo bookData={bookData} />

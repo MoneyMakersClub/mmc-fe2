@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { get, patch, post } from "../../api/example";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import ToggleButton from "../../components/common/ToggleButtonComponent";
 import BottomSheetModal from "../../components/common/BottomSheetModal";
 import TextField from "../../components/common/TextField";
@@ -227,7 +227,7 @@ const SettingPage = () => {
 
   return (
     <div className="relative w-full">
-      <Header3 title="설정" />
+      <NavigationHeader title="설정" />
       <div className="flex flex-col gap-[2.5rem] px-4 pt-[1.31rem]">
         <div>
           <div className="mb-5 text-st font-semibold">계정 정보</div>

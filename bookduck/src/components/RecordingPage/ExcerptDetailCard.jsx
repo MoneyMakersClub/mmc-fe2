@@ -1,7 +1,6 @@
 import { useState } from "react";
-
-import heart_white from "../../assets/recordingPage/heart-white.svg";
-import share_white from "../../assets/recordingPage/share-white.svg";
+import heart_gray from "../../assets/recordingPage/heart-gray.svg";
+import share_gray from "../../assets/recordingPage/share-gray.svg";
 import kakao from "../../assets/recordingPage/kakao.svg";
 import instagram from "../../assets/recordingPage/instagram.svg";
 import x from "../../assets/recordingPage/x.svg";
@@ -10,8 +9,7 @@ import link from "../../assets/recordingPage/link.svg";
 
 import BottomSheetModal from "../common/BottomSheetModal";
 import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
-
-const ReviewDetailComponent = ({ archiveDetailData, font }) => {
+const ExcerptDetailCard = ({ archiveDetailData, font }) => {
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -26,32 +24,35 @@ const ReviewDetailComponent = ({ archiveDetailData, font }) => {
     return date.split("T")[0].replace(/-/g, ".");
   };
 
+  const isModified = archiveDetailData.excerpt.modifiedTime && 
+    archiveDetailData.excerpt.modifiedTime !== archiveDetailData.excerpt.createdTime;
+  
+  const displayDate = isModified 
+    ? `${formattedDate(archiveDetailData.excerpt.modifiedTime)} (수정됨)`
+    : formattedDate(archiveDetailData.excerpt.createdTime);
+
   return (
     <div>
-      <div
-        style={{ background: archiveDetailData.review.color }}
-        className="w-[22.5825rem]  px-5 py-6 rounded-[0.88rem]  shadow-custom "
-      >
-        <div className="flex flex-col gap-2 ">
-          <div className={`text-c1 text-white ${font}`}>
-            {formattedDate(archiveDetailData.review.createdTime)}
-            {archiveDetailData.review.visibility === "PRVATE" && "/ 나만보기"}
+      <div className="w-[22.5825rem]  px-5 py-6 rounded-[0.88rem] bg-gray-10 shadow-custom  ">
+        <div className="flex flex-col gap-5  ">
+          <div className="flex justify-between">
+            <div className={`text-c1 text-gray-400 ${font}`}>
+              {displayDate}
+              {archiveDetailData.excerpt.visibility === "PRIVATE" &&
+                " • 나만보기"}
+            </div>
+            <div className={`text-b2 text-gray-400 ${font}`}>
+              {archiveDetailData.excerpt.pageNumber}p
+            </div>
           </div>
-          <div className={`text-st font-semibold text-white ${font}`}>
-            {archiveDetailData.review.reviewTitle}
+          <div className={`text-b2 text-gray-800 ${font}`}>
+            {archiveDetailData.excerpt.excerptContent}
           </div>
-          <div className={`text-b2 text-white ${font}`}>
-            {archiveDetailData.review.reviewContent}
-          </div>
-          <div className="flex gap-4 justify-end">
+          <div className=" flex gap-4 justify-end">
+            <img className="cursor-pointer" src={heart_gray} alt="heart_gray" />
             <img
               className="cursor-pointer"
-              src={heart_white}
-              alt="heart_gray"
-            />
-            <img
-              className="cursor-pointer"
-              src={share_white}
+              src={share_gray}
               alt="share_gray"
               onClick={() => {
                 setBottomSheetShow(true);
@@ -104,4 +105,4 @@ const ReviewDetailComponent = ({ archiveDetailData, font }) => {
     </div>
   );
 };
-export default ReviewDetailComponent;
+export default ExcerptDetailCard;

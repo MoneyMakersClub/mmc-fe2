@@ -20,6 +20,8 @@ import {
 } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { getReadingStatusKey, statusArr } from "../../utils/bookStatus";
+import { useOptimisticUpdate } from "../../hooks/useOptimisticUpdate";
 
 const BookListPage = ({ view }) => {
   const [sort, setSort] = useState("최신순");
@@ -28,13 +30,13 @@ const BookListPage = ({ view }) => {
   const [visible, setVisible] = useState(false);
   const [statusBottomSheet, setStatusBottomSheet] = useState(false); //최신순, 별점순, 제목순 보여주는 바텀시트 보이는지 여부
   const [statusVisible, setStatusVisible] = useState(false);
-  const statusArr = ["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"];
   const [isCancel, setCancel] = useState(true);
   const [sortedBookList, setSortedBookList] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState();
   const [currentState, setCurrentState] = useState({});
 
   const navigate = useNavigate();
+  const { mutate } = useOptimisticUpdate();
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -51,40 +53,14 @@ const BookListPage = ({ view }) => {
     }
   };
 
-  const getReadingStatusKey = (status) => {
-    switch (status) {
-      case "읽고 싶어요":
-        return "NOT_STARTED";
-      case "읽고 있어요":
-        return "READING";
-      case "다 읽었어요":
-        return "FINISHED";
-      case "중단했어요":
-        return "STOPPED";
-      default:
-        return "NOT_STARTED";
-    }
-  };
-
   const { data: bookListData = { bookList: [] } } = useQuery({
     queryKey: ["bookListData", getSortKey(sort)],
     queryFn: () => getTotalBook(getSortKey(sort)),
   });
   useEffect(() => {
-    if (bookListData) {
+    if (bookListData?.bookList) {
       const initialState = bookListData.bookList.reduce((acc, book) => {
         acc[book.userBookId] = book.readStatus;
-        return acc;
-      }, {});
-      setCurrentState(initialState);
-    }
-  }, [bookListData]);
-
-  useEffect(() => {
-    if (bookListData) {
-      const initialState = bookListData.bookList.reduce((acc, book) => {
-        acc[book.userBookId] = book.readStatus;
-        console.log(acc);
         return acc;
       }, {});
       setCurrentState(initialState);
@@ -105,7 +81,7 @@ const BookListPage = ({ view }) => {
 
   const handleTabClick = async (tab) => {
     setTabList((prev) =>
-      prev.includes(tab) ? prev.filter((t) => t !== tab) : [...prev, tab]
+      prev.includes(tab) ? [] : [tab]
     );
     console.log(tabList);
   };
@@ -119,8 +95,10 @@ const BookListPage = ({ view }) => {
     };
     if (tabList.length !== 0) {
       selectSortedList();
+    } else {
+      setSortedBookList([]);
     }
-  }, [tabList]);
+  }, [tabList, sort]);
 
   const handleStatusClick = (userBookId) => {
     setSelectedBookId(userBookId);
@@ -129,29 +107,55 @@ const BookListPage = ({ view }) => {
   };
 
   const handleStatusChange = async (status) => {
-    const initialState = bookListData.bookList.reduce((acc, book) => {
-      acc[book.userBookId] = book.readStatus;
-      return acc;
-    }, {});
-    setCurrentState(initialState);
+    const previousState = currentState[selectedBookId];
+    
+    setStatusVisible(false);
+    setTimeout(() => {
+      setStatusBottomSheet(false);
+    }, 200);
 
-    setCurrentState((prev) => ({
-      ...prev, // 이전 상태를 복사
-      selectedBookId: getReadingStatusKey(status), // index 값을 업데이트
-    }));
-    const res = await patchBookStatus(
-      selectedBookId,
-      getReadingStatusKey(status)
-    );
-    window.location.reload();
-
-    console.log(res);
+    await mutate({
+      apiCall: () => patchBookStatus(selectedBookId, getReadingStatusKey(status)),
+      queryKeys: ["bookListData"],
+      optimisticUpdate: () => {
+        setCurrentState((prev) => ({
+          ...prev,
+          [selectedBookId]: getReadingStatusKey(status),
+        }));
+      },
+      rollback: () => {
+        setCurrentState((prev) => ({
+          ...prev,
+          [selectedBookId]: previousState,
+        }));
+      },
+      onSuccess: async () => {
+        if (tabList.length !== 0) {
+          const statusList = tabList.map((it) => getReadingStatusKey(it));
+          const sortedRes = await getSortedTotalBook(statusList, getSortKey(sort));
+          setSortedBookList(sortedRes.bookList);
+        }
+      },
+    });
   };
 
   const handlePutCancel = async () => {
-    const res = await deleteBook(selectedBookId);
-    console.log(res);
-    window.location.reload();
+    setStatusVisible(false);
+    setTimeout(() => {
+      setStatusBottomSheet(false);
+    }, 200);
+
+    await mutate({
+      apiCall: () => deleteBook(selectedBookId),
+      queryKeys: ["bookListData"],
+      onSuccess: async () => {
+        if (tabList.length !== 0) {
+          const statusList = tabList.map((it) => getReadingStatusKey(it));
+          const sortedRes = await getSortedTotalBook(statusList, getSortKey(sort));
+          setSortedBookList(sortedRes.bookList);
+        }
+      },
+    });
   };
 
   const handleBookClick = (isCustom, bookInfoId) => {

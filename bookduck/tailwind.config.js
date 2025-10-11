@@ -35,6 +35,7 @@ export default {
           50: "#F7F7F7",
           100: "#EEEEEE",
           200: "#E2E2E2",
+          300: "#DDDDDD",
           400: "#ABABAB",
           500: "#8A8A8A",
           600: "#636363",
@@ -53,6 +54,7 @@ export default {
           100: "#FFECA4",
         },
         red: "#EA4520",
+        "red-light": "#F6E5E1",
         special: "#FF9F1C",
       },
       backgroundImage: {
@@ -67,10 +69,10 @@ export default {
       },
       fontSize: {
         t1: ["1.5rem", { lineHeight: "2.25rem" }], //24px
-        t2: ["1.25rem", { lineHeight: "1.75rem" }], //20px /28px
+        t2: ["1.375rem", { lineHeight: "1.875rem" }], //22px /30px
         st: ["1.125rem", { lineHeight: "1.5rem" }], //18px / 24px
-        b1: ["1rem", { lineHeight: "1.5rem" }], //16px / 24px
-        b2: ["0.875rem", { lineHeight: "1.5rem" }], //14px /24px
+        b1: ["1.0625rem", { lineHeight: "1.5rem" }], //17px / 24px
+        b2: ["0.9375rem", { lineHeight: "1.5rem" }], //15px /24px
         btn1: ["1.125rem", { lineHeight: "1.5rem" }],
         btn2: ["1rem", { lineHeight: "1.25rem" }], //16px / 20px
         btn3: ["0.875rem", { lineHeight: "1.25rem" }], //14px / 20px

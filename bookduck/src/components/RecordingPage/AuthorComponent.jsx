@@ -5,7 +5,14 @@ const AuthorComponent = ({ archiveDetailData }) => {
   const navigate = useNavigate();
 
   const handleGotoBookInfo = () => {
-    navigate(`/info/book/custom/${archiveDetailData.bookInfoId}`);
+    const bookInfoId = archiveDetailData.bookInfoId;
+    const isCustom = archiveDetailData.isCustom;
+    
+    if (isCustom) {
+      navigate(`/info/book/custom/${bookInfoId}`);
+    } else {
+      navigate(`/info/book/${bookInfoId}`);
+    }
   };
   return (
     <>

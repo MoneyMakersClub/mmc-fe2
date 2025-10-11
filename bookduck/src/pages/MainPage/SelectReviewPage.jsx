@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { get, post } from "../../api/example";
 import { useNavigate } from "react-router-dom";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import SearchComponent from "../../components/common/SearchComponent";
-import ReviewCard from "../../components/MainPage/ReviewCard";
+import HomeReviewCard from "../../components/MainPage/HomeReviewCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
 
 const SelectReviewPage = () => {
@@ -124,7 +124,7 @@ const SelectReviewPage = () => {
 
   return (
     <div className="w-full">
-      <Header3 title="한줄평 카드 위젯" />
+      <NavigationHeader title="한줄평 카드 위젯" />
       <div className="mt-[0.62rem] mb-4">
         <SearchComponent
           placeholder="제목이나 작가로 작성한 카드를 검색하세요"
@@ -134,7 +134,7 @@ const SelectReviewPage = () => {
       </div>
       <div className="flex flex-col gap-4 px-5">
         {reviews.map((review, index) => (
-          <ReviewCard
+          <HomeReviewCard
             key={index}
             selected={reviewId === review.oneLineId ? true : false}
             content={review.oneLineContent}

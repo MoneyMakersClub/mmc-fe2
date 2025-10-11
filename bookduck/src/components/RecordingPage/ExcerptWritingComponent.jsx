@@ -4,7 +4,7 @@ import PublicRange from "./PublicRange";
 import { useEffect, useState } from "react";
 import { postExtractImage } from "../../api/archive";
 
-const ExtractWritingComponent = ({
+const ExcerptWritingComponent = ({
   inputValue,
   setInputValue,
   handleTextField,
@@ -40,19 +40,6 @@ const ExtractWritingComponent = ({
               privateShow={privateShow}
               handleToggle={handleToggle}
             />
-            <label
-              htmlFor="ExtractImage"
-              className="flex gap-[0.47rem] items-center cursor-pointer"
-            >
-              <img src={camera} alt="camera" />
-              <div className="text-b2 text-gray-500">문장스캔</div>
-            </label>
-            <input
-              id="ExtractImage"
-              type="file"
-              className="hidden"
-              onChange={handleExtractImage}
-            />
           </div>
         </div>
         <div onClick={handleTextField} className="cursor-pointer">
@@ -79,4 +66,4 @@ const ExtractWritingComponent = ({
     </>
   );
 };
-export default ExtractWritingComponent;
+export default ExcerptWritingComponent;

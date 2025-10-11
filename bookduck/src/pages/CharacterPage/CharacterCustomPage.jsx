@@ -3,7 +3,7 @@ import UserDuck from "../../components/CharacterPage/UserDuck";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import Skin from "../../components/CharacterPage/Skin";
 import ButtonComponent from "../../components/common/ButtonComponent";
-import Header3 from "../../components/common/Header3";
+import NavigationHeader from "../../components/common/NavigationHeader";
 import { getUserId } from "../../api/oauth";
 import { getItemLists, patchUserItem } from "../../api/character";
 const CharacterCustomPage = () => {
@@ -137,7 +137,7 @@ const CharacterCustomPage = () => {
 
   return (
     <div className=" flex flex-col bg-orange-50">
-      <Header3 title="" />
+      <NavigationHeader title="" />
       <div className="flex justify-center h-[317px]">
         <UserDuck userId={getUserId()} selectedItems={selectedItems} />
       </div>

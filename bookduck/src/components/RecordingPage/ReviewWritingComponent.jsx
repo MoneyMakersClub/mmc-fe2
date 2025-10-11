@@ -34,20 +34,6 @@ const ReviewWritingComponent = ({
               setReviewPrivateShow={setReviewPrivateShow}
               handleToggle={handleToggle}
             />
-            <div className="flex items-center cursor-pointer">
-              {reviewColor ? (
-                <Cards stroke={reviewColor} />
-              ) : (
-                <img src={cards} />
-              )}
-              <div
-                onClick={handleDecoration}
-                style={reviewColor ? { color: reviewColor } : undefined} // bgColor가 있을 때만 style 적용
-                className={`text-b2 ${reviewColor ? "" : "text-gray-500"}`} // bgColor가 없을 때 gray-500 사용
-              >
-                카드색상
-              </div>
-            </div>
           </div>
         </div>
         <div onClick={handleTextField} className="cursor-pointer">

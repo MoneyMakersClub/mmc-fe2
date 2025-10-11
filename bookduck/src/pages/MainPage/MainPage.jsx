@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { get } from "../../api/example";
 import { getUserId } from "../../api/oauth";
 import BottomNavbar from "../../components/common/BottomNavbar";
-import Header2 from "../../components/common/Header2";
+import MainHeader from "../../components/common/MainHeader";
 import ReadingSpaceComponent from "../../components/MainPage/ReadingSpaceComponent";
 import right from "../../assets/common/right-yellow.svg";
 import BookCountDisplay from "../../components/MainPage/BookCountDisplay";
 import DeleteModal from "../../components/common/modal/DeleteModal";
 import { useSSE } from "../../context/SSEProvider";
 import FullModal from "../../components/MainPage/FullModal";
-import FloatingRecordButton from "../../components/common/FloatingRecordButton";
 import UserDuck from "../../components/CharacterPage/UserDuck";
 // API 호출 함수
 const getUserInfo = async (userId) => {
@@ -92,7 +91,7 @@ const MainPage = () => {
   return (
     <div className={`${color} w-full relative overflow-hidden h-screen`}>
       <div className="px-4">
-        <Header2 isDot={isDot} />
+        <MainHeader isDot={isDot} />
       </div>
       <div className="pl-5 mt-[1.75rem] w-full">
         <div className="text-t2 font-semibold text-black">
@@ -157,14 +156,6 @@ const MainPage = () => {
           setIsAllDelete={setIsAllDelete}
           setIsFloatingVisible={setIsFloatingVisible}
         />
-        {isFloatingVisible && (
-          <div className="absolute right-0  bottom-24 z-50">
-            <FloatingRecordButton
-              text={!JSON.parse(localStorage.getItem("isFirstLogin"))}
-              handleNavigate={() => navigate("/selectbook")}
-            />
-          </div>
-        )}
       </div>
       {isNavBar && <BottomNavbar />}
       {showDeleteModal && (
