@@ -118,8 +118,6 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
 
   const handleBookClick = (bookInfoId, providerId) => {
     console.log(bookInfoId, providerId);
-    // 현재 경로 저장
-    sessionStorage.setItem('previousPath', window.location.pathname);
     
     if (bookInfoId === null) {
       navigate(`/info/book/external/${providerId}`);
@@ -129,8 +127,6 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
   };
 
   const handleCustomBookClick = (bookInfoId) => {
-    // 현재 경로 저장
-    sessionStorage.setItem('previousPath', window.location.pathname);
     navigate(`/info/book/custom/${bookInfoId}`);
   };
 

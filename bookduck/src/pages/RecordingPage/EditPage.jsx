@@ -239,24 +239,36 @@ const EditPage = () => {
     //   providerId: "Q7uTBgAAQBAJTEST3",
     // },
 
-    const res = await putDetailExtractReview(archiveId, data);
+    await putDetailExtractReview(archiveId, data);
     
+    // PATCH 후 데이터를 다시 조회
+    const detailData = await getDetailExtractReview(archiveId);
 
-    const hasExcerpt = data.excerpt;
-    const hasReview = data.review;
+    const hasExcerpt = detailData.excerpt;
+    const hasReview = detailData.review;
     
     if (hasExcerpt && hasReview) {
-      navigate(`/total-archive-detail/${archiveId}`, {
-        state: { detailData: res, fromEdit: true }
-      });
+      // -2로 이동 후 replace로 다시 detail 페이지 열기
+      navigate(-2);
+      setTimeout(() => {
+        navigate(`/total-archive-detail/${archiveId}`, {
+          state: { detailData }
+        });
+      }, 0);
     } else if (hasReview) {
-      navigate(`/review-archive-detail/${archiveId}`, {
-        state: { detailData: res, fromEdit: true }
-      });
+      navigate(-2);
+      setTimeout(() => {
+        navigate(`/review-archive-detail/${archiveId}`, {
+          state: { detailData }
+        });
+      }, 0);
     } else if (hasExcerpt) {
-      navigate(`/excerpt-archive-detail/${archiveId}`, {
-        state: { detailData: res, fromEdit: true }
-      });
+      navigate(-2);
+      setTimeout(() => {
+        navigate(`/excerpt-archive-detail/${archiveId}`, {
+          state: { detailData }
+        });
+      }, 0);
     } else {
       navigate(-1);
     }

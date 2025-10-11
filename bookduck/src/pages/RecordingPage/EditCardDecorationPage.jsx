@@ -57,7 +57,8 @@ const EditCardDecorationPage = () => {
 
   const handleComplete = () => {
     navigate(`/recording/edit/${archiveId}`, { 
-      state: { color: reviewColor }
+      state: { color: reviewColor },
+      replace: true // 히스토리에서 decoration 제거
     });
   };
 

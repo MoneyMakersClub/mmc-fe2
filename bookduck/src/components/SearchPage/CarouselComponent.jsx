@@ -47,7 +47,6 @@ const CarouselComponent = ({ books }) => {
 
   // 책 클릭 핸들러
   const handleBookClick = (bookInfoId) => {
-    sessionStorage.setItem('previousPath', window.location.pathname);
     navigate(`/info/book/${bookInfoId}`);
   };
 

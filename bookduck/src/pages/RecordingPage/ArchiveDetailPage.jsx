@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import ExcerptDetailCard from "../../components/RecordingPage/ExcerptDetailCard";
 import DeleteModal from "../../components/common/modal/DeleteModal";
 import BottomSheetModal2 from "../../components/BookInfoPage/BottomSheetModal2";
-import { delExtractReview } from "../../api/archive";
+import { delExtractReview, getDetailExtractReview } from "../../api/archive";
 
 const ArchiveDetail = () => {
   const {
@@ -38,29 +38,37 @@ const ArchiveDetail = () => {
   const [excerptClick, setExcerptClick] = useState(false);
   const [reviewClick, setReviewClick] = useState(false);
   const navigate = useNavigate();
+  const [archiveDetailData, setArchiveDetailData] = useState(location.state?.detailData || {});
 
-  const archiveDetailData = location.state?.detailData || {};
   const ref = useRef(null); // 두 컴포넌트의 높이를 측정할 ref
 
   useEffect(() => {
-    setExcerptId(archiveDetailData.excerpt?.excerptId);
-    setReviewId(archiveDetailData.review?.reviewId);
-  }, []);
+    const fetchArchiveData = async () => {
+      // location.state가 없으면 (뒤로가기로 왔을 때) 데이터 다시 조회
+      if (!location.state?.detailData) {
+        try {
+          const data = await getDetailExtractReview(id);
+          setArchiveDetailData(data);
+          setExcerptId(data.excerpt?.excerptId);
+          setReviewId(data.review?.reviewId);
+        } catch (error) {
+          console.error("Failed to fetch archive data:", error);
+        }
+      } else {
+        setExcerptId(archiveDetailData.excerpt?.excerptId);
+        setReviewId(archiveDetailData.review?.reviewId);
+      }
+    };
+
+    fetchArchiveData();
+  }, [id, location.state]);
 
   const handleMenu = () => {
     setVisibleMenu(true);
   };
 
   const handleBack = () => {
-    // edit에서 온 경우만 특별 처리
-    const fromEdit = location.state?.fromEdit;
-    if (fromEdit) {
-      // edit에서 왔으면 -2 (edit과 decoration을 건너뜀)
-      navigate(-2);
-    } else {
-      // 일반적인 경우: 브라우저 히스토리 뒤로가기
-      navigate(-1);
-    }
+    navigate(-1);
   };
 
   const handleCancel = () => {
@@ -111,7 +119,8 @@ const ArchiveDetail = () => {
   };
 
   const handleEdit = () => {
-    navigate(`/recording/edit/${id}`, { state: {} });
+    // /edit로 이동 (originalPath 전달하지 않음)
+    navigate(`/recording/edit/${id}`);
   };
 
   const handleExcerptClick = () => {
