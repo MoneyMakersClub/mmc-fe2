@@ -77,7 +77,7 @@ export default {
         btn2: ["1rem", { lineHeight: "1.25rem" }], //16px / 20px
         btn3: ["0.875rem", { lineHeight: "1.25rem" }], //14px / 20px
         btn4: ["0.75rem", { lineHeight: "1rem" }], //12px / 16px
-        c1: ["0.75rem", { lineHeight: "1rem" }],
+        c1: ["0.75rem", { lineHeight: "1rem" }], //12px / 16px
         c3: ["2rem", { lineHeight: "2.25rem" }], //32px / 36px
       },
       fontWeight: {

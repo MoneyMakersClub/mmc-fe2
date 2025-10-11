@@ -119,7 +119,7 @@ const ArchiveDetail = () => {
   };
 
   const handleEdit = () => {
-    // /edit로 이동 (originalPath 전달하지 않음)
+    // /edit로 이동
     navigate(`/recording/edit/${id}`);
   };
 
