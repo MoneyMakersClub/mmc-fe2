@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import record_icon from "../../assets/recordingPage/record-icon.svg";
-import record_icon_circle from "../../assets/recordingPage/record-circle-icon.svg";
+import floatingRecordWhite from "../../assets/common/floating-record-white.svg";
 import { useNavigate } from "react-router-dom";
+
 const FloatingRecordButton = ({ handleNavigate, text = true }) => {
   const [internalText, setInternalText] = useState(text);
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ const FloatingRecordButton = ({ handleNavigate, text = true }) => {
 
   return (
     <>
+      {/* 기록하기 텍스트 버튼 */}
       <div
         className={`transition-all duration-500 ease-in-out z-50 ${
           internalText ? "opacity-100" : "opacity-0"
@@ -30,28 +31,31 @@ const FloatingRecordButton = ({ handleNavigate, text = true }) => {
         {internalText ? (
           <div
             onClick={handleNavigate}
-            className="flex gap-[0.75rem] justify-center items-center w-[7.8rem] h-[3.5rem] p-[1rem] mr-[1rem] rounded-[6.25rem] bg-gray-700"
+            className="flex gap-[0.75rem] justify-center items-center h-[3.5rem] px-[1.25rem] mr-[1rem] rounded-[6.25rem] bg-gray-700 cursor-pointer"
           >
-            <img src={record_icon} alt="record_icon" />
-            <div className="text-b1 font-semibold text-[#FFFFFF]">기록하기</div>
+            <img src={floatingRecordWhite} alt="record_icon" className="w-6 h-6" />
+            <div className="text-btn1 font-semibold text-white whitespace-nowrap">기록하기</div>
           </div>
         ) : null}
       </div>
+
+      {/* 동그라미 버튼 */}
       <div
-        className={`transition-all duration-500 ease-in-out transfrom ${
+        className={`transition-all duration-500 ease-in-out transform ${
           internalText ? "opacity-0" : "opacity-100"
         }`}
       >
         {!internalText ? (
-          <img
+          <div
             onClick={handleClick}
-            className="mr-[1rem] cursor-pointer"
-            src={record_icon_circle}
-            alt="record_icon_circle"
-          />
+            className="flex justify-center items-center w-[3.5rem] h-[3.5rem] mr-[1rem] rounded-full bg-gray-700 cursor-pointer shadow-lg"
+          >
+            <img src={floatingRecordWhite} alt="record_icon" className="w-6 h-6" />
+          </div>
         ) : null}
       </div>
     </>
   );
 };
+
 export default FloatingRecordButton;

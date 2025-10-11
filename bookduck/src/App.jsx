@@ -13,6 +13,8 @@ import CharacterPage from "./pages/CharacterPage/CharacterPage";
 import MyBadgePage from "./pages/CharacterPage/MyBadgePage";
 import CharacterCustomPage from "./pages/CharacterPage/CharacterCustomPage";
 import BookclubPage from "./pages/BookclubPage/BookclubPage";
+import CreateBookclubPage from "./pages/BookclubPage/CreateBookclubPage";
+import SelectBookForClubPage from "./pages/BookclubPage/SelectBookForClubPage";
 import SelectBookPage from "./pages/RecordingPage/SelectBookPage";
 import ArchivePage from "./pages/RecordingPage/ArchivePage";
 import ArchiveDetail from "./pages/RecordingPage/ArchiveDetailPage";
@@ -172,8 +174,10 @@ function App() {
 
         {/* 북클럽 관련 */}
         <Route path="/bookclub" element={<BookclubPage />} />
+        <Route path="/bookclub/create" element={<CreateBookclubPage />} />
+        <Route path="/select-book-for-club" element={<SelectBookForClubPage />} />
 
-        {/* 도서관 관련 */}
+        {/* 서재 관련 */}
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/library/bookcase/:id" element={<EnterBookCasePage />} />
 

@@ -24,7 +24,7 @@ const ReviewCard = ({ reviewData, archive = false, font, onClick }) => {
           </div>
           <div className={`text-b2 text-white ${font}`}>{content}</div>
         </div>
-        <div className={`text-c2 text-white/60 ${font}`}>
+        <div className={`text-c1 text-white/60 ${font}`}>
           {title && author && `${title} / ${author}`}
         </div>
       </div>

@@ -44,7 +44,7 @@ const BookCaseComponent = ({
               <div key={index} className="w-16 h-23 flex-shrink-0">
                 <img
                   src={it.imgPath ? it.imgPath : imgEx}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-[0.25rem]"
                 />
               </div>
             ))}

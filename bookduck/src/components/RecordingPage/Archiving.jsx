@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSortedTotalBook } from "../../api/library";
 import useBookInfoStore from "../../store/useBookInfoStore";
 import bookEx from "../../assets/common/book-cover-ex.svg";
-const Archiving = () => {
+const Archiving = ({ onBookSelect }) => {
   const navigate = useNavigate();
   const { setBookInfo } = useBookInfoStore();
 
@@ -19,8 +19,12 @@ const Archiving = () => {
 
   const handleRecording = (bookInfo) => {
     console.log(bookInfo);
-    setBookInfo(bookInfo);
-    navigate("/recording");
+    if (onBookSelect) {
+      onBookSelect(bookInfo);
+    } else {
+      setBookInfo(bookInfo);
+      navigate("/recording");
+    }
   };
 
   return (

@@ -265,7 +265,7 @@ const ReadingSpaceComponent = ({
                       <img src={helpCircle} onClick={handleHelpClick} />
                     )}
                     {isEditMode && (
-                      <div className="py-2 px-4 text-c1 ml-2 bg-[#E8E4D5] rounded-[6.25rem]">
+                      <div className="py-2 px-4 text-btn4 ml-2 bg-[#E8E4D5] rounded-[6.25rem]">
                         카드를 드래그하여 이동해보세요
                       </div>
                     )}

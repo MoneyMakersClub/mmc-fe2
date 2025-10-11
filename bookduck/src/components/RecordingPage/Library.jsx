@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import useBookInfoStore from "../../store/useBookInfoStore";
 import bookEx from "../../assets/common/bookImg-ex.svg";
 
-const Library = () => {
+const Library = ({ onBookSelect }) => {
   const navigate = useNavigate();
   const { setBookInfo } = useBookInfoStore();
 
@@ -19,8 +19,12 @@ const Library = () => {
   });
 
   const handleRecording = (book) => {
-    setBookInfo(book);
-    navigate("/recording");
+    if (onBookSelect) {
+      onBookSelect(book);
+    } else {
+      setBookInfo(book);
+      navigate("/recording");
+    }
   };
   return (
     <div className="flex flex-col mx-4">

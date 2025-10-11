@@ -49,7 +49,7 @@ const BookInfoExternalPage = () => {
             <InfoView bookData={bookData?.bookInfoDetailDto} />
           )}
           <div className="fixed bottom-[2.625rem] flex justify-end w-[24.5625rem] cursor-pointer">
-            <FloatingRecordButton />
+            <FloatingRecordButton text={false} />
           </div>
         </div>
       </div>

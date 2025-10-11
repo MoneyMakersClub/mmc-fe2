@@ -22,7 +22,7 @@ const HomeExcerptCard = ({
           {visibility === "PRIVATE" && (
             <div className="flex items-center">
               <img src={lock} />
-              <span className="text-c1">나만보기</span>
+              <span className="text-btn4">나만보기</span>
             </div>
           )}
           <div>{pageNumber || "페이지"}p</div>
@@ -31,7 +31,7 @@ const HomeExcerptCard = ({
           <div className="text-b2 text-gray-800">
             {content || "발췌 카드 위젯을 만들어보세요"}
           </div>
-          <div className="text-c2 text-gray-400">
+          <div className="text-c1 text-gray-400">
             {title || "제목"} / {author || "작가"}
           </div>
         </div>

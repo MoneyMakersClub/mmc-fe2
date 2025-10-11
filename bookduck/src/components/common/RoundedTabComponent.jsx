@@ -13,22 +13,19 @@ const RoundedTabComponent = ({
           <div
             onClick={() => onTabClick(tab)}
             key={index}
-            className={`h-7 px-3 py-[0.38rem] rounded-[1.88rem] ${
+            className={`px-[0.75rem] py-[0.38rem] rounded-[1.88rem] ${
               type === "primary"
-
                 ? (multiple ? activeTabs.includes(tab) : activeTab === tab)
-                  ? "w-18 bg-gray-700"
-                  : "w-18 border-[0.0625rem] border-gray-200 bg-gray-50"
+                  ? "bg-gray-700"
+                  : "border-[0.0625rem] border-gray-200 bg-gray-50"
                 : (multiple ? activeTabs.includes(tab) : activeTab === tab)
-                ? "w-20 bg-orange-400"
-                : "w-20 border-[0.0625rem] border-gray-200 bg-gray-50"
-            }  text-c1 cursor-pointer`}
+                ? "bg-orange-400"
+                : "border-[0.0625rem] border-gray-200 bg-gray-50"
+            } text-btn4 cursor-pointer`}
 
           >
             <div
-              className={`flex justify-center items-center ${
-                type === "primary" ? "w-[3rem]" : "w-[3.5rem]"
-              } h-4 text-c1 ${
+              className={`flex justify-center items-center text-btn4 whitespace-nowrap ${
                 (multiple ? activeTabs.includes(tab) : activeTab === tab)
                   ? "text-white"
                   : "text-gray-400"

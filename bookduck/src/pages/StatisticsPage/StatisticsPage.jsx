@@ -84,12 +84,13 @@ const StatisticsPage = () => {
   return (
     <div className="flex flex-col pb-[11.25rem]">
       <NavigationHeader title="독서 리포트" />
-      <UserCard
-        nickname={userData?.nickname}
-        userId={userId}
-        duckTitle={userData?.duckTitle}
-        genreToKorean={genreToKorean}
-      />
+      <div className="pt-[calc(env(safe-area-inset-top)+2.75rem)]">
+        <UserCard
+          nickname={userData?.nickname}
+          userId={userId}
+          duckTitle={userData?.duckTitle}
+          genreToKorean={genreToKorean}
+        />
       <div className="flex flex-col pt-6 px-7 pb-7 gap-7 bg-gray-50">
         <div className="text-b1 font-semibold">
           {userData?.isFirstHalf ? "상반기" : "하반기"} 기록은 총{" "}
@@ -130,6 +131,7 @@ const StatisticsPage = () => {
       </div>
       <div className="flex justify-center">
         {isMyPage && hasKeywords && <SummaryFloatingButton />}
+      </div>
       </div>
     </div>
   );
