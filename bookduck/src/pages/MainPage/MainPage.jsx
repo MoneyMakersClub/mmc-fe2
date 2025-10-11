@@ -11,7 +11,6 @@ import BookCountDisplay from "../../components/MainPage/BookCountDisplay";
 import DeleteModal from "../../components/common/modal/DeleteModal";
 import { useSSE } from "../../context/SSEProvider";
 import FullModal from "../../components/MainPage/FullModal";
-import FloatingRecordButton from "../../components/common/FloatingRecordButton";
 import UserDuck from "../../components/CharacterPage/UserDuck";
 // API 호출 함수
 const getUserInfo = async (userId) => {
@@ -157,14 +156,6 @@ const MainPage = () => {
           setIsAllDelete={setIsAllDelete}
           setIsFloatingVisible={setIsFloatingVisible}
         />
-        {isFloatingVisible && (
-          <div className="absolute right-0  bottom-24 z-50">
-            <FloatingRecordButton
-              text={!JSON.parse(localStorage.getItem("isFirstLogin"))}
-              handleNavigate={() => navigate("/selectbook")}
-            />
-          </div>
-        )}
       </div>
       {isNavBar && <BottomNavbar />}
       {showDeleteModal && (
