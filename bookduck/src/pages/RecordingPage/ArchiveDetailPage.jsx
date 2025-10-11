@@ -2,11 +2,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
 import AuthorComponent from "../../components/RecordingPage/AuthorComponent";
-import CloseButton from "../../components/RecordingPage/CloseButton";
 import Header2 from "../../components/RecordingPage/Header2";
-import ReviewDetailComponent from "../../components/RecordingPage/ReviewDetailComponent";
+import ReviewDetailCard from "../../components/RecordingPage/ReviewDetailCard";
 import { useEffect, useRef, useState } from "react";
-import ExtractDetailComponent from "../../components/RecordingPage/ExtractDetailComponent";
+import ExcerptDetailCard from "../../components/RecordingPage/ExcerptDetailCard";
 import DeleteModal from "../../components/common/modal/DeleteModal";
 import BottomSheetModal2 from "../../components/BookInfoPage/BottomSheetModal2";
 import { delExtractReview } from "../../api/archive";
@@ -38,18 +37,35 @@ const ArchiveDetail = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [excerptClick, setExcerptClick] = useState(false);
   const [reviewClick, setReviewClick] = useState(false);
+  const [previousPath, setPreviousPath] = useState(null); // 이전 경로 저장
   const navigate = useNavigate();
+
+  const archiveDetailData = location.state?.detailData || {};
+  const ref = useRef(null); // 두 컴포넌트의 높이를 측정할 ref
 
   useEffect(() => {
     setExcerptId(archiveDetailData.excerpt?.excerptId);
     setReviewId(archiveDetailData.review?.reviewId);
+    
+    // 진입 시점의 이전 경로 저장 (세션 스토리지 활용)
+    const savedPath = sessionStorage.getItem('previousPath');
+    if (savedPath) {
+      setPreviousPath(savedPath);
+    }
   }, []);
-  const archiveDetailData = location.state?.detailData || {};
-  console.log(archiveDetailData);
-  const ref = useRef(null); // 두 컴포넌트의 높이를 측정할 ref
 
   const handleMenu = () => {
     setVisibleMenu(true);
+  };
+
+  const handleBack = () => {
+    // 저장된 이전 경로가 있으면 그곳으로, 없으면 -1
+    if (previousPath) {
+      sessionStorage.removeItem('previousPath'); // 사용 후 제거
+      navigate(previousPath);
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleCancel = () => {
@@ -86,19 +102,15 @@ const ArchiveDetail = () => {
     const archiveId = id;
     if (excerptClick && reviewClick) {
       const res = await delExtractReview({ archiveId, excerptId, reviewId });
-      console.log("전체 삭제", res);
       navigate("/archive");
     } else if (excerptClick) {
       const res = await delExtractReview({ archiveId, excerptId });
-      console.log("빨췌 삭제", res);
       navigate("/archive");
     } else if (reviewClick) {
       const res = await delExtractReview({ archiveId, reviewId });
-      console.log("리뷰 삭제", res);
       navigate("/archive");
     } else {
       const res = await delExtractReview({ archiveId, excerptId, reviewId });
-      console.log("삭제", res);
       navigate("/archive");
     }
   };
@@ -124,13 +136,13 @@ const ArchiveDetail = () => {
       )}
       <div className=" mx-4">
         <div className="flex flex-col gap-[0.31rem]">
-          <Header2 handleMenu={handleMenu} />
+          <Header2 handleMenu={handleMenu} handleBack={handleBack} />
           <div ref={ref} className="flex flex-col gap-4">
             {pathname.split("/")[1] === "excerpt-archive-detail" && (
-              <ExtractDetailComponent archiveDetailData={archiveDetailData} />
+              <ExcerptDetailCard archiveDetailData={archiveDetailData} />
             )}
             {pathname.split("/")[1] === "review-archive-detail" && (
-              <ReviewDetailComponent
+              <ReviewDetailCard
                 archiveDetailData={archiveDetailData}
                 font={font}
               />
@@ -141,7 +153,7 @@ const ArchiveDetail = () => {
                   onClick={handleExcerptClick}
                   className={`${excerptClick ? "z-10" : ""}`}
                 >
-                  <ExtractDetailComponent
+                  <ExcerptDetailCard
                     archiveDetailData={archiveDetailData}
                     font={font}
                   />
@@ -150,7 +162,7 @@ const ArchiveDetail = () => {
                   onClick={handleReviewClick}
                   className={`${reviewClick ? "z-10" : ""}`}
                 >
-                  <ReviewDetailComponent
+                  <ReviewDetailCard
                     archiveDetailData={archiveDetailData}
                     font={font}
                   />
@@ -162,15 +174,6 @@ const ArchiveDetail = () => {
               archiveDetailData={archiveDetailData}
               font={font}
             />
-          </div>
-          <div
-            className={`mt-8 ${
-              isHeightExceeded
-                ? "mb-[1.38rem]"
-                : "absolute bottom-[1.38rem] left-1/2 -translate-x-1/2"
-            }`}
-          >
-            <CloseButton />
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Divider1 from "../common/Divider1";
 import Divider2 from "../common/Divider2";
 import UserComment from "./UserComment";
 import { getRelatedBookInfo } from "../../api/bookinfo";
+import CarouselComponent from "../SearchPage/CarouselComponent";
 
 const InfoView = ({ bookData, ratingData }) => {
   const { bookinfoId } = useParams();
@@ -22,7 +23,6 @@ const InfoView = ({ bookData, ratingData }) => {
     const fetchData = async () => {
       try {
         const res = await getRelatedBookInfo({ bookinfoId });
-        console.log("조회 성공: ", res?.bookList);
         setRelatedBookData(res?.bookList || []); // 응답이 없을 경우 빈 배열로 설정
       } catch (err) {
         console.error("오류 발생: ", err);
@@ -60,24 +60,11 @@ const InfoView = ({ bookData, ratingData }) => {
       )}
       <Divider1 />
       {relatedBookData?.length > 0 && ( // 데이터가 있을 때만 렌더링
-        <div className="flex flex-col px-4 gap-6 text-b1 font-semibold">
-          이 책을 읽은 사용자들이 읽은 다른 책
-          <div className="flex gap-3 overflow-x-scroll w-full">
-            {relatedBookData.map((book, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2"
-                style={{ width: "6.5rem", minWidth: "6.5rem" }}
-              >
-                <img
-                  className="w-[6.5rem] h-[9.75rem] rounded-[0.25rem]"
-                  src={book.imgPath}
-                  alt={`book-cover-${index}`}
-                />
-                {book.title}
-              </div>
-            ))}
+        <div className="flex flex-col px-4 gap-6">
+          <div className="text-b1 font-semibold">
+            이 책을 읽은 사용자들이 읽은 다른 책
           </div>
+          <CarouselComponent books={relatedBookData} />
         </div>
       )}
     </div>

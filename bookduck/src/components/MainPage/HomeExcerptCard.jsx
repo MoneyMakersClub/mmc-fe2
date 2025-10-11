@@ -1,5 +1,5 @@
 import lock from "../../assets/mainPage/lock.svg";
-const ExtractCard = ({
+const HomeExcerptCard = ({
   title,
   author,
   pageNumber,
@@ -39,4 +39,4 @@ const ExtractCard = ({
     </div>
   );
 };
-export default ExtractCard;
+export default HomeExcerptCard;

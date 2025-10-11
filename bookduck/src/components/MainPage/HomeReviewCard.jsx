@@ -1,7 +1,7 @@
 import React from "react";
 import emptyImage from "../../assets/recordingPage/rating-empty.svg";
 import filledImage from "../../assets/recordingPage/rating-filled.svg";
-const ReviewCard = ({
+const HomeReviewCard = ({
   cardId,
   cardIndex,
   selected,
@@ -42,4 +42,4 @@ const ReviewCard = ({
   );
 };
 
-export default ReviewCard;
+export default HomeReviewCard;

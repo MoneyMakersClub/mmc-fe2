@@ -4,7 +4,7 @@ import PublicRange from "./PublicRange";
 import { useEffect, useState } from "react";
 import { postExtractImage } from "../../api/archive";
 
-const ExtractWritingComponent = ({
+const ExcerptWritingComponent = ({
   inputValue,
   setInputValue,
   handleTextField,
@@ -66,4 +66,4 @@ const ExtractWritingComponent = ({
     </>
   );
 };
-export default ExtractWritingComponent;
+export default ExcerptWritingComponent;

@@ -33,7 +33,6 @@ const BookInfo = ({ isMe = "default", bookData }) => {
       try {
         const statusKey = getReadingStatusKey(status);
         await patch(`/books/${bookBasicData.userbookId}?status=${statusKey}`);
-        console.log(`책 상태 업데이트 성공: ${statusKey}`);
         setVisible(false);
         setTimeout(() => {
           setBottomSheetShow(false);

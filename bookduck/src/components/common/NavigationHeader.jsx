@@ -21,7 +21,7 @@ const NavigationHeader = ({
     navigate(-1);
   };
   return (
-    <div className="flex justify-between items-center h-[2.75rem] mx-4">
+    <div className="fixed top-0 left-0 right-0 bg-white z-50 pt-[env(safe-area-inset-top)] flex justify-between items-center h-[2.75rem] px-4">
       <div className="flex items-center">
         <div className="cursor-pointer">
           <img onClick={handleBackClick} src={header_arrow} alt="arrow" />
@@ -30,12 +30,14 @@ const NavigationHeader = ({
       </div>
       {check && (
         <div className="flex gap-6">
-          <div
-            onClick={handleCancel}
-            className="text-b1 text-gray-400 cursor-pointer"
-          >
-            취소
-          </div>
+          {handleCancel && (
+            <div
+              onClick={handleCancel}
+              className="text-b1 text-gray-400 cursor-pointer"
+            >
+              취소
+            </div>
+          )}
           <div
             onClick={handleComplete}
             className="text-b1 text-blue-400 cursor-pointer"

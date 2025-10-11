@@ -3,7 +3,7 @@ import { get, post } from "../../api/example";
 import { useNavigate } from "react-router-dom";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import SearchComponent from "../../components/common/SearchComponent";
-import ReviewCard from "../../components/MainPage/ReviewCard";
+import HomeReviewCard from "../../components/MainPage/HomeReviewCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
 
 const SelectReviewPage = () => {
@@ -134,7 +134,7 @@ const SelectReviewPage = () => {
       </div>
       <div className="flex flex-col gap-4 px-5">
         {reviews.map((review, index) => (
-          <ReviewCard
+          <HomeReviewCard
             key={index}
             selected={reviewId === review.oneLineId ? true : false}
             content={review.oneLineContent}

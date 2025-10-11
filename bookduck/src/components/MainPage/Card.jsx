@@ -1,13 +1,13 @@
 import React from "react";
-import ExtractCard from "./ExtractCard";
-import ReviewCard from "./ReviewCard";
+import HomeExcerptCard from "./HomeExcerptCard";
+import HomeReviewCard from "./HomeReviewCard";
 import OneBookCard from "./OneBookCard";
 import BookDisplay from "./BookDisplay";
 const Card = ({ card }) => {
   switch (card.cardType) {
     case "EXCERPT":
       return (
-        <ExtractCard
+        <HomeExcerptCard
           cardId={card.cardId}
           cardIndex={card.cardIndex}
           title={card.title}
@@ -18,7 +18,7 @@ const Card = ({ card }) => {
       );
     case "ONELINE":
       return (
-        <ReviewCard
+        <HomeReviewCard
           cardId={card.cardId}
           cardIndex={card.cardIndex}
           title={card.title}

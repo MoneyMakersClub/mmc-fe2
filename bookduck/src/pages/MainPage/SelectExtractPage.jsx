@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { get, post } from "../../api/example";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import SearchComponent from "../../components/common/SearchComponent";
-import ExtractCard from "../../components/MainPage/ExtractCard";
+import HomeExcerptCard from "../../components/MainPage/HomeExcerptCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
 
 const SelectExtractPage = () => {
@@ -141,7 +141,7 @@ const SelectExtractPage = () => {
       <div className="flex flex-col gap-4 px-5">
         {excerpts.length > 0 &&
           excerpts.map((excerpt, index) => (
-            <ExtractCard
+            <HomeExcerptCard
               key={index}
               onClick={() => handleSelectCard(excerpt.excerptId)}
               selected={excerptId === excerpt.excerptId ? true : false}

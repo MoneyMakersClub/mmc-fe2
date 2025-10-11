@@ -17,7 +17,7 @@ const SelectBookPage = () => {
     <>
       <div className="">
         <NavigationHeader title="기록할 책 선택" />
-        <div className="">
+        <div className="pt-[calc(env(safe-area-inset-top)+2.75rem)]">
           <div className=" flex justify-center items-center h-[2.75rem] mb-[0.75rem] border-b-[0.1375rem] border-gray-50">
             <TabBarComponent
               tabs={["읽고 있어요", "서재", "검색하기", "직접 등록"]}
