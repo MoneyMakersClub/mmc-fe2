@@ -68,17 +68,16 @@ export default {
           "linear-gradient(199deg, #FFF 53.87%, #FFFAE6 87.72%)",
       },
       fontSize: {
-        t1: ["1.5rem", { lineHeight: "2.25rem" }], //24px
-        t2: ["1.375rem", { lineHeight: "1.875rem" }], //22px /30px
+        t1: ["1.375rem", { lineHeight: "1.875rem" }], //22px /30px
+        t2: ["1.25rem", { lineHeight: "1.5rem" }], //20px /24px
         st: ["1.125rem", { lineHeight: "1.5rem" }], //18px / 24px
-        b1: ["1.0625rem", { lineHeight: "1.5rem" }], //17px / 24px
-        b2: ["0.9375rem", { lineHeight: "1.5rem" }], //15px /24px
+        b1: ["1rem", { lineHeight: "1.5rem" }], //16px / 24px
+        b2: ["0.875rem", { lineHeight: "1.5rem" }], //14px /24px
         btn1: ["1.125rem", { lineHeight: "1.5rem" }],
         btn2: ["1rem", { lineHeight: "1.25rem" }], //16px / 20px
         btn3: ["0.875rem", { lineHeight: "1.25rem" }], //14px / 20px
         btn4: ["0.75rem", { lineHeight: "1rem" }], //12px / 16px
         c1: ["0.75rem", { lineHeight: "1rem" }],
-        c2: ["0.6875rem", { lineHeight: "0.8125rem" }], //11px /13px
         c3: ["2rem", { lineHeight: "2.25rem" }], //32px / 36px
       },
       fontWeight: {

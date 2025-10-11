@@ -51,7 +51,7 @@ const ArchivePage = () => {
           <div className="h-[6rem] bg-transparent"></div>
         </div>
         <div className="fixed bottom-[6.38rem] flex justify-end w-[24.5625rem] cursor-pointer">
-          <FloatingRecordButton handleNavigate={handleRecording} />
+          <FloatingRecordButton handleNavigate={handleRecording} text={false} />
         </div>
 
         <BottomNavbar />

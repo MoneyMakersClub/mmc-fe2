@@ -32,7 +32,7 @@ const SearchComponent = ({
   return (
     <div
       className={classNames(
-        "flex items-center w-full  py-1 px-4 gap-2",
+        "flex items-center w-full pt-4 pb-1 px-4 gap-2",
         className
       )}
     >

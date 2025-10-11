@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import down from "../../assets/common/down.svg";
-import RoundedTabComponent from "../common/RoundedTabComponent";
+import SortFilterBar from "../common/SortFilterBar";
 import BookListView from "../common/BookListView";
 import BottomNavbar from "../common/BottomNavbar";
 import BookComponent from "../SearchPage/BookComponent";
@@ -169,26 +169,14 @@ const BookListPage = ({ view }) => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex gap-5 w-full p-4">
-          <div
-            onClick={handleSorting}
-            className="flex items-center justify-center cursor-pointer"
-          >
-            <div className="text-b2 text-gray-500 whitespace-nowrap">
-              {sort}
-            </div>
-            <img className="w-4 h-4" src={down} alt="down" />
-          </div>
-          <div className="overflow-x-auto">
-            <RoundedTabComponent
-              type="secondary"
-              tabs={["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"]}
-              activeTabs={tabList}
-              onTabClick={handleTabClick}
-              multiple={true}
-            />
-          </div>
-        </div>
+        <SortFilterBar
+          sort={sort}
+          onSortClick={handleSorting}
+          tabs={["읽고 싶어요", "읽고 있어요", "다 읽었어요", "중단했어요"]}
+          activeTabs={tabList}
+          onTabClick={handleTabClick}
+          multiple={true}
+        />
         {view === "list" && (
           <div className=" mx-4  ">
             {tabList.length === 0

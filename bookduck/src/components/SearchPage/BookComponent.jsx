@@ -8,7 +8,7 @@ const BookComponent = ({ img, title, author, handleClick }) => {
         {/* title이 두 줄까지 잘림 */}
         <div className="line-clamp-2">{title}</div> 
         {/* author가 있으면 표시 */}
-        {author && <div className="text-btn3 text-gray-500">{author}</div>}
+        {author && <div className="text-b2 text-gray-500">{author}</div>}
       </div>
     </div>
   );

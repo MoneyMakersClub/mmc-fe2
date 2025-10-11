@@ -3,7 +3,7 @@ import Divider1 from "../../components/common/Divider1";
 import Divider2 from "../../components/common/Divider2";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import StatusBar from "../../components/common/StatusBar";
-import ColoredAuthorComponent from "../../components/RecordingPage/ColoredAuthorComponent";
+import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoComponent";
 import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWritingComponent";
 import Header2 from "../../components/RecordingPage/Header2";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
@@ -296,7 +296,7 @@ const EditPage = () => {
       />
       <div className="flex flex-col mx-4 pt-[calc(env(safe-area-inset-top))]">
         <div className="flex justify-start">
-          <ColoredAuthorComponent
+          <ColoredBookInfoComponent
             bookInfo={bookInfo}
             edit={true}
             author={author}

@@ -3,7 +3,7 @@ import { get } from "../../api/example";
 import { useQuery } from "@tanstack/react-query";
 import Divider2 from "../../components/common/Divider2";
 import NavigationHeader from "../../components/common/NavigationHeader";
-import ColoredAuthorComponent from "../../components/RecordingPage/ColoredAuthorComponent";
+import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoComponent";
 import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWritingComponent";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
 import { useEffect, useState } from "react";
@@ -288,7 +288,7 @@ const RecordingPage = () => {
       />
       <div className="flex flex-col gap-[1rem] mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
         <div className="mt-5">
-          <ColoredAuthorComponent bookInfo={bookInfo} />
+          <ColoredBookInfoComponent bookInfo={bookInfo} onClick={handleBack} />
         </div>
       </div>
       <div className="mx-4">

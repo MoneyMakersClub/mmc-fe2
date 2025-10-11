@@ -7,7 +7,7 @@ import { get } from "../../api/example";
 import SearchBookComponent from "../SearchPage/SearchBookComponent";
 import useBookInfoStore from "../../store/useBookInfoStore";
 
-const Search = () => {
+const Search = ({ onBookSelect }) => {
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
   const { setBookInfo } = useBookInfoStore();
@@ -49,8 +49,12 @@ const Search = () => {
 
   const handleRecording = (bookInfo) => {
     console.log(bookInfo);
-    setBookInfo(bookInfo);
-    navigate("/recording");
+    if (onBookSelect) {
+      onBookSelect(bookInfo);
+    } else {
+      setBookInfo(bookInfo);
+      navigate("/recording");
+    }
   };
 
   return (

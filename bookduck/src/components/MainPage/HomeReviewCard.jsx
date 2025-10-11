@@ -34,7 +34,7 @@ const HomeReviewCard = ({
         <p className="text-b2 text-gray-800">
           {content || "한줄평 카드 위젯을 만들어보세요"}
         </p>
-        <p className="text-c2 text-gray-400">
+        <p className="text-c1 text-gray-400">
           {title || "제목"} / {author || "작가"}
         </p>
       </div>

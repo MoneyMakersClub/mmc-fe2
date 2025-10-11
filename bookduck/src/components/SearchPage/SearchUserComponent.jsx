@@ -64,7 +64,7 @@ const SearchUserComponent = ({ search }) => {
   }
   const users = data?.pages.flatMap((page) => page.users);
   return (
-    <div>
+    <div className="px-4">
       {users && users.length > 0 ? (
         users.map((user) => (
           <FriendListComponent

@@ -43,7 +43,7 @@ const BookListView = ({
     >
       <div className="flex gap-3 items-center  h-[6.75rem] ">
         <img
-          className="w-[4.75rem] h-[6.75rem]"
+          className="w-[4.75rem] h-[6.75rem] rounded-[0.25rem]"
           src={bookImg ? bookImg : coverEx}
           alt="coverEx"
         />
@@ -54,7 +54,7 @@ const BookListView = ({
           <div className="text-b1 text-gray-800 line-clamp-2 break-words">
             {bookTitle}
           </div>
-          <div className=" text-b1 text-gray-500 truncate">{author}</div>
+          <div className=" text-b2 text-gray-500 truncate">{author}</div>
           {!isSearch && (
             <div className="flex mt-[0.5rem]">
               {[...Array(5)].map((_, index) => (

@@ -235,7 +235,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
           <SuspenseLoading />
         </div>
       ) : registeredBooks.length > 0 || books.length > 0 ? (
-        <>
+        <div className="px-4">
           <div>
             {registeredBooks.map((book, index) => (
               <BookListView
@@ -288,7 +288,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
             ))}
             <div ref={loaderRef} style={{ height: "1px" }} />
           </div>
-        </>
+        </div>
       ) : (
         <div className="flex flex-col gap-2 items-center mt-[8.06rem]">
           <span className="text-st text-gray-800 font-semibold">

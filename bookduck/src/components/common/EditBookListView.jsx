@@ -57,7 +57,7 @@ const EditBookListView = ({
       )}
       {addBook && (
         <div className="flex">
-          <span className="text-c1 text-gray-500 cursor-pointer">
+          <span className="text-btn4 text-gray-500 cursor-pointer">
             {initState}
           </span>
           <img src={downArrow} alt="downArrow" />

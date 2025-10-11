@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { postRegisterBook } from "../../api/recording";
 import useBookInfoStore from "../../store/useBookInfoStore";
 
-const DirectRegister = () => {
+const DirectRegister = ({ onBookSelect }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [pages, setPages] = useState("");
@@ -50,8 +50,12 @@ const DirectRegister = () => {
     const res = await postRegisterBook(formData);
     console.log(res);
     if (res) {
-      setBookInfo(res.data);
-      navigate("/recording");
+      if (onBookSelect) {
+        onBookSelect(res.data);
+      } else {
+        setBookInfo(res.data);
+        navigate("/recording");
+      }
     }
   };
 
@@ -63,7 +67,7 @@ const DirectRegister = () => {
           className="mt-5"
         >
           <img
-            className="w-[6.5rem] h-[9.75rem] object-cover cursor-pointer"
+            className="w-[6.5rem] h-[9.75rem] object-cover rounded-[0.25rem] cursor-pointer"
             src={imgFile ? URL.createObjectURL(imgFile) : bookCover}
             alt="Book Cover"
           />

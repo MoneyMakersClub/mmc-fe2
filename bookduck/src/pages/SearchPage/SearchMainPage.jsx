@@ -64,6 +64,7 @@ const SearchMainPage = () => {
           search={search}
           setSearch={setSearch}
           onEnter={handleSearch}
+          custom={true}
         />
         {!search ? (
           <>
@@ -81,7 +82,7 @@ const SearchMainPage = () => {
                 </div>
               )}
             </div>
-            <div className="flex justify-between items-center h-24 px-8 py-4 bg-gray-10 my-5">
+            <div className="flex justify-between items-center h-24 px-4 py-4 bg-gray-10 my-5">
               <div className="flex flex-col gap-1 justify-center">
                 <span className="text-c1 text-gray-400">
                   책을 찾을 수 없나요?

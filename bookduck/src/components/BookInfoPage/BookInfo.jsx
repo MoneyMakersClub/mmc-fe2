@@ -51,7 +51,7 @@ const BookInfo = ({ isMe = "default", bookData }) => {
   return (
     <div className="flex gap-4 w-full">
       <img
-        className="w-[7rem] h-[9.75rem] rounded bg-cover bg-no-repeat shadow-custom"
+        className="w-[7rem] h-[9.75rem] rounded-[0.25rem] bg-cover bg-no-repeat shadow-custom"
         src={bookBasicData?.imgPath ? bookBasicData?.imgPath : imgEx}
         alt="Cover"
       />
