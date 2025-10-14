@@ -131,7 +131,7 @@ const OtherMainPage = () => {
               </div>
             </div>
             <button className="w-[10.5625rem]" onClick={handleReportClick}>
-              <div className="flex justify-center items-center gap-[0.38rem] w-[10.625rem] h-[2.625rem] bg-white rounded-[0.625rem] mt-[0.81rem]">
+              <div className="flex justify-center items-center gap-1.5 w-[10.625rem] h-[2.625rem] bg-white rounded-xl mt-[0.81rem]">
                 <span className="text-b2 text-gray-800 font-semibold">
                   독서 리포트 보러가기
                 </span>

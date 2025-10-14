@@ -54,7 +54,7 @@ const RecordingModal = ({
             <div className="absolute bottom-5 left-4">
               <label
                 htmlFor="ExtractImage"
-                className="flex gap-[0.47rem] items-center cursor-pointer"
+                className="flex gap-2 items-center cursor-pointer"
               >
                 <img src={camera} alt="camera" />
                 <div className="text-b2 text-gray-500">문장스캔</div>

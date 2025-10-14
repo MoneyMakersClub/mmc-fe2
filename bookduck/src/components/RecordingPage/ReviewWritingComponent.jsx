@@ -25,7 +25,7 @@ const ReviewWritingComponent = ({
 
   return (
     <>
-      <div className="flex flex-col gap-[0.38rem]">
+      <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between py-2">
           <div className="text-b1 font-semibold">감상평</div>
           <div className="flex gap-3">

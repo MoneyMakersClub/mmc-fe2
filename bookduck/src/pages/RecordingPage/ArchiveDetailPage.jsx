@@ -139,7 +139,7 @@ const ArchiveDetail = () => {
         </>
       )}
       <div className=" mx-4">
-        <div className="flex flex-col gap-[0.31rem]">
+        <div className="flex flex-col gap-1">
           <Header2 handleMenu={handleMenu} handleBack={handleBack} />
           <div ref={ref} className="flex flex-col gap-4">
             {pathname.split("/")[1] === "excerpt-archive-detail" && (

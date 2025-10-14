@@ -31,7 +31,7 @@ const FloatingRecordButton = ({ handleNavigate, text = true }) => {
         {internalText ? (
           <div
             onClick={handleNavigate}
-            className="flex gap-[0.75rem] justify-center items-center h-[3.5rem] px-[1.25rem] mr-[1rem] rounded-[6.25rem] bg-gray-700 cursor-pointer"
+            className="flex gap-3 justify-center items-center h-[3.5rem] px-5 mr-[1rem] rounded-full bg-gray-700 cursor-pointer"
           >
             <img src={floatingRecordWhite} alt="record_icon" className="w-6 h-6" />
             <div className="text-btn1 font-semibold text-white whitespace-nowrap">기록하기</div>

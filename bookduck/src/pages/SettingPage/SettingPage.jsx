@@ -228,7 +228,7 @@ const SettingPage = () => {
   return (
     <div className="relative w-full">
       <NavigationHeader title="설정" />
-      <div className="flex flex-col gap-[2.5rem] px-4 pt-[1.31rem]">
+      <div className="flex flex-col gap-10 px-4 pt-[1.31rem]">
         <div>
           <div className="mb-5 text-st font-semibold">계정 정보</div>
           <div className="flex justify-between items-center h-8 mb-2">
@@ -243,7 +243,7 @@ const SettingPage = () => {
 
           <div className="flex justify-between items-center h-8">
             <span>로그인정보</span>
-            <div className="flex items-center gap-[0.62rem]">
+            <div className="flex items-center gap-2.5">
               {settingInfo.loginType === "KAKAO" && (
                 <img src={kakaoLogin} alt="kakao account" />
               )}

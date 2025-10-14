@@ -20,7 +20,7 @@ const RecordCalender = ({ num, text, big = false }) => {
       )}
 
       <div className="h-4 rounded-t-lg bg-yellow-100" />
-      <div className="flex flex-col items-center py-3 gap-[0.1875rem]">
+      <div className="flex flex-col items-center py-3 gap-0.5">
         <div className="text-c3 text-blue-400 font-semibold">{num}</div>
         <div className="text-btn3 text-gray-500">{text}</div>
       </div>

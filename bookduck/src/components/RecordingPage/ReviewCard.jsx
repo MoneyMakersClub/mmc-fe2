@@ -15,10 +15,10 @@ const ReviewCard = ({ reviewData, archive = false, font, onClick }) => {
   return (
     <div onClick={onClick} className={`w-full ${onClick ? 'cursor-pointer' : ''}`}>
       <div
-        className="flex flex-col gap-[1.75rem] w-full p-[1.25rem] rounded-[0.88rem] shadow-custom"
+        className="flex flex-col gap-7 w-full p-5 rounded-2xl shadow-custom"
         style={{ backgroundColor: color || "#ABABAB" }}
       >
-        <div className="flex flex-col gap-[0.25rem]">
+        <div className="flex flex-col gap-1">
           <div className={`text-st text-white font-semibold ${font}`}>
             {reviewTitle}
           </div>

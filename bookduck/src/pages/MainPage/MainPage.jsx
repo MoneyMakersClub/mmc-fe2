@@ -123,7 +123,7 @@ const MainPage = () => {
               onClick={() => navigate(`/statistics/${userId}`)}
             >
               <div
-                className="flex justify-center items-center gap-[0.38rem] w-[10.625rem] h-[2.625rem] bg-white rounded-[0.625rem] mt-[0.81rem]"
+                className="flex justify-center items-center gap-1.5 w-[10.625rem] h-[2.625rem] bg-white rounded-xl mt-[0.81rem]"
                 style={{
                   boxShadow: "0px 0px 3px 0px rgba(0, 0, 0, 0.10)",
                 }}

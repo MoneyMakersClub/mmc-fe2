@@ -286,7 +286,7 @@ const RecordingPage = () => {
         handleBack={handleBack}
         handleComplete={handleComplete}
       />
-      <div className="flex flex-col gap-[1rem] mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
+      <div className="flex flex-col gap-4 mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
         <div className="mt-5">
           <ColoredBookInfoComponent bookInfo={bookInfo} onClick={handleBack} />
         </div>

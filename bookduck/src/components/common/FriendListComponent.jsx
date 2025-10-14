@@ -49,7 +49,7 @@ const FriendListComponent = ({
 
   // 버튼 그룹 컴포넌트
   const renderButtons = () => (
-    <div className="flex gap-[0.62rem]">
+    <div className="flex gap-2.5">
       <ButtonComponent
         type="secondary"
         text="거절"

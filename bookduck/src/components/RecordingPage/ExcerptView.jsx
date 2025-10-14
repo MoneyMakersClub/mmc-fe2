@@ -20,7 +20,7 @@ const ExcerptView = ({ font }) => {
   console.log("archiveExcerptData:", archiveExcerptData);
 
   return (
-    <div className="flex flex-col gap-[1rem] items-center mt-[1rem]">
+    <div className="flex flex-col gap-4 items-center mt-[1rem]">
       {archiveExcerptData?.archiveList?.length === 0 ? (
         <div className="mt-[17rem] text-gray-400">
           아직 작성된 발췌 기록이 없어요!

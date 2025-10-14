@@ -81,7 +81,7 @@ const CreateBookclubPage = () => {
           </div>
 
           {/* 폼 필드들 */}
-          <div className="w-full flex flex-col gap-[2rem] mb-6">
+          <div className="w-full flex flex-col gap-8 mb-6">
             <div className="w-full">
               <div className="text-b1 font-medium text-gray-800 mb-2">
                 북클럽명 <span className="text-orange-400">*</span>

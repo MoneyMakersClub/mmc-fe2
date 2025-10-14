@@ -19,7 +19,7 @@ const TotalView = ({ font }) => {
   });
   
   return (
-    <div className="w-full flex flex-col gap-[1rem] items-center mt-[1rem]">
+    <div className="w-full flex flex-col gap-4 items-center mt-[1rem]">
       {archiveData?.archiveList?.length === 0 ? (
         <div className="mt-[17rem] text-gray-400">
           아직 작성된 기록이 없어요!

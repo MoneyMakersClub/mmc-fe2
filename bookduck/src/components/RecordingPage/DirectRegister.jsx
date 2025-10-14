@@ -79,7 +79,7 @@ const DirectRegister = ({ onBookSelect }) => {
           accept="image/*"
           onChange={handleFileChange}
         />
-        <div className="w-full flex flex-col gap-[2rem] mb-[1.23rem]">
+        <div className="w-full flex flex-col gap-8 mb-[1.23rem]">
           <TextField
             type="제목"
             title

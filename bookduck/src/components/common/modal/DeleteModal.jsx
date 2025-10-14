@@ -19,13 +19,13 @@ const DeleteModal = ({
           <div className="flex gap-3 mt-2">
             <button
               onClick={onLeftClick}
-              className="w-[7.625rem] h-[3rem] p-[0.62rem] rounded-[0.5rem] bg-gray-600 text-b1 text-white font-semibold"
+              className="w-[7.625rem] h-[3rem] p-2 rounded-lg bg-gray-600 text-b1 text-white font-semibold"
             >
               {leftBtnText}
             </button>
             <button
               onClick={onRightClick}
-              className="w-[7.625rem] h-[3rem] p-[0.62rem] rounded-[0.5rem] bg-orange-300 text-b1 text-white font-semibold"
+              className="w-[7.625rem] h-[3rem] p-2 rounded-lg bg-orange-300 text-b1 text-white font-semibold"
             >
               {rightBtnText}
             </button>
