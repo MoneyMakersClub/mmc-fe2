@@ -6,7 +6,7 @@ const BookComponent = ({ img, title, author, handleClick }) => {
       <img src={img ? img : imgEx} className="w-full h-[9.25rem] rounded-[0.25rem]" />
       <div>
         {/* title이 두 줄까지 잘림 */}
-        <div className="line-clamp-2">{title}</div> 
+        <div className="text-b1 line-clamp-2">{title}</div> 
         {/* author가 있으면 표시 */}
         {author && <div className="text-b2 text-gray-500">{author}</div>}
       </div>

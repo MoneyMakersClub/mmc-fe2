@@ -4,6 +4,7 @@ import NavigationHeader from "../../components/common/NavigationHeader";
 import TextField from "../../components/common/TextField";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoComponent";
+import DatePickerModal from "../../components/BookclubPage/DatePickerModal";
 import { createClub } from "../../api/bookclub";
 import useBookInfoStore from "../../store/useBookInfoStore";
 
@@ -17,6 +18,8 @@ const CreateBookclubPage = () => {
   const [activeStartDate, setActiveStartDate] = useState("");
   const [activeEndDate, setActiveEndDate] = useState("");
   const [maxMember, setMaxMember] = useState(10);
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   const handleCreateClub = async () => {
     if (!selectedBookInfo) {
@@ -51,6 +54,25 @@ const CreateBookclubPage = () => {
 
   const handleBack = () => {
     navigate("/bookclub");
+  };
+
+  const handleStartDateSelect = (date) => {
+    setActiveStartDate(date);
+    setShowStartDatePicker(false);
+  };
+
+  const handleEndDateSelect = (date) => {
+    setActiveEndDate(date);
+    setShowEndDatePicker(false);
+  };
+
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
   };
 
   const isFormValid = clubName && activeStartDate && activeEndDate && selectedBookInfo;
@@ -122,23 +144,33 @@ const CreateBookclubPage = () => {
                 <div className="text-b1 font-medium text-gray-800 mb-2">
                   시작일 <span className="text-orange-400">*</span>
                 </div>
-                <input
-                  type="date"
-                  value={activeStartDate}
-                  onChange={(e) => setActiveStartDate(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowStartDatePicker(true)}
+                  className={`w-full p-3 border rounded-lg text-left text-b1 transition-all ${
+                    activeStartDate
+                      ? 'border-gray-200 text-gray-800'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  {activeStartDate ? formatDateForDisplay(activeStartDate) : '날짜 선택'}
+                </button>
               </div>
               <div className="flex-1">
                 <div className="text-b1 font-medium text-gray-800 mb-2">
                   종료일 <span className="text-orange-400">*</span>
                 </div>
-                <input
-                  type="date"
-                  value={activeEndDate}
-                  onChange={(e) => setActiveEndDate(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowEndDatePicker(true)}
+                  className={`w-full p-3 border rounded-lg text-left text-b1 transition-all ${
+                    activeEndDate
+                      ? 'border-gray-200 text-gray-800'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  {activeEndDate ? formatDateForDisplay(activeEndDate) : '날짜 선택'}
+                </button>
               </div>
             </div>
 
@@ -166,6 +198,24 @@ const CreateBookclubPage = () => {
           />
         </div>
       </div>
+
+      {/* 시작일 달력 모달 */}
+      <DatePickerModal
+        isOpen={showStartDatePicker}
+        onClose={() => setShowStartDatePicker(false)}
+        onSelectDate={handleStartDateSelect}
+        selectedDate={activeStartDate}
+        minDate={new Date().toISOString().split('T')[0]}
+      />
+
+      {/* 종료일 달력 모달 */}
+      <DatePickerModal
+        isOpen={showEndDatePicker}
+        onClose={() => setShowEndDatePicker(false)}
+        onSelectDate={handleEndDateSelect}
+        selectedDate={activeEndDate}
+        minDate={activeStartDate || new Date().toISOString().split('T')[0]}
+      />
     </div>
   );
 };

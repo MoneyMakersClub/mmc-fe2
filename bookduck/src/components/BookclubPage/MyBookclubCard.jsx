@@ -24,7 +24,8 @@ const MyBookclubCard = ({ club }) => {
   return (
     <div 
       onClick={handleClubClick}
-      className="flex bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow mb-3"
+      className="flex bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow mb-3 active:bg-white"
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
       {/* 책 이미지 */}
       <div className="w-[4.75rem] h-[7rem] mr-3 flex-shrink-0">
@@ -39,19 +40,19 @@ const MyBookclubCard = ({ club }) => {
       <div className="flex-1 flex flex-col justify-between">
         <div>
           {/* 상태 + 북클럽명 */}
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-2 pt-0">
             <span className="text-btn3 text-orange-400 bg-orange-50 px-2 py-1 rounded">
               [{getStatusText(club.clubStatus)}] {club.clubName}
             </span>
           </div>
           
           {/* 책 제목 */}
-          <h3 className="text-b1 font-semibold text-gray-800 mb-1">
+          <h3 className="text-b1 text-gray-800">
             {club.clubBookInfo?.bookTitle}
           </h3>
           
           {/* 작가 */}
-          <p className="text-b2 text-gray-600 mb-2">
+          <p className="text-b2 text-gray-600">
             {club.clubBookInfo?.bookAuthor}
           </p>
         </div>
