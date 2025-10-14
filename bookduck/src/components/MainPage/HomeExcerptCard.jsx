@@ -16,7 +16,7 @@ const HomeExcerptCard = ({
       >
         <div
           className={`flex ${
-            visibility === "PRIVATE" ? "justify-between" : "text-right"
+            visibility === "PRIVATE" ? "justify-between" : "justify-end"
           } text-b2 text-gray-400`}
         >
           {visibility === "PRIVATE" && (

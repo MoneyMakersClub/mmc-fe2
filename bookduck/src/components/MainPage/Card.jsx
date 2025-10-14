@@ -14,6 +14,7 @@ const Card = ({ card }) => {
           author={card.author}
           pageNumber={card.pageNumber}
           content={card.excerptContent}
+          visibility={card.visibility}
         />
       );
     case "ONELINE":

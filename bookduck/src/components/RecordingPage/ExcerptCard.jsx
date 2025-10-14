@@ -14,8 +14,8 @@ const ExcerptCard = ({ excerptData, archive = false, font, onClick }) => {
   return (
     <div onClick={onClick} className={`w-full ${onClick ? 'cursor-pointer' : ''}`}>
       <div className="flex flex-col gap-5 w-full p-5 rounded-2xl bg-gray-10 shadow-custom">
-        <div className="flex justify-between items-center">
-          <div className={`text-right text-b2 text-gray-400 ${font}`}>
+        <div className="flex justify-end items-center">
+          <div className={`text-b2 text-gray-400 ${font}`}>
             {pageNumber}p
           </div>
         </div>
