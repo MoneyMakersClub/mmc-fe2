@@ -5,7 +5,7 @@ import BookListView from "../common/BookListView";
 import BottomNavbar from "../common/BottomNavbar";
 import BookComponent from "../SearchPage/BookComponent";
 import cover_img_ex from "../../assets/libraryPage/cover-img-ex.svg";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
 import Divider1 from "../common/Divider1";
 import Divider2 from "../common/Divider2";

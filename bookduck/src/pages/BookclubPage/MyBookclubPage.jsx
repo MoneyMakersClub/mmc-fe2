@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import down from "../../assets/common/down.svg";
-import SortFilterBar from "../common/SortFilterBar";
-import BookclubListView from "../common/BookclubListView";
-import BookclubCardView from "../common/BookclubCardView";
-import BottomSheetModal from "../common/BottomSheetModal";
-import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
-import Divider1 from "../common/Divider1";
-import Divider2 from "../common/Divider2";
-import ListBottomSheet from "../common/ListBottomSheet";
-import BookclubComponent from "../SearchPage/BookclubComponent";
-import SearchComponent from "../common/SearchComponent";
+import SortFilterBar from "../../components/common/SortFilterBar";
+import BookclubListView from "../../components/common/BookclubListView";
+import BookclubCardView from "../../components/common/BookclubCardView";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
+import BottomSheetMenuComponent from "../../components/common/BottomSheetMenuComponent";
+import Divider1 from "../../components/common/Divider1";
+import Divider2 from "../../components/common/Divider2";
+import ListBottomSheet from "../../components/common/ListBottomSheet";
+import BookclubComponent from "../../components/SearchPage/BookclubComponent";
+import SuspenseLoading from "../../components/common/SuspenseLoading";
 
 import {
-  searchClubs,
+  getJoinedClubs,
   getSortedClubs,
 } from "../../api/bookclub";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-const ExploreBookclubPage = ({ view = "list" }) => {
+const MyBookclubPage = ({ view = "list" }) => {
   const [sort, setSort] = useState("최신순");
   const [tabList, setTabList] = useState([]);
   const [sortingBottomSheet, setSortingBottomSheet] = useState(false);
@@ -29,12 +29,11 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   const [sortedClubList, setSortedClubList] = useState([]);
   const [selectedClubId, setSelectedClubId] = useState();
   const [currentState, setCurrentState] = useState({});
-  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
   // 북클럽 상태 필터
-  const statusArr = ["시작 전", "읽는 중", "종료"];
+  const statusArr = ["전체", "읽는 중", "종료"];
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -49,35 +48,37 @@ const ExploreBookclubPage = ({ view = "list" }) => {
 
   const getStatusKey = (status) => {
     switch (status) {
-      case "시작 전":
-        return "BEFORE_START";
+      case "전체":
+        return null;
       case "읽는 중":
-        return "IN_PROGRESS";
+        return "ACTIVE";
       case "종료":
-        return "FINISHED";
+        return "ENDED";
       default:
         return null;
     }
   };
 
-  // 북클럽 검색 (임시로 비활성화)
-  // const { data: clubListData = { clubs: [] } } = useQuery({
-  //   queryKey: ["clubSearchData", searchQuery, getSortKey(sort)],
-  //   queryFn: () => searchClubs({ query: searchQuery, sort: getSortKey(sort) }),
-  // });
+  // 가입한 북클럽 목록 조회
+  const { data: clubListData = { clubs: [] }, isLoading, error } = useQuery({
+    queryKey: ["clubListData", getSortKey(sort)],
+    queryFn: () => getJoinedClubs(getSortKey(sort)),
+    enabled: true, 
+  });
 
-  // useEffect(() => {
-  //   if (clubListData?.clubs) {
-  //     const initialState = clubListData.clubs.reduce((acc, club) => {
-  //       acc[club.clubId] = club.status;
-  //       return acc;
-  //     }, {});
-  //     setCurrentState(initialState);
-  //   }
-  // }, [clubListData]);
+  console.log("MyBookclubPage - clubListData:", clubListData);
+  console.log("MyBookclubPage - isLoading:", isLoading);
+  console.log("MyBookclubPage - error:", error);
 
-  // 임시 데이터
-  const clubListData = { clubs: [] };
+  useEffect(() => {
+    if (clubListData?.clubs) {
+      const initialState = clubListData.clubs.reduce((acc, club) => {
+        acc[club.clubId] = club.clubStatus;
+        return acc;
+      }, {});
+      setCurrentState(initialState);
+    }
+  }, [clubListData]);
 
   const handleSortChange = (newSort) => {
     setSort(newSort);
@@ -102,8 +103,9 @@ const ExploreBookclubPage = ({ view = "list" }) => {
     const selectSortedList = async () => {
       const statusList = tabList.map((it) => getStatusKey(it));
       console.log(statusList);
-      const res = await getSortedClubs(statusList, getSortKey(sort));
-      setSortedClubList(res.clubList);
+      const clubStatus = statusList.length > 0 ? statusList[0] : null;
+      const res = await getSortedClubs(clubStatus, getSortKey(sort));
+      setSortedClubList(res.clubs || []);
     };
     if (tabList.length !== 0) {
       selectSortedList();
@@ -114,67 +116,57 @@ const ExploreBookclubPage = ({ view = "list" }) => {
 
   const filteredClubs = sortedClubList.length > 0 ? sortedClubList : clubListData?.clubs || [];
 
-  const handleSearch = () => {
-    // 검색 실행 
-  };
-
   return (
     <div className="flex flex-col">
-      {/* 검색바 */}
-      <SearchComponent
-        placeholder="북클럽을 검색해보세요"
-        search={searchQuery}
-        setSearch={setSearchQuery}
-        onEnter={handleSearch}
-        custom={true}
-      />
-
       <SortFilterBar
         sort={sort}
         onSortClick={handleSorting}
-        tabs={["시작 전", "읽는 중", "종료"]}
+        tabs={["전체", "읽는 중", "종료"]}
         activeTabs={tabList}
         onTabClick={handleTabClick}
         multiple={true}
       />
-      {view === "list" && (
-        <div className="mx-4">
-          {(clubListData?.clubs || []).length === 0 ? (
-            <div className="flex justify-center items-center py-10">
-              <div className="text-gray-500">검색된 북클럽이 없습니다.</div>
-            </div>
-          ) : (
-            <>
-              {tabList.length === 0
-                ? (clubListData?.clubs || []).map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))
-                : sortedClubList &&
-                  sortedClubList.map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))}
-            </>
-          )}
+      
+      {isLoading && (
+        <div className="flex justify-center items-center py-10">
+          <SuspenseLoading />
         </div>
       )}
-      {view === "cover" && (
+
+      {!isLoading && error && (
+        <div className="flex justify-center items-center py-10">
+          <div className="text-red-500">데이터를 불러오는데 실패했습니다.</div>
+        </div>
+      )}
+
+      {!isLoading && !error && (clubListData?.clubs || []).length === 0 && (
+        <div className="flex justify-center items-center py-10">
+          <div className="text-gray-500">가입한 북클럽이 없습니다.</div>
+        </div>
+      )}
+
+      {!isLoading && !error && view === "list" && (
         <div className="mx-4">
-          {(clubListData?.clubs || []).length === 0 ? (
-            <div className="flex justify-center items-center py-10">
-              <div className="text-gray-500">검색된 북클럽이 없습니다.</div>
-            </div>
-          ) : (
-            <>
-              {tabList.length === 0
-                ? (clubListData?.clubs || []).map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))
-                : sortedClubList &&
-                  sortedClubList.map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))}
-            </>
-          )}
+          {tabList.length === 0
+            ? (clubListData?.clubs || []).map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="my" />
+              ))
+            : sortedClubList &&
+              sortedClubList.map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="my" />
+              ))}
+        </div>
+      )}
+      {!isLoading && !error && view === "cover" && (
+        <div className="mx-4">
+          {tabList.length === 0
+            ? (clubListData?.clubs || []).map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="my" />
+              ))
+            : sortedClubList &&
+              sortedClubList.map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="my" />
+              ))}
         </div>
       )}
 
@@ -223,4 +215,5 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   );
 };
 
-export default ExploreBookclubPage;
+export default MyBookclubPage;
+

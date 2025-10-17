@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { get, patch, post } from "../../api/example";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import ToggleButton from "../../components/common/ToggleButtonComponent";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import TextField from "../../components/common/TextField";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import DeleteModal from "../../components/common/modal/DeleteModal";

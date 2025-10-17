@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import leftArrow from "../../assets/common/left.svg";
 import rightArrow from "../../assets/common/right.svg";
 

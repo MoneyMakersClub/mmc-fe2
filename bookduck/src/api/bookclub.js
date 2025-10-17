@@ -36,10 +36,23 @@ export const getClubArchives = async (clubId) => {
 };
 
 // 클럽 검색
-export const searchClubs = async ({ query = "", sort = "latest" }) => {
+export const searchClubs = async ({ query = "", sort = "latest", page = 0, size = 20 }) => {
   const params = new URLSearchParams();
-  if (query) params.append('query', query);
-  params.append('sort', sort);
+  
+  // keyword 파라미터 (필수) - 빈 문자열이라도 전송해야 함
+  params.append('keyword', query.trim());
+  
+  // status 파라미터 (선택사항, 기본값: ACTIVE)
+  params.append('status', 'ACTIVE');
+  
+  // pageable 객체를 JSON으로 전송
+  const pageable = {
+    page: page,
+    size: size,
+    sort: [] // 빈 배열로 설정
+  };
+  
+  params.append('pageable', JSON.stringify(pageable));
   
   return await get(`/clubs/search?${params.toString()}`);
 };
@@ -60,9 +73,34 @@ export const leaveClub = async (clubId) => {
 };
 
 // 클럽 정렬 조회
-export const getSortedClubs = async ({ sort = "latest", status = null }) => {
+export const getSortedClubs = async (clubStatus = null, sort = "latest") => {
   const params = new URLSearchParams({ sort });
-  if (status) params.append("status", status);
+  
+  // clubStatus가 null이 아니면 파라미터에 추가
+  if (clubStatus !== null) {
+    params.append("clubStatus", clubStatus);
+  }
   
   return await get(`/clubs/joined?${params.toString()}`);
+};
+
+// 최신 북클럽 목록 조회 (둘러보기용)
+export const getNewClubs = async (page = 0, size = 20, orderBy = "latest") => {
+  const params = new URLSearchParams();
+  
+  // orderBy 파라미터 (선택사항)
+  if (orderBy) {
+    params.append('orderBy', orderBy);
+  }
+  
+  // pageable 객체를 JSON으로 전송
+  const pageable = {
+    page: page,
+    size: size,
+    sort: [] // 빈 배열로 설정
+  };
+  
+  params.append('pageable', JSON.stringify(pageable));
+  
+  return await get(`/clubs/new?${params.toString()}`);
 };

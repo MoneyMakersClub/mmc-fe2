@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BookListView from "../common/BookListView";
 import ButtonComponent from "../common/ButtonComponent";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import Divider1 from "../../components/common/Divider1";
 import ListBottomSheet from "../common/ListBottomSheet";
 import SuspenseLoading from "../common/SuspenseLoading";

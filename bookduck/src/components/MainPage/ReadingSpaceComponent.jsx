@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { useSpring, animated } from "@react-spring/web";
 import { useDrag } from "react-use-gesture";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import Divider2 from "../common/Divider2";
 import goEdit from "../../assets/mainPage/go-edit.svg";
 import goRight from "../../assets/mainPage/go-right.svg";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import down from "../../assets/common/down-arrow.svg";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import ListBottomSheet from "../common/ListBottomSheet";
 import imgEx from "../../assets/common/bookImg-ex.svg";
 import { patch } from "../../api/example";

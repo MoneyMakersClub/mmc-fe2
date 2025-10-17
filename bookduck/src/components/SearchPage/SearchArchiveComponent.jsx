@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReviewComponent from "./ReviewComponent";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import ListBottomSheet from "../common/ListBottomSheet";
 import downArrow from "../../assets/common/down-arrow.svg";
 import { get } from "../../api/example";

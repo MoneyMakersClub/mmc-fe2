@@ -7,7 +7,7 @@ import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoCom
 import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWritingComponent";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
 import { useEffect, useState } from "react";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import WritingTemplate from "../../components/RecordingPage/WritingTemplate";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import useBookInfoStore from "../../store/useBookInfoStore";
