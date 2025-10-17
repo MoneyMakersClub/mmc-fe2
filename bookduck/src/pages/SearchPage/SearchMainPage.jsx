@@ -3,7 +3,6 @@ import { get } from "../../api/example";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import SearchComponent from "../../components/common/SearchComponent";
-import BookComponent from "../../components/SearchPage/BookComponent";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import CarouselComponent from "../../components/SearchPage/CarouselComponent";
 import SearchBookComponent from "../../components/SearchPage/SearchBookComponent";
@@ -11,6 +10,7 @@ import SearchArchiveComponent from "../../components/SearchPage/SearchArchiveCom
 import SearchUserComponent from "../../components/SearchPage/SearchUserComponent";
 import BottomNavbar from "../../components/common/BottomNavbar";
 import TabBarComponent from "../../components/common/TabBarComponent";
+import SuspenseLoading from "../../components/common/SuspenseLoading";
 
 const SearchMainPage = () => {
   const navigate = useNavigate();
@@ -37,25 +37,19 @@ const SearchMainPage = () => {
     setSubmittedSearch(search);
   };
 
-  const recentBooksQuery = useQuery({
+  const { data: recentBooksData, isLoading: isLoadingRecent } = useQuery({
     queryKey: ["recentBooks"],
     queryFn: getRecentBooks,
-    onSuccess: () => {
-      console.log("최근 책 받기 성공");
-    },
-    onError: (error) => console.error("최근 책 받기 실패", error),
   });
-  const recentBooks = recentBooksQuery.data.bookList;
+  const recentBooks = recentBooksData?.bookList || [];
 
-  const popularBooksQuery = useQuery({
+  const { data: popularBooksData, isLoading: isLoadingPopular } = useQuery({
     queryKey: ["popularBooks"],
     queryFn: getPopularBooks,
-    onSuccess: () => {
-      console.log("많이 읽는 책 받기 성공");
-    },
-    onError: (error) => console.error("많이 읽는 책 받기 실패", error),
   });
-  const popularBooks = popularBooksQuery.data.bookList;
+  const popularBooks = popularBooksData?.bookList || [];
+
+  const isLoading = isLoadingRecent || isLoadingPopular;
 
   return (
     <div className="w-full">
@@ -66,7 +60,11 @@ const SearchMainPage = () => {
           onEnter={handleSearch}
           custom={true}
         />
-        {!search ? (
+        {isLoading && !search ? (
+          <div className="flex justify-center items-center h-screen">
+            <SuspenseLoading />
+          </div>
+        ) : !search ? (
           <>
             <div className="w-full flex flex-col gap-3 mt-4 margin-auto px-4">
               <div className="text-b1 font-semibold text-gray-800">

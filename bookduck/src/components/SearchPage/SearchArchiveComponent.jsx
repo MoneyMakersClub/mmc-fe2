@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReviewComponent from "./ReviewComponent";
 import BottomSheetModal from "../common/modal/BottomSheetModal";
 import ListBottomSheet from "../common/ListBottomSheet";
 import downArrow from "../../assets/common/down-arrow.svg";
 import { get } from "../../api/example";
 import ExcerptComponent from "./ExcerptComponent";
-import SuspenseLoading from "../common/SuspenseLoading"; // 로딩 컴포넌트 추가
+import SuspenseLoading from "../common/SuspenseLoading";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const sortingArr = ["정확도순", "최신순"];
 const DATA_LIMIT = 10;
@@ -21,83 +23,47 @@ const getSortKey = (sort) => {
 };
 
 const SearchArchiveComponent = ({ search }) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [archives, setArchives] = useState([]);
   const [sort, setSort] = useState("정확도순");
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-  const loaderRef = useRef(null);
 
-  /* API - 기록 받아오기 */
-  const getArchives = async (search, page) => {
-    if (!search) return setArchives([]);
-    try {
-      setIsLoading(true); // 로딩 시작
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["archives", search, getSortKey(sort)],
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!search) return { archiveList: [], nextPage: 0, totalPages: 0 };
       const response = await get(
-        `/archives/search?page=${page}&size=${DATA_LIMIT}&keyword=${encodeURIComponent(
+        `/archives/search?page=${pageParam}&size=${DATA_LIMIT}&keyword=${encodeURIComponent(
           search
         )}&orderBy=${getSortKey(sort)}`
       );
       console.log("response", response);
+      return {
+        archiveList: response.archiveList || [],
+        nextPage: pageParam + 1,
+        totalPages: response.totalPages || 1,
+      };
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.nextPage < lastPage.totalPages ? lastPage.nextPage : undefined,
+    initialPageParam: 0,
+    enabled: !!search,
+  });
 
-      setArchives((preArchives) => {
-        return page === 0
-          ? response.archiveList
-          : [...preArchives, ...response.archiveList];
-      });
+  // 무한 스크롤 훅 사용
+  const { loaderRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
-      setTotalPages(response.totalPages || 1);
-    } catch (error) {
-      console.error("기록 읽어오기 오류", error);
-    } finally {
-      setIsLoading(false); // 로딩 종료
-    }
-  };
 
-  /* 검색어 바뀔 시 */
-  useEffect(() => {
-    setArchives([]);
-    console.log("기록 검색어 변경", search);
-    getArchives(search, 0);
-    setCurrentPage(0);
-  }, [search]);
-
-  /* 정렬 바뀔 시 */
-  useEffect(() => {
-    setCurrentPage(0);
-    getArchives(search, 0);
-  }, [sort]);
-
-  /* 현재 페이지 변경 시 데이터 요청 */
-  useEffect(() => {
-    if (search && currentPage >= 0) {
-      console.log(`페이지 ${currentPage} 데이터 로드`);
-      getArchives(search, currentPage);
-    }
-  }, [currentPage]);
-
-  /* 무한 스크롤 감지 */
-  useEffect(() => {
-    const handleObserver = (entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && currentPage < totalPages - 1 && !isLoading) {
-        console.log("다음 페이지 로드!");
-        setCurrentPage((prev) => prev + 1);
-      }
-    };
-
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0,
-    });
-
-    if (loaderRef.current) observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [currentPage, totalPages, isLoading]);
+  const archives = data?.pages.flatMap((page) => page.archiveList) || [];
 
   /* 정렬 클릭 */
   const handleClick = () => {

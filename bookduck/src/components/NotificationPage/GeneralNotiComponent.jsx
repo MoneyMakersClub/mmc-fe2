@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   useInfiniteQuery,
   useMutation,
@@ -7,6 +7,7 @@ import {
 import { get, patch } from "../../api/example";
 import NotificationItemComponent from "./NotificationItemComponent";
 import { useSSE } from "../../context/SSEProvider";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 /* API - 일반 알람 읽음 처리 */
 export const patchAlarm = async (alarmId) => {
@@ -30,7 +31,6 @@ export const getAlarmList = async ({ pageParam = 0 }) => {
 };
 
 const GeneralNotiComponent = () => {
-  const loaderRef = useRef(null);
   const queryClient = useQueryClient();
   const { sseData } = useSSE();
 
@@ -42,6 +42,13 @@ const GeneralNotiComponent = () => {
       getNextPageParam: (lastPage) =>
         lastPage.nextPage < lastPage.totalPages ? lastPage.nextPage : undefined,
     });
+
+  // 무한 스크롤 훅 사용
+  const { loaderRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
   // React Query - 알람 읽음 처리
   const { mutate: markAsRead } = useMutation({
@@ -57,23 +64,6 @@ const GeneralNotiComponent = () => {
       queryClient.invalidateQueries({ queryKey: ["alarmList"] });
     }
   }, [sseData, queryClient]);
-
-  // Intersection Observer - 무한 스크롤
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { root: null, rootMargin: "0px", threshold: 1.0 }
-    );
-
-    if (loaderRef.current) observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
     return <div>로딩 중...</div>;

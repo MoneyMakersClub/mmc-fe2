@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import down from "../../assets/common/down.svg";
 import SortFilterBar from "../../components/common/SortFilterBar";
 import BookclubListView from "../../components/common/BookclubListView";
@@ -11,11 +11,12 @@ import ListBottomSheet from "../../components/common/ListBottomSheet";
 import BookclubComponent from "../../components/SearchPage/BookclubComponent";
 import SearchComponent from "../../components/common/SearchComponent";
 import SuspenseLoading from "../../components/common/SuspenseLoading";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 import {
   getNewClubs,
 } from "../../api/bookclub";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const ExploreBookclubPage = ({ view = "list" }) => {
@@ -31,10 +32,6 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   const [currentState, setCurrentState] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [allClubs, setAllClubs] = useState([]);
-  const loaderRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -66,33 +63,38 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   };
 
   // 최신 북클럽 둘러보기
-  const { data: newClubsData, isLoading: isLoadingNew, error: errorNew } = useQuery({
-    queryKey: ["newClubsData", currentPage, getSortKey(sort)],
-    queryFn: async () => {
-      const data = await getNewClubs(currentPage, 20, getSortKey(sort));
-      return data;
+  const {
+    data,
+    isLoading: isLoadingNew,
+    error: errorNew,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["newClubsData", getSortKey(sort)],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getNewClubs(pageParam, 20, getSortKey(sort));
+      return {
+        clubs: response.clubs?.pageContent || [],
+        nextPage: pageParam + 1,
+        totalPages: response.clubs?.totalPages || 0,
+      };
     },
-    enabled: currentPage >= 0,
+    getNextPageParam: (lastPage) =>
+      lastPage.nextPage < lastPage.totalPages ? lastPage.nextPage : undefined,
+    initialPageParam: 0,
     retry: false,
   });
 
-  // 첫 페이지 로드
-  useEffect(() => {
-    if (newClubsData && currentPage === 0) {
-      setAllClubs(newClubsData.clubs?.pageContent || []);
-      setTotalPages(newClubsData.clubs?.totalPages || 0);
-    }
-  }, [newClubsData, currentPage]);
+  // 무한 스크롤 훅 사용
+  const { loaderRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
-  // 무한 스크롤 - 다음 페이지 로드
-  useEffect(() => {
-    if (newClubsData && currentPage > 0) {
-      const newClubs = newClubsData.clubs?.pageContent || [];
-      setAllClubs((prev) => [...prev, ...newClubs]);
-      setTotalPages(newClubsData.clubs?.totalPages || 0);
-    }
-  }, [newClubsData, currentPage]);
 
+  const allClubs = data?.pages.flatMap((page) => page.clubs) || [];
   const clubListData = { clubs: allClubs };
 
   const handleSortChange = (newSort) => {
@@ -203,9 +205,9 @@ const ExploreBookclubPage = ({ view = "list" }) => {
                   ))}
               
               {/* 무한 스크롤 로더 */}
-              {!isSearching && tabList.length === 0 && currentPage < totalPages && (
+              {!isSearching && tabList.length === 0 && (
                 <div ref={loaderRef} className="flex justify-center items-center py-4">
-                  <div className="text-gray-500">로딩 중...</div>
+                  {isFetchingNextPage && <div className="text-gray-500">로딩 중...</div>}
                 </div>
               )}
             </>
