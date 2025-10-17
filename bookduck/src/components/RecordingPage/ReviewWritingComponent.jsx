@@ -41,11 +41,13 @@ const ReviewWritingComponent = ({
             <div className="flex flex-col gap-2">
               <input
                 value={titleInputValue}
+                readOnly
                 placeholder="제목 (25자 이내로 작성하세요)"
                 className={`text-b1 font-semibold bg-transparent ${font}`}
               />
               <textarea
                 value={inputValue}
+                readOnly
                 className={`w-[20.5625rem] h-[9rem] mt-2 bg-transparent text-b2 appearance-none outline-none resize-none ${font}`}
                 placeholder="책에 대한 자유로운 감상을 기록하세요"
               />

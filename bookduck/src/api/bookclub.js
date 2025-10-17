@@ -31,8 +31,21 @@ export const updateClub = async (clubId, clubData) => {
 };
 
 // 북클럽 내 게시글 목록 조회
-export const getClubArchives = async (clubId) => {
-  return await get(`/clubs/${clubId}/archives`);
+export const getClubArchives = async (clubId, memberId = null, page = 0, size = 20) => {
+  const params = new URLSearchParams();
+  
+  if (memberId) {
+    params.append('memberId', memberId);
+  }
+  
+  const pageable = {
+    page: page,
+    size: size,
+    sort: []
+  };
+  params.append('pageable', JSON.stringify(pageable));
+  
+  return await get(`/clubs/${clubId}/archives?${params.toString()}`);
 };
 
 // 북클럽 검색

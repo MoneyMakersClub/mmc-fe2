@@ -1,6 +1,7 @@
-// 삭제 버튼 클릭 시 onClick 함수 실행
-// 취소 버튼 클릭 시 handleCancel 함수 실행 (모달창 set상태 함수 넣어주면 될 거 같아요)
-const DeleteModal = ({
+// 확인 모달 컴포넌트
+// 오른쪽 버튼 클릭 시 onRightClick 함수 실행
+// 왼쪽 버튼 클릭 시 onLeftClick 함수 실행
+const CheckModal = ({
   title,
   content,
   leftBtnText,
@@ -10,9 +11,9 @@ const DeleteModal = ({
 }) => {
   return (
     <>
-      <div className="flex justify-center items-center fixed top-0 z-30 w-[24.5625rem] h-screen bg-black bg-opacity-50">
-        <div className="flex flex-col items-center justify-center w-[18rem] h-[10.5rem] px-4 rounded-[1rem] bg-[#FFFFFF] text-center">
-          <div className="flex flex-col gap-2 my-3  whitespace-pre-line">
+      <div className="flex justify-center items-center fixed top-0 z-30 w-full max-w-[64rem] h-screen bg-black bg-opacity-50">
+        <div className="flex flex-col items-center justify-center w-[18rem] min-h-[10.5rem] px-5 py-4 rounded-[1rem] bg-[#FFFFFF] text-center">
+          <div className="flex flex-col gap-2 my-3 whitespace-pre-line">
             <div className="text-st text-gray-800 font-semibold">{title}</div>
             {content && <div className="text-b2 text-gray-400">{content}</div>}
           </div>
@@ -35,4 +36,5 @@ const DeleteModal = ({
     </>
   );
 };
-export default DeleteModal;
+export default CheckModal;
+

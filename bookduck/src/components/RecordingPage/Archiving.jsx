@@ -23,7 +23,7 @@ const Archiving = ({ onBookSelect }) => {
       onBookSelect(bookInfo);
     } else {
       setBookInfo(bookInfo);
-      navigate("/recording");
+      navigate("/archive?recording=true", { replace: true });
     }
   };
 

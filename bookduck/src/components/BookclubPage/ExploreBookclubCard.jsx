@@ -6,7 +6,7 @@ const ExploreBookclubCard = ({ club }) => {
   const getStatusText = (status) => {
     switch (status) {
       case "ACTIVE":
-        return "읽는 중";
+        return "진행 중";
       case "ENDED":
         return "종료";
       default:

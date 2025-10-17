@@ -105,7 +105,7 @@ const SearchMainPage = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 px-4">
           <TabBarComponent
             tabs={["도서", "기록", "사용자"]}
             activeTab={tab}

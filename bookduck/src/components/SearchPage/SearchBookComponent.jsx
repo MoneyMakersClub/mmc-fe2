@@ -4,7 +4,7 @@ import BookListView from "../common/BookListView";
 import ButtonComponent from "../common/ButtonComponent";
 import BottomSheetModal from "../common/modal/BottomSheetModal";
 import Divider1 from "../../components/common/Divider1";
-import ListBottomSheet from "../common/ListBottomSheet";
+import BookStatusModal from "../common/BookStatusModal";
 import SuspenseLoading from "../common/SuspenseLoading";
 import { get, patch, post, del } from "../../api/example";
 import { getReadingStatusKor, getReadingStatusKey, statusArr } from "../../utils/bookStatus";
@@ -283,15 +283,12 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
         visible={visible}
         setVisible={setVisible}
       >
-        <div className="p-4">
-          <ListBottomSheet
-            title="책 상태"
-            options={statusArr}
-            currentOption={currentState}
-            handleOption={handleStatusChange}
-            handlePutCancel={deleteBook}
-          />
-        </div>
+        <BookStatusModal
+          currentStatus={selectedBook?.readStatus}
+          onStatusChange={handleStatusChange}
+          onDelete={() => deleteBook(selectedBook.userbookId)}
+          showDelete={!!selectedBook?.userbookId}
+        />
       </BottomSheetModal>
     </>
   );

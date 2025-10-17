@@ -8,7 +8,7 @@ import MainHeader from "../../components/common/MainHeader";
 import ReadingSpaceComponent from "../../components/MainPage/ReadingSpaceComponent";
 import right from "../../assets/common/right-yellow.svg";
 import BookCountDisplay from "../../components/MainPage/BookCountDisplay";
-import DeleteModal from "../../components/common/modal/DeleteModal";
+import CheckModal from "../../components/common/modal/CheckModal";
 import { useSSE } from "../../context/SSEProvider";
 import FullModal from "../../components/MainPage/FullModal";
 import UserDuck from "../../components/CharacterPage/UserDuck";
@@ -159,7 +159,7 @@ const MainPage = () => {
       </div>
       {isNavBar && <BottomNavbar />}
       {showDeleteModal && (
-        <DeleteModal
+        <CheckModal
           title="정말 삭제하시겠어요?"
           content="카드들이 모두 삭제되며 복구할 수 없어요."
           leftBtnText="삭제"
@@ -169,7 +169,7 @@ const MainPage = () => {
         />
       )}
       {showOutModal && (
-        <DeleteModal
+        <CheckModal
           title={`편집된 사항을\n저장하지 않고 나갈까요?`}
           leftBtnText="나가기"
           rightBtnText="계속하기"

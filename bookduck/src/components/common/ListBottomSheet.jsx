@@ -44,13 +44,13 @@ const ListBottomSheet = ({
   return (
     <div className="flex flex-col gap-3 mb-[1.75rem]">
       {title && (
-        <div className="text-st text-gray-800 font-semibold">{title}</div>
+        <div className="text-st text-gray-800 font-semibold px-4">{title}</div>
       )}
       {options.map((option, index) => {
         return (
           <div key={index}>
             <div
-              className="flex flex-row justify-between items-center w-[22.5625rem]  py-3 px-1 cursor-pointer"
+              className="flex flex-row justify-between items-center w-full py-3 px-4 cursor-pointer"
               onClick={() => handleOption(option)}
             >
               <div
@@ -69,7 +69,7 @@ const ListBottomSheet = ({
       {isCancel && (
         <div
           onClick={handlePutCancel}
-          className="flex items-center gap-1 w-[22.2625rem] h-[3rem] px-3 py-3 bg-gray-10 rounded-2 mt-4 cursor-pointer"
+          className="flex items-center gap-1 w-full h-[3rem] px-4 py-3 bg-gray-10 rounded-2 mt-4 cursor-pointer"
         >
           <img src={trash} className="w-6 h-6" />
           <span className="text-btn3 text-gray-500">{cancelText}</span>

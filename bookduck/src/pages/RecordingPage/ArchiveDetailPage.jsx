@@ -4,13 +4,20 @@ import { get } from "../../api/example";
 import AuthorComponent from "../../components/RecordingPage/AuthorComponent";
 import Header2 from "../../components/RecordingPage/Header2";
 import ReviewDetailCard from "../../components/RecordingPage/ReviewDetailCard";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import ExcerptDetailCard from "../../components/RecordingPage/ExcerptDetailCard";
-import DeleteModal from "../../components/common/modal/DeleteModal";
+import CheckModal from "../../components/common/modal/CheckModal";
 import BottomSheetModal2 from "../../components/BookInfoPage/BottomSheetModal2";
 import { delExtractReview, getDetailExtractReview } from "../../api/archive";
+import SuspenseLoading from "../../components/common/SuspenseLoading";
+
+const EditPage = lazy(() => import("./EditPage"));
 
 const ArchiveDetail = () => {
+  const location = useLocation();
+  
+  const searchParams = new URLSearchParams(location.search);
+  const isEditing = searchParams.get('editing') === 'true';
   const {
     data: font,
     isLoading,
@@ -30,7 +37,6 @@ const ArchiveDetail = () => {
   const [visibleMenu, setVisibleMenu] = useState(false);
   const [visible, setVisible] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const location = useLocation();
   const { id } = useParams();
   const [excerptId, setExcerptId] = useState();
   const [reviewId, setReviewId] = useState();
@@ -119,8 +125,8 @@ const ArchiveDetail = () => {
   };
 
   const handleEdit = () => {
-    // /edit로 이동
-    navigate(`/recording/edit/${id}`);
+    const currentPath = pathname;
+    navigate(`${currentPath}?editing=true`, { replace: true });
   };
 
   const handleExcerptClick = () => {
@@ -130,6 +136,15 @@ const ArchiveDetail = () => {
   const handleReviewClick = () => {
     setReviewClick(!reviewClick);
   };
+
+  // 수정 모드일 때 EditPage 렌더링
+  if (isEditing) {
+    return (
+      <Suspense fallback={<SuspenseLoading />}>
+        <EditPage />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="">
@@ -192,7 +207,7 @@ const ArchiveDetail = () => {
         />
       )}
       {showDeleteModal && (
-        <DeleteModal
+        <CheckModal
           title={
             excerptClick && !reviewClick
               ? "발췌카드를 삭제하시겠어요?"

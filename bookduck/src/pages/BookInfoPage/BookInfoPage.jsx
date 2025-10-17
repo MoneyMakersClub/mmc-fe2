@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
 import TabBarComponent from "../../components/common/TabBarComponent";
@@ -9,10 +9,16 @@ import FloatingRecordButton from "../../components/common/FloatingRecordButton";
 import MyComment from "../../components/BookInfoPage/MyComment";
 import { getBookInfo, getOneLineRatingsInfo } from "../../api/bookinfo";
 import SuspenseLoading from "../../components/common/SuspenseLoading";
+import RecordingPage from "../RecordingPage/RecordingPage";
 
 const BookInfoPage = () => {
   const { bookinfoId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const searchParams = new URLSearchParams(location.search);
+  const isRecording = searchParams.get('recording') === 'true';
+  
   const [activeTab, setActiveTab] = useState("책 정보");
   const [RatingListData, setRatingListData] = useState(null);
   const [bookData, setBookData] = useState(null);
@@ -36,7 +42,9 @@ const BookInfoPage = () => {
   }, [bookinfoId]);
 
   const handleBack = () => {
-    navigate(-1);
+    // 쿼리 파라미터 제거하여 원래 페이지로 돌아가기
+    const currentPath = location.pathname;
+    navigate(currentPath);
   };
 
   if (isLoading) {
@@ -45,6 +53,11 @@ const BookInfoPage = () => {
         <SuspenseLoading />
       </div>
     );
+  }
+
+  // 기록하기 모드일 때 RecordingPage 렌더링
+  if (isRecording) {
+    return <RecordingPage />;
   }
 
   return (

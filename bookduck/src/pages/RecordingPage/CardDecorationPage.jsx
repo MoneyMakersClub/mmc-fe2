@@ -56,12 +56,15 @@ const CardDecorationPage = () => {
 
   const handleComplete = () => {
     // 작성하던 내용을 다시 전달
-    navigate("/recording", {
+    const returnPath = location.state?.returnPath || "/archive";
+    
+    navigate(`${returnPath}?recording=true`, {
       state: {
         returnFromDecoration: true,
         tempReviewInputValue: textValue,
         tempTitleInputValue: reviewTitleValue,
-      }
+      },
+      replace: true
     });
   };
 
@@ -71,7 +74,7 @@ const CardDecorationPage = () => {
       <div className="px-4 pt-[calc(env(safe-area-inset-top)+2.75rem+2.69rem)] mb-[5.12rem]">
         <ReviewCard reviewData={reviewData} font={font} />
       </div>
-      <div className="relative min-h-[26rem] rounded-t-[1.25rem] shadow-custom2">
+      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[1.25rem] shadow-custom2">
         <div className="px-6 pt-8 pb-3">
           <RoundedTabComponent
             type="primary"

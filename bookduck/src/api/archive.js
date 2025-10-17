@@ -3,11 +3,14 @@ import { del, get, post, put } from "./example";
 
 export const postExtractReview = async (data) => {
   try {
+    console.log("API 요청 데이터:", data);
     const res = await post("/archives", data);
     console.log("발췌 및 감상평 업로드 성공", res);
     return res;
   } catch (error) {
     console.error("발췌 및 감상평 업로드 실패", error);
+    console.error("에러 응답:", error.response?.data);
+    throw error; // 에러를 다시 throw하여 상위에서 처리할 수 있도록
   }
 };
 

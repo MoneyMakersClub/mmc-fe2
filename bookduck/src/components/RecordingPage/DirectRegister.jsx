@@ -54,7 +54,7 @@ const DirectRegister = ({ onBookSelect }) => {
         onBookSelect(res.data);
       } else {
         setBookInfo(res.data);
-        navigate("/recording");
+        navigate("/archive?recording=true", { replace: true });
       }
     }
   };

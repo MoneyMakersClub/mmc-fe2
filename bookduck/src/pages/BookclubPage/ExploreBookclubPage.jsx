@@ -37,7 +37,7 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   const navigate = useNavigate();
 
   // 북클럽 상태 필터
-  const statusArr = ["전체", "읽는 중", "종료"];
+  const statusArr = ["전체", "진행 중", "종료"];
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -54,7 +54,7 @@ const ExploreBookclubPage = ({ view = "list" }) => {
     switch (status) {
       case "전체":
         return null;
-      case "읽는 중":
+      case "진행 중":
         return "ACTIVE";
       case "종료":
         return "ENDED";
@@ -260,15 +260,9 @@ const ExploreBookclubPage = ({ view = "list" }) => {
       >
         <ListBottomSheet
           title="정렬"
-          items={["최신순", "인기순"]}
-          currentItem={sort}
-          onItemSelect={handleSortChange}
-          onCancel={() => {
-            setVisible(false);
-            setTimeout(() => {
-              setSortingBottomSheet(false);
-            }, 200);
-          }}
+          options={["최신순", "인기순"]}
+          currentOption={sort}
+          handleOption={handleSortChange}
         />
       </BottomSheetModal>
 

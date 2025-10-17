@@ -23,7 +23,7 @@ const Library = ({ onBookSelect }) => {
       onBookSelect(book);
     } else {
       setBookInfo(book);
-      navigate("/recording");
+      navigate("/archive?recording=true", { replace: true });
     }
   };
   return (

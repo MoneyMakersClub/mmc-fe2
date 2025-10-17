@@ -7,12 +7,18 @@ import TotalView from "../../components/RecordingPage/TotalView";
 import TabBarComponent from "../../components/common/TabBarComponent";
 import ExcerptView from "../../components/RecordingPage/ExcerptView";
 import ReviewView from "../../components/RecordingPage/ReviewView";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import FloatingRecordButton from "../../components/common/FloatingRecordButton";
+import RecordingPage from "./RecordingPage";
 
 const ArchivePage = () => {
   const [tab, setTab] = useState("전체보기");
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 쿼리 파라미터 확인
+  const searchParams = new URLSearchParams(location.search);
+  const isRecording = searchParams.get('recording') === 'true';
 
   const {
     data: font,
@@ -29,9 +35,10 @@ const ArchivePage = () => {
     refetchOnWindowFocus: false,
   });
 
-  const handleRecording = () => {
-    navigate("/selectBook");
-  };
+  // 기록하기 모드일 때 RecordingPage 렌더링
+  if (isRecording) {
+    return <RecordingPage />;
+  }
 
   return (
     <>
@@ -51,7 +58,7 @@ const ArchivePage = () => {
           <div className="h-[6rem] bg-transparent"></div>
         </div>
         <div className="fixed bottom-[6.38rem] flex justify-end w-[24.5625rem] cursor-pointer">
-          <FloatingRecordButton handleNavigate={handleRecording} text={false} />
+          <FloatingRecordButton text={false} />
         </div>
 
         <BottomNavbar />

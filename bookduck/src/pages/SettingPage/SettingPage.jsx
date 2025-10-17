@@ -6,7 +6,7 @@ import ToggleButton from "../../components/common/ToggleButtonComponent";
 import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import TextField from "../../components/common/TextField";
 import ButtonComponent from "../../components/common/ButtonComponent";
-import DeleteModal from "../../components/common/modal/DeleteModal";
+import CheckModal from "../../components/common/modal/CheckModal";
 import edit from "../../assets/settingPage/edit.svg";
 import kakaoLogin from "../../assets/settingPage/kakao-login.svg";
 import google from "../../assets/loginPage/google.svg";
@@ -340,7 +340,7 @@ const SettingPage = () => {
         </div>
       </BottomSheetModal>
       {showDeleteModal && (
-        <DeleteModal
+        <CheckModal
           title={`수정된 이름을\n저장하지 않고 나갈까요?`}
           leftBtnText="나가기"
           rightBtnText="계속하기"

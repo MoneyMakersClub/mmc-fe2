@@ -6,7 +6,7 @@ const MyBookclubCard = ({ club }) => {
   const getStatusText = (status) => {
     switch (status) {
       case "ACTIVE":
-        return "읽는 중";
+        return "진행 중";
       case "ENDED":
         return "종료";
       default:
@@ -56,10 +56,15 @@ const MyBookclubCard = ({ club }) => {
           {/* 최근 메시지 */}
           <div className="mt-auto flex-shrink-0 flex items-end">
             {club.latestPost?.content ? (
-              <div className="w-[14.6875rem] h-[1.875rem] bg-gray-50 rounded px-2 flex items-center">
-                <span className="text-b2 text-gray-600 truncate">
+              <div className="w-[14.6875rem] h-[1.875rem] bg-gray-50 rounded px-2 flex items-center justify-between">
+                <span className="text-b2 text-gray-500 truncate">
                   {club.latestPost.content}
                 </span>
+                {club.unreadCount > 0 && (
+                  <div className="bg-orange-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2 flex-shrink-0">
+                    {club.unreadCount}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="w-[14.6875rem] h-[1.875rem]"></div>
@@ -67,12 +72,6 @@ const MyBookclubCard = ({ club }) => {
           </div>
         </div>
 
-        {/* 안 읽은 메세지 수 */}
-        {club.unreadCount > 0 && (
-          <div className="absolute top-4 right-4 w-5 h-5 bg-orange-300 rounded-full flex items-center justify-center">
-            <span className="text-c1 text-white font-semibold">{club.unreadCount}</span>
-          </div>
-        )}
       </div>
     </div>
   );

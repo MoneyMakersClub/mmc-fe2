@@ -54,13 +54,13 @@ const BottomSheetModal = ({
   if (!bottomSheetShow && !visible) return null;
 
   const slideModal = (
-    <div className="flex justify-center">
+    <div className="flex justify-center z-[120]">
       {!custom && (
         <div
           onClick={handleBackdropClick}
           className={`${
             visible ? "bg-black bg-opacity-50" : "bg-transparent"
-          } w-full h-screen  fixed top-0 transition-colors duration-300`}
+          } w-full h-screen fixed top-0 transition-colors duration-300 z-[120]`}
         />
       )}
 
@@ -68,7 +68,7 @@ const BottomSheetModal = ({
         onClick={(e) => e.stopPropagation()}
         className={`bg-white ${
           visible ? "animate-slideUp" : "animate-slideDown"
-        } bg-opacity-100 fixed bottom-0 w-full  rounded-t-xl pt-6 pb-4 px-4 transition-transform shadow-custom duration-300`}
+        } bg-opacity-100 fixed bottom-0 w-full rounded-t-xl pt-6 pb-4 px-4 transition-transform shadow-custom duration-300 z-[120]`}
         style={{ height: height ? `${height}` : "auto", overflowY: "auto" }}
       >
         {children}

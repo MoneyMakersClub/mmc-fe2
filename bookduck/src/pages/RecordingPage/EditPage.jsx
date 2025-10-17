@@ -124,7 +124,9 @@ const EditPage = () => {
 
   const handleBack = () => {
     setReviewColor("");
-    navigate(-1); 
+    // 쿼리 파라미터 제거
+    const currentPath = location.pathname;
+    navigate(currentPath);
   };
 
   const handleExtractOnChange = (e) => {
@@ -160,8 +162,8 @@ const EditPage = () => {
 
   const handleExtractTextField = () => {
     // 모달 열 때 임시 상태에 현재 값 복사
-    setTempExtractInputValue(extractInputValue);
-    setTempPageInputValue(pageInputValue);
+    setTempExtractInputValue(extractInputValue || "");
+    setTempPageInputValue(pageInputValue || "");
     setViewBottomSheet(true);
     setBottomSheetType("발췌");
     setTimeout(() => setVisible(true), 10);
@@ -247,40 +249,35 @@ const EditPage = () => {
     const hasExcerpt = detailData.excerpt;
     const hasReview = detailData.review;
     
+    // 쿼리 파라미터 제거하여 원래 페이지로 돌아가기
+    const currentPath = location.pathname;
+    
     if (hasExcerpt && hasReview) {
-      // -2로 이동 후 replace로 다시 detail 페이지 열기
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/total-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/total-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else if (hasReview) {
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/review-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/review-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else if (hasExcerpt) {
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/excerpt-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/excerpt-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else {
-      navigate(-1);
+      navigate(currentPath);
     }
   };
 
   const handleDecoration = () => {
+    const currentPath = location.pathname;
     navigate(`/recording/edit/${archiveId}/decoration`, {
       state: {
         textValue: reviewInputValue,
         titleValue: titleInputValue,
         bookTitleValue: title,
         authorValue: author,
+        returnPath: currentPath, // 돌아갈 경로 저장
       },
     });
   };
