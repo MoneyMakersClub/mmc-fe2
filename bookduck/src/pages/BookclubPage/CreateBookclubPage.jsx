@@ -33,7 +33,7 @@ const CreateBookclubPage = () => {
       description,
       activeStartDate,
       activeEndDate,
-      bookInfoId: selectedBookInfo.bookInfoId,
+      bookInfoId: selectedBookInfo.bookUnitDto?.bookInfoId || selectedBookInfo.bookInfoId,
       maxMember
     };
 
@@ -44,6 +44,8 @@ const CreateBookclubPage = () => {
       navigate("/bookclub");
     } catch (error) {
       console.error("북클럽 생성 실패:", error);
+      console.error("에러 응답:", error.response?.data);
+      console.error("에러 상태:", error.response?.status);
       alert("북클럽 생성에 실패했습니다.");
     }
   };
@@ -75,7 +77,7 @@ const CreateBookclubPage = () => {
     return `${year}.${month}.${day}`;
   };
 
-  const isFormValid = clubName && activeStartDate && activeEndDate && selectedBookInfo;
+  const isFormValid = clubName && activeStartDate && activeEndDate && selectedBookInfo && maxMember >= 2 && maxMember <= 50;
 
   return (
     <div className="w-full max-w-[64rem]">
@@ -96,7 +98,7 @@ const CreateBookclubPage = () => {
                 className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
               >
                 <div className="text-center text-b1 text-gray-400">
-                  책을 선택해주세요
+                  서재에서 함께 읽을 책을 선택
                 </div>
               </div>
             )}
@@ -183,9 +185,18 @@ const CreateBookclubPage = () => {
                 min="2"
                 max="50"
                 value={maxMember}
-                onChange={(e) => setMaxMember(parseInt(e.target.value) || 2)}
+                onChange={(e) => setMaxMember(e.target.value)}
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  if (value === '' || value === '0') {
+                    setMaxMember(10); // 포커스가 나갔을 때만 기본값 설정
+                  }
+                }}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
               />
+              <p className="text-c1 text-gray-400 mt-2">
+                2명부터 50명까지 설정할 수 있어요.
+              </p>
             </div>
           </div>
 

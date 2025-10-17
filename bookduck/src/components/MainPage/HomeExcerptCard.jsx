@@ -9,7 +9,7 @@ const HomeExcerptCard = ({
   visibility,
 }) => {
   return (
-    <div className="cursor-pointer  w-full h-[8rem]" onClick={onClick}>
+    <div className="cursor-pointer w-full min-h-[8rem]" onClick={onClick}>
       <div
         className={`flex flex-col gap-5 rounded-2xl bg-gray-10 shadow-custom p-5
           ${selected && " border-[1px] border-[#6B7FF0]"}`}

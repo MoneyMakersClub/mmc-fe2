@@ -203,7 +203,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
           <SuspenseLoading />
         </div>
       ) : registeredBooks.length > 0 || books.length > 0 ? (
-        <div className="px-4">
+        <div>
           <div>
             {registeredBooks.map((book, index) => (
               <BookListView

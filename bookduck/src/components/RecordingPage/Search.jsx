@@ -59,14 +59,12 @@ const Search = ({ onBookSelect }) => {
 
   return (
     <>
-      <div>
-        <SearchComponent
-          search={search}
-          setSearch={setSearch}
-          onEnter={handleSearch}
-          custom={true}
-        />
-      </div>
+      <SearchComponent
+        search={search}
+        setSearch={setSearch}
+        onEnter={handleSearch}
+        custom={true}
+      />
       <div className="flex flex-col mx-4 mt-[0.5rem]">
         {search && (
           <SearchBookComponent

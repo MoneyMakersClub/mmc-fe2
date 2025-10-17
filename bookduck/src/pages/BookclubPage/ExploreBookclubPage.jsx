@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import down from "../../assets/common/down.svg";
 import SortFilterBar from "../../components/common/SortFilterBar";
 import BookclubListView from "../../components/common/BookclubListView";
@@ -15,6 +15,7 @@ import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 import {
   getNewClubs,
+  searchClubs,
 } from "../../api/bookclub";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -27,16 +28,16 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   const [statusBottomSheet, setStatusBottomSheet] = useState(false);
   const [statusVisible, setStatusVisible] = useState(false);
   const [isCancel, setCancel] = useState(true);
-  const [sortedClubList, setSortedClubList] = useState([]);
   const [selectedClubId, setSelectedClubId] = useState();
   const [currentState, setCurrentState] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [submittedSearch, setSubmittedSearch] = useState(null); 
   const [isSearching, setIsSearching] = useState(false);
 
   const navigate = useNavigate();
 
   // 북클럽 상태 필터
-  const statusArr = ["시작 전", "읽는 중", "종료"];
+  const statusArr = ["전체", "읽는 중", "종료"];
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -51,12 +52,12 @@ const ExploreBookclubPage = ({ view = "list" }) => {
 
   const getStatusKey = (status) => {
     switch (status) {
-      case "시작 전":
-        return "BEFORE_START";
+      case "전체":
+        return null;
       case "읽는 중":
-        return "IN_PROGRESS";
+        return "ACTIVE";
       case "종료":
-        return "FINISHED";
+        return "ENDED";
       default:
         return null;
     }
@@ -93,9 +94,48 @@ const ExploreBookclubPage = ({ view = "list" }) => {
     isFetchingNextPage,
   });
 
+  // 북클럽 검색 쿼리
+  const {
+    data: searchData,
+    isLoading: isLoadingSearch,
+    error: errorSearch,
+    fetchNextPage: fetchNextSearchPage,
+    hasNextPage: hasNextSearchPage,
+    isFetchingNextPage: isFetchingNextSearchPage,
+  } = useInfiniteQuery({
+    queryKey: ["searchClubs", submittedSearch, tabList],
+    queryFn: async ({ pageParam = 0 }) => {
+      const selectedStatus = tabList.length > 0 ? getStatusKey(tabList[0]) : null;
+      
+      const response = await searchClubs({
+        keyword: submittedSearch,
+        clubStatus: selectedStatus,
+        page: pageParam,
+        size: 20
+      });
+      
+      return {
+        clubs: response.clubs?.pageContent || [],
+        nextPage: pageParam + 1,
+        totalPages: response.clubs?.totalPages || 0,
+      };
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.nextPage < lastPage.totalPages ? lastPage.nextPage : undefined,
+    initialPageParam: 0,
+    enabled: !!submittedSearch,
+  });
+
+  // 검색 결과 무한 스크롤 훅
+  const { loaderRef: searchLoaderRef } = useInfiniteScroll({
+    fetchNextPage: fetchNextSearchPage,
+    hasNextPage: hasNextSearchPage,
+    isFetchingNextPage: isFetchingNextSearchPage,
+  });
 
   const allClubs = data?.pages.flatMap((page) => page.clubs) || [];
-  const clubListData = { clubs: allClubs };
+  const searchResults = searchData?.pages.flatMap((page) => page.clubs) || [];
+  const clubListData = { clubs: isSearching ? searchResults : allClubs };
 
   const handleSortChange = (newSort) => {
     setSort(newSort);
@@ -110,17 +150,19 @@ const ExploreBookclubPage = ({ view = "list" }) => {
   };
 
   const handleTabClick = async (tab) => {
-    setTabList((prev) =>
-      prev.includes(tab) ? [] : [tab]
-    );
-    console.log(tabList);
+    setTabList((prev) => {
+      const newList = prev.includes(tab) ? [] : [tab];
+      return newList;
+    });
   };
 
-  const filteredClubs = []; // 빈 배열로 설정
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
+      setSubmittedSearch(searchQuery);
       setIsSearching(true);
+      // 검색 시 "전체" 필터 기본 적용
+      setTabList(["전체"]);
     }
   };
 
@@ -128,6 +170,9 @@ const ExploreBookclubPage = ({ view = "list" }) => {
     setSearchQuery(value);
     if (value.trim() === "") {
       setIsSearching(false);
+      setSubmittedSearch(null);
+      // 검색어 지울 때 필터도 초기화
+      setTabList([]);
     }
   };
 
@@ -145,25 +190,28 @@ const ExploreBookclubPage = ({ view = "list" }) => {
       <SortFilterBar
         sort={sort}
         onSortClick={handleSorting}
-        tabs={[]}
-        activeTabs={[]}
-        onTabClick={() => {}}
+        tabs={isSearching ? statusArr : []}
+        activeTab={tabList.length > 0 ? tabList[0] : null}
+        activeTabs={tabList}
+        onTabClick={handleTabClick}
         multiple={false}
       />
       
-      {isLoadingNew && (
+      {(isLoadingNew || (isSearching && isLoadingSearch)) && (
         <div className="flex justify-center items-center py-10">
           <SuspenseLoading />
         </div>
       )}
 
-      {errorNew && (
+      {(errorNew || (isSearching && errorSearch)) && (
         <div className="flex justify-center items-center py-10">
-          <div className="text-red-500">데이터를 불러오는데 실패했습니다.</div>
+          <div className="text-red-500">
+            {isSearching ? "검색 중 오류가 발생했습니다." : "데이터를 불러오는데 실패했습니다."}
+          </div>
         </div>
       )}
 
-      {!isLoadingNew && !errorNew && view === "list" && (
+      {!isLoadingNew && !errorNew && !(isSearching && isLoadingSearch) && !(isSearching && errorSearch) && view === "list" && (
         <div className="mx-4">
           {(clubListData?.clubs || []).length === 0 ? (
             <div className="flex justify-center items-center py-10">
@@ -173,19 +221,14 @@ const ExploreBookclubPage = ({ view = "list" }) => {
             </div>
           ) : (
             <>
-              {tabList.length === 0
-                ? (clubListData?.clubs || []).map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))
-                : sortedClubList &&
-                  sortedClubList.map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))}
+              {(clubListData?.clubs || []).map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="explore" />
+              ))}
             </>
           )}
         </div>
       )}
-      {!isLoadingNew && !errorNew && view === "cover" && (
+      {!isLoadingNew && !errorNew && !(isSearching && isLoadingSearch) && !(isSearching && errorSearch) && view === "cover" && (
         <div className="mx-4">
           {(clubListData?.clubs || []).length === 0 ? (
             <div className="flex justify-center items-center py-10">
@@ -195,21 +238,14 @@ const ExploreBookclubPage = ({ view = "list" }) => {
             </div>
           ) : (
             <>
-              {tabList.length === 0
-                ? (clubListData?.clubs || []).map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))
-                : sortedClubList &&
-                  sortedClubList.map((club, index) => (
-                    <BookclubListView key={index} clubs={[club]} type="explore" />
-                  ))}
+              {(clubListData?.clubs || []).map((club, index) => (
+                <BookclubListView key={index} clubs={[club]} type="explore" />
+              ))}
               
               {/* 무한 스크롤 로더 */}
-              {!isSearching && tabList.length === 0 && (
-                <div ref={loaderRef} className="flex justify-center items-center py-4">
-                  {isFetchingNextPage && <div className="text-gray-500">로딩 중...</div>}
-                </div>
-              )}
+              <div ref={isSearching ? searchLoaderRef : loaderRef} className="flex justify-center items-center py-4">
+                {(isFetchingNextPage || isFetchingNextSearchPage) && <div className="text-gray-500">로딩 중...</div>}
+              </div>
             </>
           )}
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { get, post } from "../../api/example";
-import NavigationHeader from "../../components/common/NavigationHeader";
+import PageLayout from "../../components/common/PageLayout";
 import SearchComponent from "../../components/common/SearchComponent";
 import HomeExcerptCard from "../../components/MainPage/HomeExcerptCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
@@ -13,10 +13,23 @@ const DATA_LIMIT = 10;
 const SelectExtractPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [excerptId, setExcerptId] = useState();
   const [cardData, setCardData] = useState({
     cardType: "EXCERPT",
   });
+
+  const handleSearch = () => {
+    setSearchQuery(search);
+  };
+
+  // 검색어 변경 처리
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    if (value === "") {
+      setSearchQuery(""); // 검색어가 비워지면 검색 결과도 초기화
+    }
+  };
 
   const {
     data,
@@ -25,10 +38,10 @@ const SelectExtractPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["excerpts", search],
+    queryKey: ["excerpts", searchQuery],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await get(
-        `/readingspace/excerpts/search?keyword=${search}&page=${pageParam}&size=${DATA_LIMIT}`
+        `/readingspace/excerpts/search?keyword=${searchQuery}&page=${pageParam}&size=${DATA_LIMIT}`
       );
       console.log("response", response);
       const excerpts = response.pageContent.map((excerpt) => ({
@@ -87,16 +100,20 @@ const SelectExtractPage = () => {
   };
 
   return (
-    <div className="w-full">
-      <NavigationHeader title="발췌 카드 위젯" />
-      <div className="mt-[0.62rem] mb-4">
+    <PageLayout
+      hasHeader={true}
+      headerProps={{ title: "발췌 카드 위젯" }}
+    >
+      <div className="pb-4">
         <SearchComponent
           placeholder="기록한 발췌 카드를 검색하세요"
           search={search}
-          setSearch={setSearch}
+          setSearch={handleSearchChange}
+          onEnter={handleSearch}
+          custom={true}
         />
       </div>
-      <div className="flex flex-col gap-4 px-5">
+      <div className="flex flex-col gap-4 px-5 mb-24">
         {excerpts.length > 0 &&
           excerpts.map((excerpt, index) => (
             <HomeExcerptCard
@@ -113,7 +130,7 @@ const SelectExtractPage = () => {
         <div ref={loaderRef} style={{ height: "1px" }} />
       </div>
       {excerptId && (
-        <div className="fixed bottom-0 w-[24.5625rem] h-[5.5rem] px-4 pt-[0.37rem] bg-white">
+        <div className="fixed bottom-0 w-full max-w-[64rem] h-[5.5rem] px-4 pt-[0.37rem] bg-white border-t border-gray-100">
           <ButtonComponent
             text="완료"
             type="primary"
@@ -122,7 +139,7 @@ const SelectExtractPage = () => {
           />
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 };
 

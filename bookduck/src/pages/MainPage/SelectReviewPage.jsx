@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { get, post } from "../../api/example";
 import { useNavigate } from "react-router-dom";
-import NavigationHeader from "../../components/common/NavigationHeader";
+import PageLayout from "../../components/common/PageLayout";
 import SearchComponent from "../../components/common/SearchComponent";
 import HomeReviewCard from "../../components/MainPage/HomeReviewCard";
 import ButtonComponent from "../../components/common/ButtonComponent";
@@ -13,10 +13,23 @@ const DATA_LIMIT = 10;
 const SelectReviewPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); 
   const [reviewId, setReviewId] = useState();
   const [cardData, setCardData] = useState({
     cardType: "ONELINE",
   });
+
+  const handleSearch = () => {
+    setSearchQuery(search);
+  };
+
+  // 검색어 변경 처리 
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    if (value === "") {
+      setSearchQuery(""); // 검색어가 비워지면 검색 결과도 초기화
+    }
+  };
 
   const {
     data,
@@ -25,10 +38,10 @@ const SelectReviewPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["reviews", search],
+    queryKey: ["reviews", searchQuery],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await get(
-        `/readingspace/onelines/search?keyword=${search}&page=${pageParam}&size=${DATA_LIMIT}`
+        `/readingspace/onelines/search?keyword=${searchQuery}&page=${pageParam}&size=${DATA_LIMIT}`
       );
       console.log("response", response);
       const reviews = response.pageContent.map((review) => ({
@@ -86,16 +99,20 @@ const SelectReviewPage = () => {
   };
 
   return (
-    <div className="w-full">
-      <NavigationHeader title="한줄평 카드 위젯" />
-      <div className="mt-[0.62rem] mb-4">
+    <PageLayout
+      hasHeader={true}
+      headerProps={{ title: "한줄평 카드 위젯" }}
+    >
+      <div className="pb-4">
         <SearchComponent
-          placeholder="제목이나 작가로 작성한 카드를 검색하세요"
+          placeholder="제목이나 작가로 검색하세요"
           search={search}
-          setSearch={setSearch}
+          setSearch={handleSearchChange}
+          onEnter={handleSearch}
+          custom={true}
         />
       </div>
-      <div className="flex flex-col gap-4 px-5">
+      <div className="flex flex-col gap-4 px-5 mb-24">
         {reviews.map((review, index) => (
           <HomeReviewCard
             key={index}
@@ -110,7 +127,7 @@ const SelectReviewPage = () => {
         <div ref={loaderRef} style={{ height: "1px" }} />
       </div>
       {reviewId && (
-        <div className="fixed bottom-0 w-[24.5625rem] h-[5.5rem] px-4 pt-[0.37rem] bg-white">
+        <div className="fixed bottom-0 w-full max-w-[64rem] h-[5.5rem] px-4 pt-[0.37rem] bg-white border-t border-gray-100">
           <ButtonComponent
             text="완료"
             type="primary"
@@ -119,7 +136,7 @@ const SelectReviewPage = () => {
           />
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 };
 

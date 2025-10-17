@@ -5,6 +5,7 @@ const SortFilterBar = ({
   sort, 
   onSortClick, 
   tabs, 
+  activeTab,
   activeTabs, 
   onTabClick,
   multiple = true 
@@ -24,6 +25,7 @@ const SortFilterBar = ({
         <RoundedTabComponent
           type="secondary"
           tabs={tabs}
+          activeTab={activeTab}
           activeTabs={activeTabs}
           onTabClick={onTabClick}
           multiple={multiple}
