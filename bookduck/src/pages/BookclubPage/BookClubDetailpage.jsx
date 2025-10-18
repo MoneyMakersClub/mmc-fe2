@@ -28,8 +28,6 @@ const BookClubDetailPage = () => {
       setIsLoading(true);
       const clubRes = await getClubDetail(clubId);
       setClubData(clubRes);
-      
-      // 실제 멤버 목록 사용
       if (clubRes?.members) {
         setMembers(clubRes.members);
       }
@@ -162,7 +160,7 @@ const BookClubDetailPage = () => {
           </div>
         )}
 
-        {activeTab === "참여자" && (
+        {activeTab === `참여자 (${clubData.memberCount}명)` && (
           <div className="py-4">
             <ClubMemberView clubId={clubId} />
           </div>

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import duck from "../../assets/common/duck.svg";
+import profileDuck from "../../assets/common/profile-duck.svg";
 import ButtonComponent from "./ButtonComponent";
 import badge from "../../assets/friendPage/badge.svg";
 
@@ -73,8 +73,8 @@ const FriendListComponent = ({
       onClick={handleClick}
     >
       <div className="flex items-center">
-        <div className="w-[3.5rem] h-[3.5rem] mr-3">
-          <img src={duck} className="object-cover w-full h-full" />
+        <div className="w-[3.5rem] h-[3.5rem] mr-3 rounded-full overflow-hidden bg-stone-50 border border-gray-200 flex items-center justify-center" style={{ borderWidth: '0.1px' }}>
+          <img src={profileDuck} className="w-[2.5rem] h-[2.5rem] object-contain" />
         </div>
         <span className="ml-2 text-gray-800">{userName}</span>
         {isOfficial && (

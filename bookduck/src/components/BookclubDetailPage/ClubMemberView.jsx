@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getClubMembers } from "../../api/bookclub";
-import FriendListComponent from "../common/FriendListComponent";
+import ClubMemberListComponent from "./ClubMemberListComponent";
 
 const ClubMemberView = ({ clubId }) => {
-  const [memberData, setMemberData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [members, setMembers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         setIsLoading(true);
         const res = await getClubMembers(clubId);
-        setMemberData(res);
+        setMembers(res.members || []);
       } catch (err) {
         console.error("멤버 목록 조회 실패:", err);
       } finally {
@@ -34,22 +34,23 @@ const ClubMemberView = ({ clubId }) => {
     );
   }
 
-  const members = memberData?.members || [];
-
   return (
     <div className="flex flex-col">
       {members.length > 0 ? (
         <div className="flex flex-col">
-          {members.map((member, index) => (
-            <FriendListComponent
-              key={member.memberId}
-              userId={member.userId}
-              userName={member.nickname}
-              isOfficial={member.role === "LEADER"}
-              text="none"
-              handleClick={() => navigate(`/user/${member.userId}`)}
-            />
-          ))}
+          {members.map((member, index) => {
+            console.log("ClubMemberView - individual member:", member);
+            return (
+              <ClubMemberListComponent
+                key={member.memberId}
+                memberId={member.memberId}
+                userId={member.userId}
+                nickname={member.nickname}
+                role={member.role}
+                handleClick={() => navigate(`/user/${member.userId}`)}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="flex justify-center items-center py-16">
