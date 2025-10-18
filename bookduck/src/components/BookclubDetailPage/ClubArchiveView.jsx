@@ -39,38 +39,6 @@ const ClubArchiveView = ({ clubId, unreadCount = 0, activeFilter, members = [] }
     }
   }, [clubId, activeFilter, members]);
 
-  const handleCardClick = async (archiveId) => {
-    if (!archiveId) {
-      return;
-    }
-    
-    try {
-      const res = await getDetailExtractReview(archiveId);
-      
-      if (!res) {
-        return;
-      }
-      
-      const typeState =
-        res.excerpt && res.review ? "ALL" : res.excerpt ? "EXCERPT" : "REVIEW";
-
-      if (typeState === "ALL")
-        navigate(`/total-archive-detail/${archiveId}`, {
-          state: { detailData: res },
-        });
-      else if (typeState === "REVIEW")
-        navigate(`/review-archive-detail/${archiveId}`, {
-          state: { detailData: res },
-        });
-      else if (typeState === "EXCERPT")
-        navigate(`/excerpt-archive-detail/${archiveId}`, {
-          state: { detailData: res },
-        });
-    } catch (error) {
-      console.error("Failed to fetch archive detail:", error);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -84,46 +52,24 @@ const ClubArchiveView = ({ clubId, unreadCount = 0, activeFilter, members = [] }
       {archiveData?.length > 0 ? (
         <div className="flex flex-col gap-4 w-full">
           {archiveData.map((item, index) => {
-            const { type, id, nickname, content, title, createdTime } = item;
-            
-            // 임시로 데이터 구조를 맞춰서 전달
-            const archiveDetailData = {
-              review: type === "REVIEW" ? {
-                reviewTitle: title || "",
-                reviewContent: content || "",
-                color: "#FFE4B5", // 기본 색상
-                visibility: "PUBLIC",
-                createdTime: createdTime,
-                modifiedTime: null
-              } : null,
-              excerpt: type === "EXCERPT" ? {
-                excerptContent: content || "",
-                pageNumber: 0, // 페이지 번호는 실제 데이터에서 가져와야 함
-                visibility: "PUBLIC",
-                createdTime: createdTime,
-                modifiedTime: null
-              } : null
-            };
+            const { type, id, nickname, data } = item;
 
             if (type === "REVIEW") {
               return (
-                <div key={index} onClick={() => handleCardClick(id)} className="cursor-pointer">
+                <div key={index}>
                   <ClubReviewCard 
-                    archiveDetailData={archiveDetailData}
+                    data={data}
                     font=""
                     nickname={nickname}
-                    createdTime={createdTime}
                   />
                 </div>
               );
             } else if (type === "EXCERPT") {
               return (
-                <div key={index} onClick={() => handleCardClick(id)} className="cursor-pointer">
+                <div key={index}>
                   <ClubExcerptCard 
-                    archiveDetailData={archiveDetailData}
-                    font=""
+                    data={data}
                     nickname={nickname}
-                    createdTime={createdTime}
                   />
                 </div>
               );

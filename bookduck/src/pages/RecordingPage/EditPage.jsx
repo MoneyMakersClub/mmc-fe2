@@ -24,10 +24,12 @@ import { useQuery } from "@tanstack/react-query";
 import { postExtractImage } from "../../api/archive";
 import RecordingModal from "../../components/RecordingPage/RecordingModal";
 import { get } from "../../api/example";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const EditPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { goBackFromEditing } = useNavigationHistory();
   const [viewBottomSheet, setViewBottomSheet] = useState(false);
   const [visible, setVisible] = useState(false);
   const [bottomSheetType, setBottomSheetType] = useState("");
@@ -124,9 +126,7 @@ const EditPage = () => {
 
   const handleBack = () => {
     setReviewColor("");
-    // 쿼리 파라미터 제거
-    const currentPath = location.pathname;
-    navigate(currentPath);
+    goBackFromEditing();
   };
 
   const handleExtractOnChange = (e) => {
@@ -271,13 +271,20 @@ const EditPage = () => {
 
   const handleDecoration = () => {
     const currentPath = location.pathname;
-    navigate(`/recording/edit/${archiveId}/decoration`, {
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+    const decorationUrl = returnTo 
+      ? `/recording/edit/${archiveId}/decoration?returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : `/recording/edit/${archiveId}/decoration`;
+    
+    navigate(decorationUrl, {
       state: {
         textValue: reviewInputValue,
         titleValue: titleInputValue,
         bookTitleValue: title,
         authorValue: author,
-        returnPath: currentPath, // 돌아갈 경로 저장
+        returnPath: currentPath,
       },
     });
   };

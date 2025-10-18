@@ -2,7 +2,7 @@ import { useState } from "react";
 import bookCover from "../../assets/common/book-cover.svg";
 import TextField from "../common/TextField";
 import ButtonComponent from "../common/ButtonComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { postRegisterBook } from "../../api/recording";
 import useBookInfoStore from "../../store/useBookInfoStore";
 
@@ -14,6 +14,7 @@ const DirectRegister = ({ onBookSelect }) => {
   const [imgFile, setImgFile] = useState();
   const { setBookInfo } = useBookInfoStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -48,13 +49,20 @@ const DirectRegister = ({ onBookSelect }) => {
     }
 
     const res = await postRegisterBook(formData);
-    console.log(res);
     if (res) {
       if (onBookSelect) {
         onBookSelect(res.data);
       } else {
         setBookInfo(res.data);
-        navigate("/archive?recording=true", { replace: true });
+        
+        const searchParams = new URLSearchParams(location.search);
+        const returnTo = searchParams.get('returnTo');
+        const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+        const url = returnTo 
+          ? `/archive?recording=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+          : '/archive?recording=true';
+        
+        navigate(url, { replace: true });
       }
     }
   };

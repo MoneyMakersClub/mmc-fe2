@@ -17,11 +17,13 @@ import useReviewData from "../../store/useReviewDataStore";
 import useReviewColorStore from "../../store/useReviewColorStore";
 import { postExtractImage } from "../../api/archive";
 import RecordingModal from "../../components/RecordingPage/RecordingModal";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const RecordingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
+  const { goBackFromRecording, goBackAfterComplete } = useNavigationHistory();
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [viewBottomSheet, setViewBottomSheet] = useState(false);
@@ -91,14 +93,12 @@ const RecordingPage = () => {
 
   const handleBack = () => {
     setReviewColor("");
-    const currentPath = location.pathname;
-    navigate(currentPath);
+    goBackFromRecording();
   };
 
   const handleCancel = () => {
     setReviewColor("");
-    const currentPath = location.pathname;
-    navigate(currentPath);
+    goBackFromRecording();
   };
 
   const handleExtractOnChange = (e) => {
@@ -263,30 +263,32 @@ const RecordingPage = () => {
       setTitleInputValue("");
       setReviewInputValue("");
       
-      // 쿼리 파라미터 제거하여 원래 페이지로 돌아가기
-      const currentPath = location.pathname;
-      navigate(currentPath);
+      // 완료 후 원래 페이지로 돌아가기
+      goBackAfterComplete();
     }
   };
 
   const handleDecoration = () => {
-    // 현재 날짜를 YYYY.MM.DD 형식으로 생성
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-    
-    // 제목이 없으면 날짜 기반 제목 생성 (YYYY년 MM월 DD일의 기록)
     const defaultTitle = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일의 기록`;
     
-    // 모달에서 호출되므로 임시 값을 전달
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+    const decorationUrl = returnTo 
+      ? `/recording/decoration?returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : '/recording/decoration';
+    
     const currentPath = location.pathname;
-    navigate("/recording/decoration", {
+    navigate(decorationUrl, {
       state: {
         textValue: tempReviewInputValue,
         titleValue: tempTitleInputValue || defaultTitle,
         bookTitleValue: bookInfo.bookUnitDto?.title || bookInfo.title || title,
         authorValue: bookInfo.bookUnitDto?.author || bookInfo.author || author,
-        createdDate: formattedDate, // 오늘 날짜 추가
-        returnPath: currentPath, // 돌아갈 경로 저장
+        createdDate: formattedDate,
+        returnPath: currentPath,
       },
     });
   };

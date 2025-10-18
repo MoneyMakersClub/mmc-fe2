@@ -72,13 +72,9 @@ const FloatingRecordButton = ({ text = true, onRecordClick }) => {
             userBookId: clubData.userBookId,
           });
         }
-        navigate(`${currentPath}?recording=true`, {
-          state: {
-            fromPath: currentPath,
-            fromParams: params
-          },
-          replace: true
-        });
+        
+        const returnTo = encodeURIComponent(currentPath);
+        navigate(`/archive?recording=true&returnTo=${returnTo}&historyDelta=1`);
       } catch (error) {
         console.log("북클럽 정보 로딩 실패:", error);
         navigate("/selectBook");
@@ -99,18 +95,14 @@ const FloatingRecordButton = ({ text = true, onRecordClick }) => {
                 bookInfoId: bookData.bookInfoBasicDto.bookInfoId,
               },
               isCustom: bookData.bookInfoBasicDto.isCustom,
-              providerId: bookData.providerId,
+              providerId: bookData.bookInfoBasicDto.isCustom ? null : bookData.bookInfoBasicDto.providerId,
             };
             setBookInfo(bookInfoToSet);
           }
         }
-        navigate(`${currentPath}?recording=true`, {
-          state: {
-            fromPath: currentPath,
-            fromParams: params
-          },
-          replace: true
-        });
+        
+        const returnTo = encodeURIComponent(currentPath);
+        navigate(`/archive?recording=true&returnTo=${returnTo}&historyDelta=1`);
       } catch (error) {
         console.error("책 정보 로딩 실패:", error);
         navigate("/selectBook");
@@ -118,7 +110,12 @@ const FloatingRecordButton = ({ text = true, onRecordClick }) => {
     } 
     // 다른 페이지에서는 책 선택 페이지로
     else {
-      navigate("/selectBook");
+      if (currentPath === '/archive') {
+        const returnTo = encodeURIComponent(currentPath);
+        navigate(`/selectBook?returnTo=${returnTo}&historyDelta=1`);
+      } else {
+        navigate("/selectBook");
+      }
     }
   };
 

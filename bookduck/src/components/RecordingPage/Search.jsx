@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BookListView from "../common/BookListView";
 import SearchComponent from "../common/SearchComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
 import SearchBookComponent from "../SearchPage/SearchBookComponent";
@@ -12,6 +12,7 @@ const Search = ({ onBookSelect }) => {
   const [submittedSearch, setSubmittedSearch] = useState("");
   const { setBookInfo } = useBookInfoStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getRecentBooks = async () => {
     return await get(`/books/recent`);
@@ -48,12 +49,19 @@ const Search = ({ onBookSelect }) => {
   const popularBooks = popularBooksQuery.data.bookList;
 
   const handleRecording = (bookInfo) => {
-    console.log(bookInfo);
     if (onBookSelect) {
       onBookSelect(bookInfo);
     } else {
       setBookInfo(bookInfo);
-      navigate("/archive?recording=true", { replace: true });
+      
+      const searchParams = new URLSearchParams(location.search);
+      const returnTo = searchParams.get('returnTo');
+      const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+      const url = returnTo 
+        ? `/archive?recording=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+        : '/archive?recording=true';
+      
+      navigate(url, { replace: true });
     }
   };
 

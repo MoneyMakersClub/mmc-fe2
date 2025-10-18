@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import polygon from "../../assets/characterPage/polygon.svg";
 import noArchive from "../../assets/bookinfoPage/user-no-archive.svg";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
@@ -14,6 +14,7 @@ import SuspenseLoading from "../../components/common/SuspenseLoading"; // 로딩
 // 유저가 직접 추가한 책 정보 페이지
 const BookInfoAddedPage = () => {
   const { bookinfoId } = useParams();
+  const navigate = useNavigate();
   const [bookData, setBookData] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
@@ -32,6 +33,10 @@ const BookInfoAddedPage = () => {
     };
     fetchData();
   }, [bookinfoId]);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   console.log("bookdata", bookData);
   const [activeTab, setActiveTab] = useState("기록");
@@ -65,7 +70,7 @@ const BookInfoAddedPage = () => {
         </div>
       ) : (
         <div>
-          <NavigationHeader title="" />
+          <NavigationHeader title="" handleBack={handleBack} />
           <div className="flex flex-col items-center px-4 mt-4 gap-[8.875rem]">
             <BookInfo isMe={isMe} bookData={bookData} />
             <div className="flex flex-col items-center gap-6">

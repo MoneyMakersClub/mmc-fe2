@@ -5,11 +5,11 @@ import TabBarComponent from "../../components/common/TabBarComponent";
 import RoundedTabComponent from "../../components/common/RoundedTabComponent";
 import BookInfoCard from "../../components/BookclubDetailPage/BookInfoCard";
 import ClubArchiveView from "../../components/BookclubDetailPage/ClubArchiveView";
+import ClubMemberView from "../../components/BookclubDetailPage/ClubMemberView";
 import FloatingRecordButton from "../../components/common/FloatingRecordButton";
 import useBookInfoStore from "../../store/useBookInfoStore";
 import { getClubDetail } from "../../api/bookclub";
 import SuspenseLoading from "../../components/common/SuspenseLoading";
-import RecordingPage from "../RecordingPage/RecordingPage";
 
 const BookClubDetailPage = () => {
   const { clubId } = useParams();
@@ -17,9 +17,6 @@ const BookClubDetailPage = () => {
   const location = useLocation();
   const { setBookInfo } = useBookInfoStore();
   
-  // 쿼리 파라미터 확인
-  const searchParams = new URLSearchParams(location.search);
-  const isRecording = searchParams.get('recording') === 'true';
   const [activeTab, setActiveTab] = useState("북클럽");
   const [activeFilter, setActiveFilter] = useState("전체");
   const [clubData, setClubData] = useState(null);
@@ -48,9 +45,18 @@ const BookClubDetailPage = () => {
   }, [clubId]);
 
   const handleBack = () => {
-    // 쿼리 파라미터 제거하여 원래 페이지로 돌아가기
-    const currentPath = location.pathname;
-    navigate(currentPath);
+    navigate('/bookclub'); 
+  };
+
+  const handleBookClick = () => {
+    if (clubData?.clubBookInfo) {
+      const { bookInfoId, isCustom } = clubData.clubBookInfo;
+      if (isCustom) {
+        navigate(`/info/book/custom/${bookInfoId}`);
+      } else {
+        navigate(`/info/book/${bookInfoId}`);
+      }
+    }
   };
 
 
@@ -87,10 +93,6 @@ const BookClubDetailPage = () => {
     );
   }
 
-  // 기록하기 모드일 때 RecordingPage 렌더링
-  if (isRecording) {
-    return <RecordingPage />;
-  }
 
   return (
     <div className="w-full">
@@ -120,6 +122,7 @@ const BookClubDetailPage = () => {
             getStatusText={getStatusText}
             formatDate={formatDate}
             onRefresh={fetchData}
+            onBookClick={handleBookClick}
           />
         </div>
 
@@ -160,17 +163,15 @@ const BookClubDetailPage = () => {
         )}
 
         {activeTab === "참여자" && (
-          <div className="px-4 py-8">
-            <div className="text-center text-gray-500">
-              참여자 목록 기능은 준비 중입니다.
-            </div>
+          <div className="py-4">
+            <ClubMemberView clubId={clubId} />
           </div>
         )}
 
         {activeTab === "모임 정보" && (
           <div className="px-4 py-8">
             <div className="text-center text-gray-500">
-              모임 정보 기능은 준비 중입니다.
+            공사중..
             </div>
           </div>
         )}

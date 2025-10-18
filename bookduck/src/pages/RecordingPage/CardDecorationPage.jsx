@@ -10,12 +10,14 @@ import ButtonComponent from "../../components/common/ButtonComponent";
 import useReviewColorStore from "../../store/useReviewColorStore";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const CardDecorationPage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("기본");
   const { reviewColor, setReviewColor } = useReviewColorStore();
   const navigate = useNavigate();
+  const { goBackFromRecording } = useNavigationHistory();
   
   // 폰트 설정 가져오기
   const {
@@ -55,10 +57,15 @@ const CardDecorationPage = () => {
   };
 
   const handleComplete = () => {
-    // 작성하던 내용을 다시 전달
     const returnPath = location.state?.returnPath || "/archive";
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = searchParams.get('historyDelta');
+    const url = returnTo 
+      ? `${returnPath}?recording=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : `${returnPath}?recording=true`;
     
-    navigate(`${returnPath}?recording=true`, {
+    navigate(url, {
       state: {
         returnFromDecoration: true,
         tempReviewInputValue: textValue,
