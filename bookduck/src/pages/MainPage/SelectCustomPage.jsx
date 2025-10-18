@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { get, post } from "../../api/example";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import OneBookCard from "../../components/MainPage/OneBookCard";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import SearchComponent from "../../components/common/SearchComponent";
 import BookListView from "../../components/common/BookListView";
 import ButtonComponent from "../../components/common/ButtonComponent";

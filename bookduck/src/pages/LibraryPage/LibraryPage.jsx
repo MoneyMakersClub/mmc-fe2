@@ -4,7 +4,7 @@ import BookListPage from "../../components/LibraryPage/BookListPage";
 import BookCasePage from "../../components/LibraryPage/BookCasePage";
 import BasicHeader from "../../components/common/BasicHeader";
 import BottomNavbar from "../../components/common/BottomNavbar";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import ListIcon from "../../components/LibraryPage/ListIcon";
 import CoverIcon from "../../components/LibraryPage/CoverIcon";

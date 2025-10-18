@@ -67,7 +67,7 @@ const CharacterAlarmModal = ({ type, badgeType, badgeName, text, onClick }) => {
             </div>
             <div className="px-4 h-12 w-full">
               <button
-                className="text-b1 font-semibold text-white bg-gray-700 p-[10px] w-[100%] h-12 rounded-[8px]"
+                className="text-b1 font-semibold text-white bg-gray-700 p-2.5 w-[100%] h-12 rounded-lg"
                 onClick={onClick}
               >
                 확인

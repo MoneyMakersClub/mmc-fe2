@@ -1,6 +1,6 @@
 import BookCaseComponent from "./BookCaseComponent";
 import BottomNavbar from "../common/BottomNavbar";
-import DeleteModal from "../common/modal/DeleteModal";
+import CheckModal from "../common/modal/CheckModal";
 import { useEffect, useState } from "react";
 import BottomSheetModal2 from "../BookInfoPage/BottomSheetModal2";
 import book_case_ex1 from "../../assets/libraryPage/bookcase-ex1.svg";
@@ -85,7 +85,7 @@ const BookCasePage = ({ showAddBookCaseBottomSheet, bookCaseId }) => {
         ></BottomSheetModal2>
       )}
       {showDeleteModal && (
-        <DeleteModal
+        <CheckModal
           title="정말 삭제하시겠어요?"
           content="삭제된 카드는 다시 복구할 수 없어요."
           leftBtnText="삭제"

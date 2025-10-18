@@ -8,7 +8,7 @@ const RoundedTabComponent = ({
 }) => {
   return (
     <>
-      <div className={`flex ${type === "primary" ? "gap-[0.62rem]" : "gap-2"}`}>
+      <div className={`flex ${type === "primary" ? "gap-2.5" : "gap-2"}`}>
         {tabs.map((tab, index) => (
           <div
             onClick={() => onTabClick(tab)}

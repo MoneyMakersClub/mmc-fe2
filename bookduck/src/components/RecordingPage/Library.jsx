@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import BookListView from "../common/BookListView";
 import { getTotalBook } from "../../api/library";
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import bookEx from "../../assets/common/bookImg-ex.svg";
 
 const Library = ({ onBookSelect }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setBookInfo } = useBookInfoStore();
 
   const {
@@ -23,7 +24,15 @@ const Library = ({ onBookSelect }) => {
       onBookSelect(book);
     } else {
       setBookInfo(book);
-      navigate("/recording");
+      
+      const searchParams = new URLSearchParams(location.search);
+      const returnTo = searchParams.get('returnTo');
+      const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+      const url = returnTo 
+        ? `/archive?recording=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+        : '/archive?recording=true';
+      
+      navigate(url, { replace: true });
     }
   };
   return (

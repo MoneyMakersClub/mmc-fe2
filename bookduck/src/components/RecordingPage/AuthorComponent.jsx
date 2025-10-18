@@ -20,7 +20,7 @@ const AuthorComponent = ({ archiveDetailData }) => {
         onClick={handleGotoBookInfo}
         className="w-[22.5625rem] px-4 py-[0.62rem] rounded-[0.5rem] bg-gray-50 cursor-pointer"
       >
-        <div className="flex gap-[0.88rem]">
+        <div className="flex gap-3.5">
           <div>
             <img
               className="w-[3.0625rem] h-[4.375rem]"
@@ -30,7 +30,7 @@ const AuthorComponent = ({ archiveDetailData }) => {
               alt="img_template"
             />
           </div>
-          <div className="flex flex-col gap-[0.2rem] justify-center">
+          <div className="flex flex-col gap-0.5 justify-center">
             <div className="text-b2 text-gray-800 font-semibold">
               {archiveDetailData.title}
             </div>

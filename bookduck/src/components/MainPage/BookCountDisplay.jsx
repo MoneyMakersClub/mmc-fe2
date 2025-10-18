@@ -4,7 +4,7 @@ const BookCountDisplay = ({ bookCount }) => {
   const digits = String(bookCount).split("");
 
   return (
-    <div className="flex gap-[0.38rem]">
+    <div className="flex gap-1.5">
       {digits.map((digit, index) => (
         <p
           key={index}

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import down from "../../assets/common/down.svg";
-import SortFilterBar from "../common/SortFilterBar";
-import BookclubListView from "../common/BookclubListView";
-import BookclubCardView from "../common/BookclubCardView";
-import BottomSheetModal from "../common/BottomSheetModal";
-import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
-import Divider1 from "../common/Divider1";
-import Divider2 from "../common/Divider2";
-import ListBottomSheet from "../common/ListBottomSheet";
-import BookclubComponent from "../SearchPage/BookclubComponent";
+import SortFilterBar from "../../components/common/SortFilterBar";
+import BookclubListView from "../../components/common/BookclubListView";
+import BookclubCardView from "../../components/common/BookclubCardView";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
+import BottomSheetMenuComponent from "../../components/common/BottomSheetMenuComponent";
+import Divider1 from "../../components/common/Divider1";
+import Divider2 from "../../components/common/Divider2";
+import ListBottomSheet from "../../components/common/ListBottomSheet";
+import BookclubComponent from "../../components/SearchPage/BookclubComponent";
+import SuspenseLoading from "../../components/common/SuspenseLoading";
 
 import {
   getJoinedClubs,
@@ -32,7 +33,7 @@ const MyBookclubPage = ({ view = "list" }) => {
   const navigate = useNavigate();
 
   // 북클럽 상태 필터
-  const statusArr = ["시작 전", "읽는 중", "종료"];
+  const statusArr = ["전체", "진행 중", "종료"];
 
   const getSortKey = (sort) => {
     switch (sort) {
@@ -47,14 +48,14 @@ const MyBookclubPage = ({ view = "list" }) => {
 
   const getStatusKey = (status) => {
     switch (status) {
-      case "시작 전":
-        return "BEFORE_START";
-      case "읽는 중":
-        return "IN_PROGRESS";
-      case "종료":
-        return "FINISHED";
-      default:
+      case "전체":
         return null;
+      case "진행 중":
+        return "ACTIVE";
+      case "종료":
+        return "ENDED";
+      default:
+        return "알 수 없음";
     }
   };
 
@@ -62,11 +63,8 @@ const MyBookclubPage = ({ view = "list" }) => {
   const { data: clubListData = { clubs: [] }, isLoading, error } = useQuery({
     queryKey: ["clubListData", getSortKey(sort)],
     queryFn: () => getJoinedClubs(getSortKey(sort)),
+    enabled: true, 
   });
-
-  console.log("MyBookclubPage - clubListData:", clubListData);
-  console.log("MyBookclubPage - isLoading:", isLoading);
-  console.log("MyBookclubPage - error:", error);
 
   useEffect(() => {
     if (clubListData?.clubs) {
@@ -101,8 +99,9 @@ const MyBookclubPage = ({ view = "list" }) => {
     const selectSortedList = async () => {
       const statusList = tabList.map((it) => getStatusKey(it));
       console.log(statusList);
-      const res = await getSortedClubs(statusList, getSortKey(sort));
-      setSortedClubList(res.clubList);
+      const clubStatus = statusList.length > 0 ? statusList[0] : null;
+      const res = await getSortedClubs(clubStatus, getSortKey(sort));
+      setSortedClubList(res.clubs || []);
     };
     if (tabList.length !== 0) {
       selectSortedList();
@@ -117,16 +116,17 @@ const MyBookclubPage = ({ view = "list" }) => {
     <div className="flex flex-col">
       <SortFilterBar
         sort={sort}
-        onSortClick={handleSorting}
-        tabs={["시작 전", "읽는 중", "종료"]}
+        onSortClick={() => {}} // 정렬 기능 비활성화
+        tabs={["전체", "진행 중", "종료"]}
         activeTabs={tabList}
         onTabClick={handleTabClick}
         multiple={true}
+        disableSort={true}
       />
       
       {isLoading && (
         <div className="flex justify-center items-center py-10">
-          <div className="text-gray-500">로딩 중...</div>
+          <SuspenseLoading />
         </div>
       )}
 
@@ -176,15 +176,9 @@ const MyBookclubPage = ({ view = "list" }) => {
       >
         <ListBottomSheet
           title="정렬"
-          items={["최신순", "이름순"]}
-          currentItem={sort}
-          onItemSelect={handleSortChange}
-          onCancel={() => {
-            setVisible(false);
-            setTimeout(() => {
-              setSortingBottomSheet(false);
-            }, 200);
-          }}
+          options={["최신순", "이름순"]}
+          currentOption={sort}
+          handleOption={handleSortChange}
         />
       </BottomSheetModal>
 
@@ -197,15 +191,9 @@ const MyBookclubPage = ({ view = "list" }) => {
       >
         <ListBottomSheet
           title="상태"
-          items={statusArr}
-          currentItem={tabList[0] || "전체"}
-          onItemSelect={handleTabClick}
-          onCancel={() => {
-            setStatusVisible(false);
-            setTimeout(() => {
-              setStatusBottomSheet(false);
-            }, 200);
-          }}
+          options={statusArr}
+          currentOption={tabList[0] || "전체"}
+          handleOption={handleTabClick}
         />
       </BottomSheetModal>
     </div>
@@ -213,3 +201,4 @@ const MyBookclubPage = ({ view = "list" }) => {
 };
 
 export default MyBookclubPage;
+

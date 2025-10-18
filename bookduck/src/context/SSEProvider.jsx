@@ -17,6 +17,8 @@ const DEFAULT_SSE_DATA = {
 export const SSEProvider = ({ children }) => {
   const [sseData, setSseData] = useState(DEFAULT_SSE_DATA);
   const [eventSource, setEventSource] = useState(null);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
 
   // SSE 연결 설정
   const connectToSSE = () => {
@@ -42,7 +44,11 @@ export const SSEProvider = ({ children }) => {
       console.log("SSE 연결 성공");
 
       // 이벤트 핸들러 등록
-      newEventSource.onopen = () => console.log("SSE 연결 열림");
+      newEventSource.onopen = () => {
+        console.log("SSE 연결 열림");
+        setIsConnected(true);
+        setReconnectAttempts(0);
+      };
       newEventSource.addEventListener("sse-alarm", onSSEMessageReceived);
       newEventSource.onerror = onSSEError;
 
@@ -84,7 +90,9 @@ export const SSEProvider = ({ children }) => {
   }, [eventSource]);
 
   return (
-    <SSEContext.Provider value={{ sseData }}>{children}</SSEContext.Provider>
+    <SSEContext.Provider value={{ sseData, isConnected, reconnectAttempts }}>
+      {children}
+    </SSEContext.Provider>
   );
 };
 

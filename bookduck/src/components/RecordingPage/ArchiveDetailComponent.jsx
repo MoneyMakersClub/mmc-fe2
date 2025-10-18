@@ -1,5 +1,5 @@
 import { useState } from "react";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
 import { useParams } from "react-router-dom";
 import { getDetailExtractReview } from "../../api/archive";

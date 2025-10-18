@@ -4,6 +4,7 @@ import NavigationHeader from "../../components/common/NavigationHeader";
 import TextField from "../../components/common/TextField";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoComponent";
+import DatePickerModal from "../../components/BookclubPage/DatePickerModal";
 import { createClub } from "../../api/bookclub";
 import useBookInfoStore from "../../store/useBookInfoStore";
 
@@ -17,6 +18,8 @@ const CreateBookclubPage = () => {
   const [activeStartDate, setActiveStartDate] = useState("");
   const [activeEndDate, setActiveEndDate] = useState("");
   const [maxMember, setMaxMember] = useState(10);
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   const handleCreateClub = async () => {
     if (!selectedBookInfo) {
@@ -30,7 +33,7 @@ const CreateBookclubPage = () => {
       description,
       activeStartDate,
       activeEndDate,
-      bookInfoId: selectedBookInfo.bookInfoId,
+      bookInfoId: selectedBookInfo.bookUnitDto?.bookInfoId || selectedBookInfo.bookInfoId,
       maxMember
     };
 
@@ -41,6 +44,8 @@ const CreateBookclubPage = () => {
       navigate("/bookclub");
     } catch (error) {
       console.error("북클럽 생성 실패:", error);
+      console.error("에러 응답:", error.response?.data);
+      console.error("에러 상태:", error.response?.status);
       alert("북클럽 생성에 실패했습니다.");
     }
   };
@@ -53,7 +58,26 @@ const CreateBookclubPage = () => {
     navigate("/bookclub");
   };
 
-  const isFormValid = clubName && activeStartDate && activeEndDate && selectedBookInfo;
+  const handleStartDateSelect = (date) => {
+    setActiveStartDate(date);
+    setShowStartDatePicker(false);
+  };
+
+  const handleEndDateSelect = (date) => {
+    setActiveEndDate(date);
+    setShowEndDatePicker(false);
+  };
+
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  const isFormValid = clubName && activeStartDate && activeEndDate && selectedBookInfo && maxMember >= 2 && maxMember <= 50;
 
   return (
     <div className="w-full max-w-[64rem]">
@@ -74,14 +98,14 @@ const CreateBookclubPage = () => {
                 className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
               >
                 <div className="text-center text-b1 text-gray-400">
-                  책을 선택해주세요
+                  서재에서 함께 읽을 책을 선택
                 </div>
               </div>
             )}
           </div>
 
           {/* 폼 필드들 */}
-          <div className="w-full flex flex-col gap-[2rem] mb-6">
+          <div className="w-full flex flex-col gap-8 mb-6">
             <div className="w-full">
               <div className="text-b1 font-medium text-gray-800 mb-2">
                 북클럽명 <span className="text-orange-400">*</span>
@@ -122,23 +146,33 @@ const CreateBookclubPage = () => {
                 <div className="text-b1 font-medium text-gray-800 mb-2">
                   시작일 <span className="text-orange-400">*</span>
                 </div>
-                <input
-                  type="date"
-                  value={activeStartDate}
-                  onChange={(e) => setActiveStartDate(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowStartDatePicker(true)}
+                  className={`w-full p-3 border rounded-lg text-left text-b1 transition-all ${
+                    activeStartDate
+                      ? 'border-gray-200 text-gray-800'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  {activeStartDate ? formatDateForDisplay(activeStartDate) : '날짜 선택'}
+                </button>
               </div>
               <div className="flex-1">
                 <div className="text-b1 font-medium text-gray-800 mb-2">
                   종료일 <span className="text-orange-400">*</span>
                 </div>
-                <input
-                  type="date"
-                  value={activeEndDate}
-                  onChange={(e) => setActiveEndDate(e.target.value)}
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowEndDatePicker(true)}
+                  className={`w-full p-3 border rounded-lg text-left text-b1 transition-all ${
+                    activeEndDate
+                      ? 'border-gray-200 text-gray-800'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  {activeEndDate ? formatDateForDisplay(activeEndDate) : '날짜 선택'}
+                </button>
               </div>
             </div>
 
@@ -151,9 +185,18 @@ const CreateBookclubPage = () => {
                 min="2"
                 max="50"
                 value={maxMember}
-                onChange={(e) => setMaxMember(parseInt(e.target.value) || 2)}
+                onChange={(e) => setMaxMember(e.target.value)}
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  if (value === '' || value === '0') {
+                    setMaxMember(10); // 포커스가 나갔을 때만 기본값 설정
+                  }
+                }}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-b1"
               />
+              <p className="text-c1 text-gray-400 mt-2">
+                2명부터 50명까지 설정할 수 있어요.
+              </p>
             </div>
           </div>
 
@@ -166,6 +209,24 @@ const CreateBookclubPage = () => {
           />
         </div>
       </div>
+
+      {/* 시작일 달력 모달 */}
+      <DatePickerModal
+        isOpen={showStartDatePicker}
+        onClose={() => setShowStartDatePicker(false)}
+        onSelectDate={handleStartDateSelect}
+        selectedDate={activeStartDate}
+        minDate={new Date().toISOString().split('T')[0]}
+      />
+
+      {/* 종료일 달력 모달 */}
+      <DatePickerModal
+        isOpen={showEndDatePicker}
+        onClose={() => setShowEndDatePicker(false)}
+        onSelectDate={handleEndDateSelect}
+        selectedDate={activeEndDate}
+        minDate={activeStartDate || new Date().toISOString().split('T')[0]}
+      />
     </div>
   );
 };

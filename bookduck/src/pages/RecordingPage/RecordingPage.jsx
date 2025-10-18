@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { get } from "../../api/example";
 import { useQuery } from "@tanstack/react-query";
 import Divider2 from "../../components/common/Divider2";
@@ -7,7 +7,7 @@ import ColoredBookInfoComponent from "../../components/common/ColoredBookInfoCom
 import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWritingComponent";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
 import { useEffect, useState } from "react";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import WritingTemplate from "../../components/RecordingPage/WritingTemplate";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import useBookInfoStore from "../../store/useBookInfoStore";
@@ -17,10 +17,13 @@ import useReviewData from "../../store/useReviewDataStore";
 import useReviewColorStore from "../../store/useReviewColorStore";
 import { postExtractImage } from "../../api/archive";
 import RecordingModal from "../../components/RecordingPage/RecordingModal";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const RecordingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams();
+  const { goBackFromRecording, goBackAfterComplete } = useNavigationHistory();
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [viewBottomSheet, setViewBottomSheet] = useState(false);
@@ -41,6 +44,12 @@ const RecordingPage = () => {
     setAuthor(location.state?.author);
     setTitle(location.state?.title);
     
+    // bookInfo store에서 데이터 가져오기 (북클럽이나 책 정보 페이지에서 온 경우)
+    if (bookInfo && bookInfo.bookUnitDto) {
+      setAuthor(bookInfo.bookUnitDto.author);
+      setTitle(bookInfo.bookUnitDto.title);
+    }
+    
     // decoration 페이지에서 돌아온 경우 모달 복원
     if (location.state?.returnFromDecoration) {
       setTempReviewInputValue(location.state.tempReviewInputValue || "");
@@ -49,7 +58,8 @@ const RecordingPage = () => {
       setBottomSheetType("감상평");
       setTimeout(() => setVisible(true), 10);
     }
-  }, [location.state]);
+  }, [location.state, bookInfo]);
+
 
   const {
     data: font,
@@ -83,12 +93,12 @@ const RecordingPage = () => {
 
   const handleBack = () => {
     setReviewColor("");
-    navigate("/selectBook");
+    goBackFromRecording();
   };
 
   const handleCancel = () => {
     setReviewColor("");
-    navigate("/selectBook");
+    goBackFromRecording();
   };
 
   const handleExtractOnChange = (e) => {
@@ -220,18 +230,15 @@ const RecordingPage = () => {
         userBookId: null,
       };
       data.userBook = {
-        title: bookInfo.bookUnitDto.title,
-        author: bookInfo.bookUnitDto.author,
-        publisher: bookInfo.bookUnitDto?.publisher,
-        publishDate: bookInfo.bookUnitDto?.publishDate,
-        description: bookInfo.bookUnitDto?.description,
-        genreId: bookInfo.bookUnitDto?.genreId,
-        category: ["fiction"],
-        imgPath: bookInfo.bookUnitDto?.imgPath,
-        language: bookInfo.bookUnitDto?.language,
-        readStatus: "READING",
-        providerId: bookInfo.providerId,
+        title: bookInfo.bookUnitDto?.title || bookInfo.title,
+        author: bookInfo.bookUnitDto?.author || bookInfo.author,
+        imgPath: bookInfo.bookUnitDto?.imgPath || bookInfo.imgPath,
       };
+      
+      // providerId를 최상위로 이동 (북클럽에서 온 경우 이미 서버에 등록된 책이므로 제외)
+      if (bookInfo.providerId && !location.pathname.includes('/bookclub/')) {
+        data.providerId = bookInfo.providerId;
+      }
     }
 
     // userBook: {
@@ -249,30 +256,39 @@ const RecordingPage = () => {
     // },
 
     const res = await postExtractReview(data);
-    setBookInfo({});
-    setPageInputValue();
-    setExtractInputValue("");
-    setTitleInputValue("");
-    setReviewInputValue("");
-    navigate("/archive");
+    if (res) {
+      setBookInfo({});
+      setPageInputValue();
+      setExtractInputValue("");
+      setTitleInputValue("");
+      setReviewInputValue("");
+      
+      // 완료 후 원래 페이지로 돌아가기
+      goBackAfterComplete();
+    }
   };
 
   const handleDecoration = () => {
-    // 현재 날짜를 YYYY.MM.DD 형식으로 생성
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-    
-    // 제목이 없으면 날짜 기반 제목 생성 (YYYY년 MM월 DD일의 기록)
     const defaultTitle = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일의 기록`;
     
-    // 모달에서 호출되므로 임시 값을 전달
-    navigate("/recording/decoration", {
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+    const decorationUrl = returnTo 
+      ? `/recording/decoration?returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : '/recording/decoration';
+    
+    const currentPath = location.pathname;
+    navigate(decorationUrl, {
       state: {
         textValue: tempReviewInputValue,
         titleValue: tempTitleInputValue || defaultTitle,
         bookTitleValue: bookInfo.bookUnitDto?.title || bookInfo.title || title,
         authorValue: bookInfo.bookUnitDto?.author || bookInfo.author || author,
-        createdDate: formattedDate, // 오늘 날짜 추가
+        createdDate: formattedDate,
+        returnPath: currentPath,
       },
     });
   };
@@ -286,7 +302,7 @@ const RecordingPage = () => {
         handleBack={handleBack}
         handleComplete={handleComplete}
       />
-      <div className="flex flex-col gap-[1rem] mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
+      <div className="flex flex-col gap-4 mx-4 pt-[calc(env(safe-area-inset-top)+2.75rem)]">
         <div className="mt-5">
           <ColoredBookInfoComponent bookInfo={bookInfo} onClick={handleBack} />
         </div>
@@ -310,8 +326,8 @@ const RecordingPage = () => {
           inputValue={reviewInputValue}
           handleTextField={handleReviewTextField}
           titleInputValue={titleInputValue}
-          bookTitleValue={bookInfo.title}
-          authorValue={bookInfo.author}
+          bookTitleValue={bookInfo.bookUnitDto?.title || title}
+          authorValue={bookInfo.bookUnitDto?.author || author}
           reviewPrivateShow={reviewPrivateShow}
           setReviewPrivateShow={setReviewPrivateShow}
           handleDecoration={handleDecoration}

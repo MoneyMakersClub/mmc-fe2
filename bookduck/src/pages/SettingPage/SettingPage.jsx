@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { get, patch, post } from "../../api/example";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import ToggleButton from "../../components/common/ToggleButtonComponent";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import TextField from "../../components/common/TextField";
 import ButtonComponent from "../../components/common/ButtonComponent";
-import DeleteModal from "../../components/common/modal/DeleteModal";
+import CheckModal from "../../components/common/modal/CheckModal";
 import edit from "../../assets/settingPage/edit.svg";
 import kakaoLogin from "../../assets/settingPage/kakao-login.svg";
 import google from "../../assets/loginPage/google.svg";
@@ -228,7 +228,7 @@ const SettingPage = () => {
   return (
     <div className="relative w-full">
       <NavigationHeader title="설정" />
-      <div className="flex flex-col gap-[2.5rem] px-4 pt-[1.31rem]">
+      <div className="flex flex-col gap-10 px-4 pt-[1.31rem]">
         <div>
           <div className="mb-5 text-st font-semibold">계정 정보</div>
           <div className="flex justify-between items-center h-8 mb-2">
@@ -243,7 +243,7 @@ const SettingPage = () => {
 
           <div className="flex justify-between items-center h-8">
             <span>로그인정보</span>
-            <div className="flex items-center gap-[0.62rem]">
+            <div className="flex items-center gap-2.5">
               {settingInfo.loginType === "KAKAO" && (
                 <img src={kakaoLogin} alt="kakao account" />
               )}
@@ -340,7 +340,7 @@ const SettingPage = () => {
         </div>
       </BottomSheetModal>
       {showDeleteModal && (
-        <DeleteModal
+        <CheckModal
           title={`수정된 이름을\n저장하지 않고 나갈까요?`}
           leftBtnText="나가기"
           rightBtnText="계속하기"

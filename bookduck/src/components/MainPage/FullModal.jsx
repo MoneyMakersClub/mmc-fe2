@@ -12,7 +12,7 @@ const FullModal = ({ onClick }) => {
         </div>
         <div className="px-4">
           <button
-            className="text-b1 font-semibold text-white bg-gray-700 p-[10px] w-full rounded-[8px]"
+            className="text-b1 font-semibold text-white bg-gray-700 p-2.5 w-full rounded-lg"
             onClick={onClick}
           >
             뒤로가기

@@ -12,12 +12,14 @@ import ButtonComponent from "../../components/common/ButtonComponent";
 import useReviewColorStore from "../../store/useReviewColorStore";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const EditCardDecorationPage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("기본");
   const { reviewColor, setReviewColor } = useReviewColorStore();
   const navigate = useNavigate();
+  const { goBackFromEditing } = useNavigationHistory();
   const textValue = location.state?.textValue;
   const reviewTitleValue = location.state?.titleValue;
   const bookTitleValue = location.state?.bookTitleValue;
@@ -56,10 +58,23 @@ const EditCardDecorationPage = () => {
   };
 
   const handleComplete = () => {
-    navigate(`/recording/edit/${archiveId}`, { 
-      state: { color: reviewColor },
-      replace: true // 히스토리에서 decoration 제거
-    });
+    const returnPath = location.state?.returnPath;
+    
+    if (returnPath) {
+      const searchParams = new URLSearchParams(location.search);
+      const returnTo = searchParams.get('returnTo');
+      const historyDelta = searchParams.get('historyDelta');
+      const url = returnTo 
+        ? `${returnPath}?editing=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+        : `${returnPath}?editing=true`;
+      
+      navigate(url, { 
+        state: { color: reviewColor },
+        replace: true
+      });
+    } else {
+      navigate(-1);
+    }
   };
 
   return (

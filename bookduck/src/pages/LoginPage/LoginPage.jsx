@@ -18,14 +18,14 @@ const LoginPage = () => {
       <div className="flex flex-col gap-3 items-center bg-white py-5">
         <a
           href={GoogleURI}
-          className="flex justify-center items-center gap-[0.62rem] w-[22.0625rem] h-[3rem] rounded-[0.5rem] border-solid border-[0.0938rem] border-[#ADADAD] bg-white mt-[1.69rem]"
+          className="flex justify-center items-center gap-2.5 w-[22.0625rem] h-[3rem] rounded-lg border-solid border-[0.0938rem] border-[#ADADAD] bg-white mt-[1.69rem]"
         >
           <img src={google} alt="google logo" />
           Google로 시작하기
         </a>
         <a
           href={KakaoURI}
-          className="flex justify-center items-center gap-[0.62rem] w-[22.0625rem] h-[3rem] rounded-[0.5rem] bg-[#FEE500]"
+          className="flex justify-center items-center gap-2.5 w-[22.0625rem] h-[3rem] rounded-lg bg-[#FEE500]"
         >
           <img src={kakao} alt="kakao logo" />
           카카오로 시작하기

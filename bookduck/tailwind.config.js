@@ -72,7 +72,7 @@ export default {
         t2: ["1.25rem", { lineHeight: "1.5rem" }], //20px /24px
         st: ["1.125rem", { lineHeight: "1.5rem" }], //18px / 24px
         b1: ["1rem", { lineHeight: "1.5rem" }], //16px / 24px
-        b2: ["0.875rem", { lineHeight: "1.5rem" }], //14px /24px
+        b2: ["0.875rem", { lineHeight: "1.25rem" }], //14px /24px
         btn1: ["1.125rem", { lineHeight: "1.5rem" }],
         btn2: ["1rem", { lineHeight: "1.25rem" }], //16px / 20px
         btn3: ["0.875rem", { lineHeight: "1.25rem" }], //14px / 20px

@@ -1,13 +1,14 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import FriendListComponent from "../../components/common/FriendListComponent";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+
+const DATA_LIMIT = 10;
 
 const SearchUserComponent = ({ search }) => {
   const navigate = useNavigate();
-  const loaderRef = useRef(null);
-  const DATA_LIMIT = 10;
 
   // API 호출 함수
   const getUsers = async ({ pageParam = 0 }) => {
@@ -29,7 +30,7 @@ const SearchUserComponent = ({ search }) => {
     };
   };
 
-  const { data, isLoading, fetchNextPage, hasNextPage, refetch } =
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["users", search],
       queryFn: getUsers,
@@ -38,26 +39,14 @@ const SearchUserComponent = ({ search }) => {
       initialPageParam: 0,
     });
 
+  // 무한 스크롤 훅 사용
+  const { loaderRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
+
   console.log("Rendered data:", data);
-
-  useEffect(() => {
-    const handleObserver = (entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && hasNextPage) {
-        fetchNextPage();
-      }
-    };
-
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0,
-    });
-
-    if (loaderRef.current) observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage]);
 
   if (isLoading) {
     return <div>로딩 중...</div>;

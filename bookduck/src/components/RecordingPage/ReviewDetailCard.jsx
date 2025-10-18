@@ -8,7 +8,7 @@ import x from "../../assets/recordingPage/x.svg";
 import gallery from "../../assets/recordingPage/gallery.svg";
 import link from "../../assets/recordingPage/link.svg";
 
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import BottomSheetMenuComponent from "../common/BottomSheetMenuComponent";
 
 const ReviewDetailCard = ({ archiveDetailData, font }) => {

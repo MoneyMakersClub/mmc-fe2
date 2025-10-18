@@ -8,7 +8,7 @@ const SearchBar = () => {
   };
   return (
     <div className="flex items-center gap-[1rem]">
-      <div className="flex items-center w-[19.4375rem] h-[2.5rem] p-[0.125rem] rounded-[0.5rem] bg-gray-50">
+      <div className="flex items-center w-[19.4375rem] h-[2.5rem] p-0.5 rounded-lg bg-gray-50">
         <div className="flex items-center">
           <img className="m-[0.5rem]" src={search} alt="search" />
           <input

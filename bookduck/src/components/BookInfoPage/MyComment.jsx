@@ -5,7 +5,7 @@ import starHalf from "../../assets/bookinfoPage/star-half.svg";
 import leftMark from "../../assets/bookinfoPage/left-quotmark.svg";
 import rightMark from "../../assets/bookinfoPage/right-quotmark.svg";
 import menu from "../../assets/bookinfoPage/menu-vertical.svg";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import ButtonComponent from "../common/ButtonComponent";
 import BottomSheetModal2 from "./BottomSheetModal2";
 import {

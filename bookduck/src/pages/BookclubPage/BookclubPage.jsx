@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TabBarComponent from "../../components/common/TabBarComponent";
-import MyBookclubPage from "../../components/BookclubPage/MyBookclubPage";
-import ExploreBookclubPage from "../../components/BookclubPage/ExploreBookclubPage";
+import MyBookclubPage from "./MyBookclubPage";
+import ExploreBookclubPage from "./ExploreBookclubPage";
 import BasicHeader from "../../components/common/BasicHeader";
 import BottomNavbar from "../../components/common/BottomNavbar";
 import BookclubCreateIcon from "../../components/BookclubPage/BookclubCreateIcon";

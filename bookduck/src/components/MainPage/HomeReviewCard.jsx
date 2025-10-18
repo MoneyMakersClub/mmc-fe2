@@ -13,7 +13,7 @@ const HomeReviewCard = ({
 }) => {
   return (
     <div
-      className={`flex w-full flex-col px-4 py-3 bg-gray-10 shadow-custom h-[6rem] justify-between rounded-[0.75rem]  ${
+      className={`flex w-full flex-col px-4 py-3 bg-gray-10 shadow-custom min-h-[6rem] justify-between rounded-[0.75rem]  ${
         selected && " border-[1px] border-[#6B7FF0]"
       }`}
       onClick={onClick}
@@ -30,7 +30,7 @@ const HomeReviewCard = ({
           </div>
         ))}
       </div>
-      <div className="flex flex-col gap-[0.38rem]">
+      <div className="flex flex-col gap-1.5">
         <p className="text-b2 text-gray-800">
           {content || "한줄평 카드 위젯을 만들어보세요"}
         </p>

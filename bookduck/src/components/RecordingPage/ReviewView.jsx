@@ -20,7 +20,7 @@ const ReviewView = ({ font }) => {
   console.log("archiveReviewData:", archiveReviewData);
 
   return (
-    <div className="flex flex-col gap-[1rem] items-center mt-[1rem]">
+    <div className="flex flex-col gap-4 items-center mt-[1rem]">
       {archiveReviewData?.archiveList?.length === 0 ? (
         <div className="mt-[17rem] text-gray-400">
           아직 작성된 감상평이 없어요!

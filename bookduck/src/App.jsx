@@ -15,6 +15,7 @@ import CharacterCustomPage from "./pages/CharacterPage/CharacterCustomPage";
 import BookclubPage from "./pages/BookclubPage/BookclubPage";
 import CreateBookclubPage from "./pages/BookclubPage/CreateBookclubPage";
 import SelectBookForClubPage from "./pages/BookclubPage/SelectBookForClubPage";
+import BookClubDetailPage from "./pages/BookclubPage/BookClubDetailpage";
 import SelectBookPage from "./pages/RecordingPage/SelectBookPage";
 import ArchivePage from "./pages/RecordingPage/ArchivePage";
 import ArchiveDetail from "./pages/RecordingPage/ArchiveDetailPage";
@@ -149,13 +150,11 @@ function App() {
 
         {/* 기록 관련 */}
         <Route path="/selectBook" element={<SelectBookPage />} />
-        <Route path="/recording" element={<RecordingPage />} />
         <Route path="/recording/decoration" element={<CardDecorationPage />} />
         <Route path="/archive" element={<ArchivePage />} />
         <Route path="/excerpt-archive-detail/:id" element={<ArchiveDetail />} />
         <Route path="/review-archive-detail/:id" element={<ArchiveDetail />} />
         <Route path="/total-archive-detail/:id" element={<ArchiveDetail />} />
-        <Route path="/recording/edit/:id" element={<EditPage />} />
         <Route
           path="/recording/edit/:id/decoration"
           element={<EditCardDecorationPage />}
@@ -176,6 +175,7 @@ function App() {
         <Route path="/bookclub" element={<BookclubPage />} />
         <Route path="/bookclub/create" element={<CreateBookclubPage />} />
         <Route path="/select-book-for-club" element={<SelectBookForClubPage />} />
+        <Route path="/bookclub/:clubId" element={<BookClubDetailPage />} />
 
         {/* 서재 관련 */}
         <Route path="/library" element={<LibraryPage />} />

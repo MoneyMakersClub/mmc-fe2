@@ -8,7 +8,7 @@ import ExcerptWritingComponent from "../../components/RecordingPage/ExcerptWriti
 import Header2 from "../../components/RecordingPage/Header2";
 import ReviewWritingComponent from "../../components/RecordingPage/ReviewWritingComponent";
 import { useEffect, useState } from "react";
-import BottomSheetModal from "../../components/common/BottomSheetModal";
+import BottomSheetModal from "../../components/common/modal/BottomSheetModal";
 import WritingTemplate from "../../components/RecordingPage/WritingTemplate";
 import ButtonComponent from "../../components/common/ButtonComponent";
 import useBookInfoStore from "../../store/useBookInfoStore";
@@ -24,10 +24,12 @@ import { useQuery } from "@tanstack/react-query";
 import { postExtractImage } from "../../api/archive";
 import RecordingModal from "../../components/RecordingPage/RecordingModal";
 import { get } from "../../api/example";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const EditPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { goBackFromEditing } = useNavigationHistory();
   const [viewBottomSheet, setViewBottomSheet] = useState(false);
   const [visible, setVisible] = useState(false);
   const [bottomSheetType, setBottomSheetType] = useState("");
@@ -124,7 +126,7 @@ const EditPage = () => {
 
   const handleBack = () => {
     setReviewColor("");
-    navigate(-1); 
+    goBackFromEditing();
   };
 
   const handleExtractOnChange = (e) => {
@@ -160,8 +162,8 @@ const EditPage = () => {
 
   const handleExtractTextField = () => {
     // 모달 열 때 임시 상태에 현재 값 복사
-    setTempExtractInputValue(extractInputValue);
-    setTempPageInputValue(pageInputValue);
+    setTempExtractInputValue(extractInputValue || "");
+    setTempPageInputValue(pageInputValue || "");
     setViewBottomSheet(true);
     setBottomSheetType("발췌");
     setTimeout(() => setVisible(true), 10);
@@ -247,40 +249,42 @@ const EditPage = () => {
     const hasExcerpt = detailData.excerpt;
     const hasReview = detailData.review;
     
+    // 쿼리 파라미터 제거하여 원래 페이지로 돌아가기
+    const currentPath = location.pathname;
+    
     if (hasExcerpt && hasReview) {
-      // -2로 이동 후 replace로 다시 detail 페이지 열기
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/total-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/total-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else if (hasReview) {
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/review-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/review-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else if (hasExcerpt) {
-      navigate(-2);
-      setTimeout(() => {
-        navigate(`/excerpt-archive-detail/${archiveId}`, {
-          state: { detailData }
-        });
-      }, 0);
+      navigate(`/excerpt-archive-detail/${archiveId}`, {
+        state: { detailData }
+      });
     } else {
-      navigate(-1);
+      navigate(currentPath);
     }
   };
 
   const handleDecoration = () => {
-    navigate(`/recording/edit/${archiveId}/decoration`, {
+    const currentPath = location.pathname;
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = parseInt(searchParams.get('historyDelta') || '0') + 1;
+    const decorationUrl = returnTo 
+      ? `/recording/edit/${archiveId}/decoration?returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : `/recording/edit/${archiveId}/decoration`;
+    
+    navigate(decorationUrl, {
       state: {
         textValue: reviewInputValue,
         titleValue: titleInputValue,
         bookTitleValue: title,
         authorValue: author,
+        returnPath: currentPath,
       },
     });
   };

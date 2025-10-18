@@ -9,14 +9,14 @@ const HomeExcerptCard = ({
   visibility,
 }) => {
   return (
-    <div className="cursor-pointer  w-full h-[8rem]" onClick={onClick}>
+    <div className="cursor-pointer w-full min-h-[8rem]" onClick={onClick}>
       <div
-        className={`flex flex-col gap-[1.25rem] rounded-[0.875rem] bg-gray-10 shadow-custom p-5
+        className={`flex flex-col gap-5 rounded-2xl bg-gray-10 shadow-custom p-5
           ${selected && " border-[1px] border-[#6B7FF0]"}`}
       >
         <div
           className={`flex ${
-            visibility === "PRIVATE" ? "justify-between" : "text-right"
+            visibility === "PRIVATE" ? "justify-between" : "justify-end"
           } text-b2 text-gray-400`}
         >
           {visibility === "PRIVATE" && (
@@ -27,7 +27,7 @@ const HomeExcerptCard = ({
           )}
           <div>{pageNumber || "페이지"}p</div>
         </div>
-        <div className="flex flex-col gap-[0.5rem]">
+        <div className="flex flex-col gap-2">
           <div className="text-b2 text-gray-800">
             {content || "발췌 카드 위젯을 만들어보세요"}
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavigationHeader from "../../components/common/NavigationHeader";
 import BookInfo from "../../components/BookInfoPage/BookInfo";
 import TabBarComponent from "../../components/common/TabBarComponent";
@@ -13,6 +13,8 @@ import SuspenseLoading from "../../components/common/SuspenseLoading";
 const BookInfoPage = () => {
   const { bookinfoId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
   const [activeTab, setActiveTab] = useState("책 정보");
   const [RatingListData, setRatingListData] = useState(null);
   const [bookData, setBookData] = useState(null);
@@ -36,6 +38,7 @@ const BookInfoPage = () => {
   }, [bookinfoId]);
 
   const handleBack = () => {
+    // 이전 페이지로 돌아가기
     navigate(-1);
   };
 

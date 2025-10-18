@@ -4,29 +4,27 @@ import { useNavigate } from "react-router-dom";
 const BookclubComponent = ({ club, view = "list" }) => {
   const navigate = useNavigate();
 
+  const getStatusText = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "진행 중";
+      case "ENDED":
+        return "종료";
+      default:
+        return "알 수 없음";
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case "BEFORE_START":
         return "bg-blue-100 text-blue-800";
-      case "IN_PROGRESS":
-        return "bg-green-100 text-green-800";
-      case "FINISHED":
+      case "ACTIVE":
+        return "bg-orange-100 text-orange-800";
+      case "ENDED":
         return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case "BEFORE_START":
-        return "시작 전";
-      case "IN_PROGRESS":
-        return "읽는 중";
-      case "FINISHED":
-        return "종료";
-      default:
-        return "알 수 없음";
     }
   };
 

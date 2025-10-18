@@ -51,10 +51,7 @@ const TabBarComponent = ({
 
           {activeTab === tab && (
             <div
-              style={{ width: borderWidth }}
-              className={`absolute bottom-[-0.75rem] h-[0.125rem] bg-black ${
-                isBig ? " left-0 right-0  justify-self-center " : ""
-              }`}
+              className="absolute bottom-[-0.75rem] h-[0.125rem] bg-black left-1/2 -translate-x-1/2 w-[70%]"
             />
           )}
         </div>

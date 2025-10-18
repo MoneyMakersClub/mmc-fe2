@@ -50,7 +50,7 @@ const BadgeModal = ({ badge, currentData }) => {
           </div>
         )}
         <div className="px-4 w-[100%] h-8">
-          <button className="flex justify-center items-center text-btn3 font-semibold text-white bg-gray-700 p-[10px] w-[100%]  h-8 rounded-lg">
+          <button className="flex justify-center items-center text-btn3 font-semibold text-white bg-gray-700 p-2.5 w-[100%]  h-8 rounded-lg">
             닫기
           </button>
         </div>

@@ -42,7 +42,7 @@ const RecordingModal = ({
                 </div>
               </div>
               <HighlightTextarea
-                value={tempExtractInputValue}
+                value={tempExtractInputValue || ""}
                 onChange={handleExtractOnChange}
                 onScroll={handleExtractScroll}
                 placeholder="책의 구절을 입력하세요"
@@ -54,7 +54,7 @@ const RecordingModal = ({
             <div className="absolute bottom-5 left-4">
               <label
                 htmlFor="ExtractImage"
-                className="flex gap-[0.47rem] items-center cursor-pointer"
+                className="flex gap-2 items-center cursor-pointer"
               >
                 <img src={camera} alt="camera" />
                 <div className="text-b2 text-gray-500">문장스캔</div>
@@ -68,8 +68,8 @@ const RecordingModal = ({
             </div>
             <div className="absolute bottom-5 right-4">
               <div className="text-btn3 text-gray-400">
-                <span className={tempExtractInputValue.length > 300 ? "text-red" : ""}>
-                  {tempExtractInputValue.length}
+                <span className={(tempExtractInputValue?.length || 0) > 300 ? "text-red" : ""}>
+                  {tempExtractInputValue?.length || 0}
                 </span>
                 /300
               </div>
@@ -95,7 +95,7 @@ const RecordingModal = ({
                 className={`text-b1 font-semibold bg-transparent ${font}`}
               />
               <HighlightTextarea
-                value={tempReviewInputValue}
+                value={tempReviewInputValue || ""}
                 onChange={handleReviewOnChange}
                 onScroll={handleReviewScroll}
                 placeholder="책에 대한 자유로운 감상을 기록하세요"
@@ -121,8 +121,8 @@ const RecordingModal = ({
             </div>
             <div className="absolute bottom-5 right-4">
               <div className="text-btn3 text-gray-400">
-                <span className={tempReviewInputValue.length > 1000 ? "text-red" : ""}>
-                  {tempReviewInputValue.length}
+                <span className={(tempReviewInputValue?.length || 0) > 1000 ? "text-red" : ""}>
+                  {tempReviewInputValue?.length || 0}
                 </span>
                 /1000
               </div>

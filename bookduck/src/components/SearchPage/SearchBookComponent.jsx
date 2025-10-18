@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BookListView from "../common/BookListView";
 import ButtonComponent from "../common/ButtonComponent";
-import BottomSheetModal from "../common/BottomSheetModal";
+import BottomSheetModal from "../common/modal/BottomSheetModal";
 import Divider1 from "../../components/common/Divider1";
-import ListBottomSheet from "../common/ListBottomSheet";
+import BookStatusModal from "../common/BookStatusModal";
 import SuspenseLoading from "../common/SuspenseLoading";
 import { get, patch, post, del } from "../../api/example";
 import { getReadingStatusKor, getReadingStatusKey, statusArr } from "../../utils/bookStatus";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const DATA_LIMIT = 10;
 
@@ -15,20 +17,16 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
   const navigate = useNavigate();
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingRegistered, setIsLoadingRegistered] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [registeredBooks, setRegisteredBooks] = useState([]);
-  const [books, setBooks] = useState([]);
   const [currentState, setCurrentState] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const loaderRef = useRef(null);
 
   // API - 등록 책 정보 받아오기
   const getRegisteredBooks = async (keyword) => {
     if (!keyword) return;
     try {
-      setIsLoading(true); // 로딩 시작
+      setIsLoadingRegistered(true);
       const response = await get(
         `/bookinfo/search/custom?keyword=${encodeURIComponent(keyword)}`
       );
@@ -36,32 +34,47 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
     } catch (error) {
       console.error("등록 책 읽어오기 오류:", error);
     } finally {
-      setIsLoading(false); // 로딩 종료
+      setIsLoadingRegistered(false);
     }
   };
 
-  // API - 일반 책 데이터 받아오기
-  const getBooks = async (keyword, page = 0) => {
-    if (!keyword) return setBooks([]);
-    try {
-      setIsLoading(true); // 로딩 시작
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["searchBooks", search],
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!search) return { bookList: [], nextPage: 0, totalPages: 0 };
       const response = await get(
         `/bookinfo/search?keyword=${encodeURIComponent(
-          keyword
-        )}&page=${page}&size=${DATA_LIMIT}`
+          search
+        )}&page=${pageParam}&size=${DATA_LIMIT}`
       );
-      setBooks((prevBooks) => {
-        return page === 0
-          ? response.bookList
-          : [...prevBooks, ...response.bookList];
-      });
-      setTotalPages(response.totalPages || 1);
-    } catch (error) {
-      console.error("책 데이터 불러오기 오류:", error);
-    } finally {
-      setIsLoading(false); // 로딩 종료
-    }
-  };
+      return {
+        bookList: response.bookList || [],
+        nextPage: pageParam + 1,
+        totalPages: response.totalPages || 1,
+      };
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.nextPage < lastPage.totalPages ? lastPage.nextPage : undefined,
+    initialPageParam: 0,
+    enabled: !!search,
+  });
+
+  // 무한 스크롤 훅 사용
+  const { loaderRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
+
+  // 모든 페이지의 책 데이터 병합
+  const books = data?.pages.flatMap((page) => page.bookList) || [];
 
   // 책 상태 변경 API 호출
   const patchRegisteredStatus = async (option) => {
@@ -71,7 +84,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
       console.log(`책 상태 업데이트 성공: ${statusKey}`);
       setSelectedBook(null);
       getRegisteredBooks(search); // 등록된 책 갱신
-      getBooks(search, 0); // 일반 책 첫 페이지 갱신
+      refetch(); // 일반 책 갱신
       setVisible(false);
       setTimeout(() => {
         setBottomSheetShow(false);
@@ -98,7 +111,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
         setBottomSheetShow(false);
       }, 200);
       setSelectedBook(null);
-      getBooks(search, 0); // 첫 페이지 새로 로드
+      refetch(); // 책 목록 갱신
     } catch (error) {
       console.error("책 등록 업데이트 오류:", error);
     }
@@ -110,7 +123,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
       await del(`/books/${userbookId}`);
       setSelectedBook(null);
       getRegisteredBooks(search);
-      getBooks(search, 0);
+      refetch();
     } catch (error) {
       console.error(error);
     }
@@ -177,56 +190,11 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
   };
 
   useEffect(() => {
-    // 검색어가 변경될 때 상태를 초기화하고 첫 페이지 호출
-    const resetSearch = async () => {
-      console.log("검색어 변경:", search);
-
-      // 상태 초기화
-      setBooks([]); // 기존 책 데이터 초기화
-      setCurrentPage(0); // 페이지 초기화
-      setTotalPages(1);
-
-      try {
-        await getRegisteredBooks(search); // 등록된 책 요청
-        await getBooks(search, 0); // 첫 페이지 요청
-      } catch (error) {
-        console.error("검색어 변경 처리 중 오류:", error);
-      }
-    };
-
     if (search) {
-      resetSearch(); // 검색어 변경 시 초기화 함수 호출
+      console.log("검색어 변경:", search);
+      getRegisteredBooks(search); // 등록된 책 요청
     }
   }, [search]);
-
-  // 무한 스크롤 감지
-  useEffect(() => {
-    const handleObserver = (entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && currentPage < totalPages - 1 && !isLoading) {
-        console.log("다음 페이지 로드!");
-        setCurrentPage((prev) => prev + 1);
-      }
-    };
-
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0,
-    });
-
-    if (loaderRef.current) observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [currentPage, totalPages]);
-
-  // 현재 페이지 변경 시 데이터 요청
-  useEffect(() => {
-    if (search && currentPage >= 0) {
-      console.log(`페이지 ${currentPage} 데이터 로드`);
-      getBooks(search, currentPage);
-    }
-  }, [currentPage, search]);
 
   return (
     <>
@@ -235,7 +203,7 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
           <SuspenseLoading />
         </div>
       ) : registeredBooks.length > 0 || books.length > 0 ? (
-        <div className="px-4">
+        <div>
           <div>
             {registeredBooks.map((book, index) => (
               <BookListView
@@ -315,15 +283,12 @@ const SearchBookComponent = ({ search, selectBook = false, onClick }) => {
         visible={visible}
         setVisible={setVisible}
       >
-        <div className="p-4">
-          <ListBottomSheet
-            title="책 상태"
-            options={statusArr}
-            currentOption={currentState}
-            handleOption={handleStatusChange}
-            handlePutCancel={deleteBook}
-          />
-        </div>
+        <BookStatusModal
+          currentStatus={selectedBook?.readStatus}
+          onStatusChange={handleStatusChange}
+          onDelete={() => deleteBook(selectedBook.userbookId)}
+          showDelete={!!selectedBook?.userbookId}
+        />
       </BottomSheetModal>
     </>
   );

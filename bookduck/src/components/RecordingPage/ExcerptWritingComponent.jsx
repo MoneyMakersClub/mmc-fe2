@@ -31,7 +31,7 @@ const ExcerptWritingComponent = ({
 
   return (
     <>
-      <div className="flex flex-col gap-[0.38rem]">
+      <div className="flex flex-col gap-1.5">
         <div className="flex justify-between py-2 mt-4">
           <div className="text-b1 font-semibold">발췌</div>
           <div className="flex gap-3">

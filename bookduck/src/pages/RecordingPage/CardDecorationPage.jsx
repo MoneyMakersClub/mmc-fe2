@@ -10,12 +10,14 @@ import ButtonComponent from "../../components/common/ButtonComponent";
 import useReviewColorStore from "../../store/useReviewColorStore";
 import { useQuery } from "@tanstack/react-query";
 import { get } from "../../api/example";
+import { useNavigationHistory } from "../../utils/navigationUtils";
 
 const CardDecorationPage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("기본");
   const { reviewColor, setReviewColor } = useReviewColorStore();
   const navigate = useNavigate();
+  const { goBackFromRecording } = useNavigationHistory();
   
   // 폰트 설정 가져오기
   const {
@@ -55,13 +57,21 @@ const CardDecorationPage = () => {
   };
 
   const handleComplete = () => {
-    // 작성하던 내용을 다시 전달
-    navigate("/recording", {
+    const returnPath = location.state?.returnPath || "/archive";
+    const searchParams = new URLSearchParams(location.search);
+    const returnTo = searchParams.get('returnTo');
+    const historyDelta = searchParams.get('historyDelta');
+    const url = returnTo 
+      ? `${returnPath}?recording=true&returnTo=${returnTo}&historyDelta=${historyDelta}`
+      : `${returnPath}?recording=true`;
+    
+    navigate(url, {
       state: {
         returnFromDecoration: true,
         tempReviewInputValue: textValue,
         tempTitleInputValue: reviewTitleValue,
-      }
+      },
+      replace: true
     });
   };
 
@@ -71,7 +81,7 @@ const CardDecorationPage = () => {
       <div className="px-4 pt-[calc(env(safe-area-inset-top)+2.75rem+2.69rem)] mb-[5.12rem]">
         <ReviewCard reviewData={reviewData} font={font} />
       </div>
-      <div className="relative min-h-[26rem] rounded-t-[1.25rem] shadow-custom2">
+      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[1.25rem] shadow-custom2">
         <div className="px-6 pt-8 pb-3">
           <RoundedTabComponent
             type="primary"

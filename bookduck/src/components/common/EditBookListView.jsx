@@ -22,7 +22,7 @@ const EditBookListView = ({
     <div
       className={`flex items-center justify-between w-full h-[7.75rem] pb-[0.5rem] pt-[0.5rem] cursor-pointer`}
     >
-      <div className="flex gap-[0.75rem] items-center w-[15.75rem] h-[6.75rem]">
+      <div className="flex gap-3 items-center w-[15.75rem] h-[6.75rem]">
         <div className="relative">
           <img
             className="w-[4.75rem] h-[6.75rem]"
